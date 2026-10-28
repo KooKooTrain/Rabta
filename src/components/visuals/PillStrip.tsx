@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Strip of solid pills (ember / cream alternating) on a dark bar.
+ * Strip of solid pills (brand / tint alternating) on a dark bar.
  * Decorative; for a text marquee use the Marquee section.
  */
 export function PillStrip({
@@ -23,7 +23,7 @@ export function PillStrip({
           key={i}
           className={cn(
             "min-w-0 flex-1 rounded-pill",
-            i % 2 === 0 ? "bg-ember" : "bg-cream",
+            i % 2 === 0 ? "bg-brand" : "bg-tint",
             i === 0 && "max-w-10",
             pillClassName,
           )}

@@ -30,7 +30,7 @@ export function Team({ id, tone, index }: SectionProps) {
       <Container>
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <SectionHeading eyebrow={c.eyebrow} heading={c.heading} index={index} size="2xl" className="lg:col-span-7" />
-          <p data-reveal="" className="label-mono max-w-sm leading-relaxed text-muted lg:col-span-5 lg:justify-self-end">
+          <p data-reveal="" className="label-caps max-w-sm leading-relaxed text-muted lg:col-span-5 lg:justify-self-end">
             <T c={c.intro} rich={false} />
           </p>
         </div>
@@ -59,7 +59,7 @@ export function Team({ id, tone, index }: SectionProps) {
                     </span>
                   </Stamp>
                   <div className="mt-6 border-t border-line pt-4">
-                    <p className="label-mono text-accent-text">
+                    <p className="label-caps text-accent-text">
                       [ <T c={m.role} rich={false} tag={false} /> ]
                     </p>
                     <h3 className="font-display text-title mt-2">

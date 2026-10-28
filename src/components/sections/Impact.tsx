@@ -8,7 +8,7 @@ import type { SectionProps } from "./registry";
 
 /**
  * "The effect" bento: heading + note on the left; a giant number with an
- * ember tile and a charcoal tile under it on the right. All rounded tiles.
+ * brand tile and a charcoal tile under it on the right. All rounded tiles.
  */
 export function Impact({ id, tone, index }: SectionProps) {
   const c = site.content.impact;
@@ -27,7 +27,7 @@ export function Impact({ id, tone, index }: SectionProps) {
                 <T c={c.heading} />
               </h2>
             </div>
-            <p data-reveal="" className="max-w-sm font-mono text-[0.8125rem] leading-relaxed text-muted">
+            <p data-reveal="" className="max-w-sm text-[0.9375rem] leading-relaxed text-muted">
               <T c={c.note} />
             </p>
           </div>
@@ -42,7 +42,7 @@ export function Impact({ id, tone, index }: SectionProps) {
               <div
                 key={i}
                 data-reveal=""
-                data-tone={i === 0 ? "ember" : "charcoal"}
+                data-tone={i === 0 ? "brand" : "charcoal"}
                 style={{ "--i": i + 1 } as React.CSSProperties}
                 className="flex min-h-64 flex-col justify-end rounded-card border border-edge bg-bg p-6 text-fg md:p-8"
               >

@@ -48,10 +48,10 @@ export function DemoSidebar({ items }: { items: { label: string; icon: IconName 
           aria-label="Prototype sections"
           className="sticky top-14 flex h-[calc(100dvh-3.5rem)] flex-col gap-6 p-4"
         >
-          <p className="label-mono px-3 pt-2 text-subtle">Workspace</p>
+          <p className="label-caps px-3 pt-2 text-subtle">Workspace</p>
           <ul className="-mt-3 flex flex-col gap-1">{items.map((it, i) => item(it, i, "col"))}</ul>
           <div className="mt-auto rounded-tile bg-soft p-4">
-            <p className="label-mono text-subtle">Sample data</p>
+            <p className="label-caps text-subtle">Sample data</p>
             <p className="mt-2 text-sm text-muted">
               Everything shown here is illustrative. No real family data is used.
             </p>

@@ -24,7 +24,7 @@ export function FinalCta({ id, tone, index }: SectionProps) {
           <h2 data-reveal="" style={{ "--i": 1 } as React.CSSProperties} className="font-display text-display-2xl mt-6">
             <T c={c.heading} />
           </h2>
-          <p data-reveal="" style={{ "--i": 2 } as React.CSSProperties} className="mt-6 max-w-md font-mono text-[0.8125rem] leading-relaxed text-muted">
+          <p data-reveal="" style={{ "--i": 2 } as React.CSSProperties} className="mt-6 max-w-md text-[0.9375rem] leading-relaxed text-muted">
             <T c={c.body} />
           </p>
           <div data-reveal="" style={{ "--i": 3 } as React.CSSProperties} className="mt-10 flex flex-wrap items-center gap-2">
@@ -37,7 +37,7 @@ export function FinalCta({ id, tone, index }: SectionProps) {
           <div className="flex items-stretch [transform:rotateY(-16deg)_rotateZ(-3deg)]">
             <span aria-hidden="true" className="me-1.5 w-2 shrink-0 rounded-full bg-ink" />
             <PixelField
-              palette="ember"
+              palette="brand"
               direction="radial"
               cell={20}
               wave={0.32}

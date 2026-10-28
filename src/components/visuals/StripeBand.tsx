@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 
-const STEPS = ["#141110", "#221c19", "#3a2219", "#7a2e10", "#d9440f", "#ff7f4d", "#ffb38a", "#ffe6d4"];
+const STEPS = ["#141110", "#1b1a22", "#1e2340", "#22307a", "#2f47c8", "#6f86ff", "#c9d4ff", "#eef1ff"];
 
 /**
- * Horizontal stripes stepping between coal, ember and cream; the light
+ * Horizontal stripes stepping between coal, cobalt and pale blue; the light
  * stripes get slanted, rounded-off ends. Use as a transition between sections.
  */
 export function StripeBand({

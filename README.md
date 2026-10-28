@@ -2,12 +2,13 @@
 
 A home page and base frame for the **6th Annual ADU COE STEM Programming with AI Competition**
 (Advanced Track · theme: *AI for Family* · 29 Oct 2026). The visual language:
-- **One warm palette:** cream background, ember (red-orange) as the only accent, warm charcoal and coal
-  for dark slabs, apricot and cream as soft tints. Light and dark mode (toggle in the header).
+- **One palette:** warm cream and charcoal neutrals with a single cobalt-blue accent ("brand") and a
+  pale-blue soft tint. Light and dark mode (toggle in the header). To swap the accent colour, edit
+  `--color-brand*` / `--color-tint` in `tokens.css` and the canvas palettes in `PixelField` / `StripeBand`.
 - **Rounded shapes:** pill buttons and tags in condensed caps, rounded tiles and cards, and coloured
   sections drawn as rounded slabs inset from the page edges.
 - **Structure and texture:** giant condensed caps, sliced photo hero, pinned stacking cards, stat
-  bentos, animated pixel fields, pill strips, striped bands, perforated photo stamps, `[ MONO ]` labels.
+  bentos, animated pixel fields, pill strips, striped bands, perforated photo stamps, small `[ CAPS ]` labels.
 
 **Stack:** Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS v4 · lucide-react ·
 GSAP + ScrollTrigger + Lenis (home page motion) · `motion` (only on /demo). There is no backend logic,
@@ -49,8 +50,8 @@ Node 20.9+ is required (Node 22 or 24 recommended).
 - Fake text is wrapped in `ph("…")`, which renders a visible **[PLACEHOLDER]** tag. Replace
   `ph("old")` with a plain `"new"` string and the tag disappears.
 - Set `flags.showPlaceholderTags: false` to hide every tag at once, for screenshots.
-- In headlines, `\n` is a line break and `*word*` becomes the accent-coloured word (ember on light and
-  dark sections, white on the ember slab). Headlines render in CAPS automatically, so write them in
+- In headlines, `\n` is a line break and `*word*` becomes the accent-coloured word (cobalt on light and
+  dark sections, ink on the cobalt slab). Headlines render in CAPS automatically, so write them in
   normal case.
 - **Photos:** drop files in `public/photos/`, point `site.media.hero` (the sliced hero band) and
   `site.media.moments` (the stamp collage) at them, and log them in `photo-credits.json` + CREDITS.md.
@@ -63,7 +64,7 @@ Node 20.9+ is required (Node 22 or 24 recommended).
 ### Editing tokens (rebrand in minutes)
 `src/styles/tokens.css` has four blocks:
 1. **Brand palette** (`@theme`): change the hex values. Keep the text/background contrast at AA (4.5:1).
-2. **Tones** (`[data-tone=paper|panel|ember|charcoal|coal]`): which palette colour each section tone uses.
+2. **Tones** (`[data-tone=paper|panel|brand|charcoal|coal]`): which palette colour each section tone uses.
    `paper` sections run full-bleed; every other tone is drawn as a rounded slab inset from the edges.
 3. **Dark theme** (`[data-theme="dark"]`): overrides for the tones. The theme follows the OS until the
    visitor uses the toggle; the choice is saved in `localStorage`. Logic lives in `src/lib/theme.ts`.
@@ -148,7 +149,7 @@ Keys are only read on the server. Never prefix them with `NEXT_PUBLIC_`.
 - [ ] Export all the AI chats into one PDF.
 
 ## Accessibility and performance notes
-- Skip link, landmarks, visible focus rings (apricot on dark), AA colour pairs in both themes, and native
+- Skip link, landmarks, visible focus rings (pale blue on dark), AA colour pairs in both themes, and native
   `<details>` for the FAQ. The theme toggle is a real button with `aria-pressed`.
 - `prefers-reduced-motion` is respected everywhere: CSS globally, `gsap.matchMedia()` for scroll
   effects, no Lenis, hooks in JS components, and `MotionConfig` in /demo.

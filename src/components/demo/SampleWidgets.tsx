@@ -18,16 +18,16 @@ const tasks = [
 
 const statusDot = {
   ok: "bg-charcoal",
-  watch: "bg-ember",
-  info: "bg-apricot",
+  watch: "bg-brand",
+  info: "bg-tint",
 } as const;
 
 const statusLabel = { ok: "On track", watch: "Needs attention", info: "Upcoming" } as const;
 
 const split = [
   { label: "Parents", value: 46, color: "var(--t-fg)" },
-  { label: "Teens", value: 28, color: "var(--color-ember)" },
-  { label: "Grandparents", value: 16, color: "var(--color-apricot)" },
+  { label: "Teens", value: 28, color: "var(--color-brand)" },
+  { label: "Grandparents", value: 16, color: "var(--color-tint)" },
   { label: "Kids", value: 10, color: "var(--color-rule-strong)" },
 ];
 
@@ -38,30 +38,30 @@ export function SampleWidgets() {
         <h2 id="widgets-heading" className="font-display text-title">
           This week
         </h2>
-        <p className="label-mono text-subtle">Sample widgets: copy these patterns</p>
+        <p className="label-caps text-subtle">Sample widgets: copy these patterns</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
         {/* 1. Number card */}
         <Card className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <p className="label-mono text-muted">Tasks done</p>
+            <p className="label-caps text-muted">Tasks done</p>
             <Icon name="list-checks" className="size-4 text-muted" />
           </div>
           <p className="font-display text-display-xl tabular-nums">
             18<span className="text-muted">/24</span>
           </p>
           <div className="h-1.5 overflow-hidden rounded-pill bg-soft" role="img" aria-label="75 percent complete">
-            <div className="h-full w-3/4 rounded-pill bg-ember" />
+            <div className="h-full w-3/4 rounded-pill bg-brand" />
           </div>
           <p className="text-sm text-muted">
-            <span className="font-medium text-ember-ink">+12%</span> vs last week
+            <span className="font-medium text-brand-ink">+12%</span> vs last week
           </p>
         </Card>
 
         {/* 2. List with status dots */}
         <Card className="flex flex-col gap-3 sm:row-span-2 2xl:row-span-1">
-          <p className="label-mono text-muted">Up next</p>
+          <p className="label-caps text-muted">Up next</p>
           <ul className="divide-y divide-line">
             {tasks.map((t) => (
               <li key={t.label} className="flex items-start gap-3 py-3 first:pt-1 last:pb-0">
@@ -82,7 +82,7 @@ export function SampleWidgets() {
 
         {/* 3. Donut card */}
         <Card className="flex flex-col gap-4">
-          <p className="label-mono text-muted">Who&apos;s carrying the load</p>
+          <p className="label-caps text-muted">Who&apos;s carrying the load</p>
           <div className="flex items-center gap-5">
             <Donut
               segments={split.map((s) => ({ value: s.value, color: s.color }))}
@@ -90,7 +90,7 @@ export function SampleWidgets() {
               label="Share of tasks: parents 46%, teens 28%, grandparents 16%, kids 10%"
             >
               <span className="font-display text-xl">46%</span>
-              <span className="label-mono text-[0.625rem] text-subtle">Parents</span>
+              <span className="label-caps text-[0.625rem] text-subtle">Parents</span>
             </Donut>
             <ul className="flex flex-col gap-1.5 text-sm">
               {split.map((s) => (
@@ -107,13 +107,13 @@ export function SampleWidgets() {
         {/* 4. Sparkline card */}
         <Card className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <p className="label-mono text-muted">Wellbeing index</p>
-            <span className="rounded-pill bg-apricot px-2 py-0.5 text-xs font-medium text-ink">↑ 6 pts</span>
+            <p className="label-caps text-muted">Wellbeing index</p>
+            <span className="rounded-pill bg-tint px-2 py-0.5 text-xs font-medium text-ink">↑ 6 pts</span>
           </div>
           <p className="font-display text-display-lg tabular-nums">78</p>
           <Sparkline
             series={[52, 55, 54, 58, 61, 60, 64, 67, 66, 71, 74, 78]}
-            className="h-16 text-ember"
+            className="h-16 text-brand"
             label="Wellbeing index rising from 52 to 78 over 12 weeks"
           />
         </Card>

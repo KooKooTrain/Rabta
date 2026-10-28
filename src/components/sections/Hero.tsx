@@ -35,11 +35,11 @@ export function Hero({ id, tone }: SectionProps) {
     >
       <Container className="pt-5 md:pt-7">
         <div
-          className="fade-up label-mono flex items-center justify-between gap-4 text-muted"
+          className="fade-up label-caps flex items-center justify-between gap-4 text-muted"
           style={cssVars({ "--delay": "0ms" })}
         >
           <p className="flex items-center gap-2">
-            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-ember" />
+            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-brand" />
             <T c={c.eyebrow} rich={false} />
           </p>
           <p className="hidden sm:block">[ {site.competition.date} ]</p>
@@ -53,9 +53,9 @@ export function Hero({ id, tone }: SectionProps) {
                 {i === 0 && (
                   <span
                     aria-hidden="true"
-                    className="ms-[0.12em] inline-flex h-[0.62em] w-[1.5em] translate-y-[-0.06em] items-center justify-end rounded-pill border-[0.07em] border-ember p-[0.06em] align-middle"
+                    className="ms-[0.12em] inline-flex h-[0.62em] w-[1.5em] translate-y-[-0.06em] items-center justify-end rounded-pill border-[0.07em] border-brand p-[0.06em] align-middle"
                   >
-                    <span className="block aspect-square h-full rounded-full bg-ember" />
+                    <span className="block aspect-square h-full rounded-full bg-brand" />
                   </span>
                 )}
                 {i === lines.length - 1 && <PhTag c={c.headline} />}
@@ -75,8 +75,8 @@ export function Hero({ id, tone }: SectionProps) {
           className="pop-in absolute end-[var(--gutter)] -bottom-6 z-10 hidden max-w-[19rem] overflow-hidden rounded-tile border border-line bg-surface text-fg shadow-lift sm:block"
           style={cssVars({ "--delay": "1300ms" })}
         >
-          <p className="label-mono flex items-center gap-2 bg-fg px-4 py-2 text-bg">
-            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-ember" />
+          <p className="label-caps flex items-center gap-2 bg-fg px-4 py-2 text-bg">
+            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-brand" />
             <T c={c.insight.label} rich={false} tag={false} />
           </p>
           <div className="p-4">
@@ -95,7 +95,7 @@ export function Hero({ id, tone }: SectionProps) {
         className="fade-up mt-10 grid grid-cols-1 items-center gap-6 border-t border-dashed border-line py-6 md:mt-12 md:grid-cols-[1fr_auto_1fr]"
         style={cssVars({ "--delay": "900ms" })}
       >
-        <p className="max-w-md font-mono text-[0.8125rem] leading-relaxed text-muted">
+        <p className="max-w-md text-[0.9375rem] leading-relaxed text-muted">
           <T c={c.lead} />
         </p>
         {ctas.length > 0 && (
@@ -105,7 +105,7 @@ export function Hero({ id, tone }: SectionProps) {
             ))}
           </div>
         )}
-        <div className="label-mono flex items-center justify-between gap-4 text-muted md:justify-end">
+        <div className="label-caps flex items-center justify-between gap-4 text-muted md:justify-end">
           <p className="flex items-center gap-2 md:hidden xl:flex">
             <LiveClock timeZone={c.bottomBar.timeZone} className="text-fg" />
             {c.bottomBar.clockLabel}

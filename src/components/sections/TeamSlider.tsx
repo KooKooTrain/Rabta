@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
- * Slider: horizontal snap row with an ember progress bar and round prev/next
+ * Slider: horizontal snap row with an brand progress bar and round prev/next
  * buttons below xl. At xl+ the cards sit in one row and the controls hide.
  */
 export function TeamSlider({ children, count }: { children: ReactNode; count: number }) {
@@ -39,7 +39,9 @@ export function TeamSlider({ children, count }: { children: ReactNode; count: nu
     <div>
       <ul
         ref={ref}
-        data-lenis-prevent-wheel=""
+        // Only sideways swipes scroll the row natively; vertical wheel stays
+        // with Lenis (prevent-wheel made the page jump and stick over it)
+        data-lenis-prevent-horizontal=""
         className="-mx-[var(--gutter)] flex snap-x snap-mandatory scroll-px-[var(--gutter)] gap-4 overflow-x-auto px-[var(--gutter)] pt-2 pb-4 [scrollbar-width:none] xl:mx-0 xl:grid xl:gap-6 xl:overflow-visible xl:px-0"
         style={{ gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}
       >

@@ -13,7 +13,7 @@ import { Container } from "./Container";
 const linkCls =
   "underline-offset-4 decoration-line-strong transition-colors duration-[var(--dur-base)] ease-hover hover:text-fg hover:underline";
 
-/** Rounded coal footer: ember + cream action tiles, [ mono ] link columns, pixel block, giant wordmark. */
+/** Rounded coal footer: brand + tint action tiles, [ caps ] link columns, pixel block, giant wordmark. */
 export function Footer() {
   const f = site.footer;
   const comp = site.competition;
@@ -32,8 +32,8 @@ export function Footer() {
               key={a.href}
               href={a.href}
               className={cn(
-                "group flex items-center justify-between gap-4 rounded-[calc(var(--radius-slab)-0.5rem)] px-6 py-6 text-ink transition-colors duration-[var(--dur-base)] ease-hover hover:bg-apricot md:px-8 md:py-8",
-                i === 0 ? "bg-ember" : "bg-cream",
+                "group flex items-center justify-between gap-4 rounded-[calc(var(--radius-slab)-0.5rem)] px-6 py-6 transition-colors duration-[var(--dur-base)] ease-hover hover:bg-paper hover:text-ink md:px-8 md:py-8",
+                i === 0 ? "bg-brand text-white" : "bg-tint text-ink",
               )}
             >
               <span className="font-display text-[clamp(1.5rem,1.1rem+1.6vw,2.5rem)] leading-none">
@@ -63,8 +63,8 @@ export function Footer() {
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8">
             {columns.map((col) => (
               <div key={col.title}>
-                <p className="label-mono text-subtle">[ {col.title} ]</p>
-                <ul className="label-mono mt-5 space-y-3 text-muted">
+                <p className="label-caps text-subtle">[ {col.title} ]</p>
+                <ul className="label-caps mt-5 space-y-3 text-muted">
                   {col.links.map((l) => (
                     <li key={l.href}>
                       <Link href={l.href} className={linkCls}>
@@ -76,8 +76,8 @@ export function Footer() {
               </div>
             ))}
             <div className="col-span-2 sm:col-span-1">
-              <p className="label-mono text-subtle">[ Competition ]</p>
-              <dl className="label-mono mt-5 space-y-3 text-muted">
+              <p className="label-caps text-subtle">[ Competition ]</p>
+              <dl className="label-caps mt-5 space-y-3 text-muted">
                 <div>
                   <dt className="sr-only">Event</dt>
                   <dd>{comp.name}</dd>
@@ -99,7 +99,7 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="label-mono mt-16 flex flex-col gap-4 border-t border-line py-6 text-subtle md:flex-row md:items-center md:justify-between">
+        <div className="label-caps mt-16 flex flex-col gap-4 border-t border-line py-6 text-subtle md:flex-row md:items-center md:justify-between">
           <p>
             [ © 2026 <T c={site.brand.teamName} rich={false} /> ]
           </p>

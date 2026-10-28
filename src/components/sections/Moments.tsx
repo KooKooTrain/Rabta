@@ -24,7 +24,7 @@ export function Moments({ id, tone, index }: SectionProps) {
         <Container>
           <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
             <SectionHeading eyebrow={c.eyebrow} heading={c.heading} index={index} size="2xl" className="lg:col-span-8" />
-            <p data-reveal="" className="max-w-sm font-mono text-[0.8125rem] leading-relaxed text-muted lg:col-span-4 lg:justify-self-end">
+            <p data-reveal="" className="max-w-sm text-[0.9375rem] leading-relaxed text-muted lg:col-span-4 lg:justify-self-end">
               <T c={c.intro} />
             </p>
           </div>
@@ -47,7 +47,7 @@ export function Moments({ id, tone, index }: SectionProps) {
                 key={i}
                 className={cn(
                   "font-display rounded-pill px-5 py-2 text-[clamp(1.125rem,1rem+0.8vw,1.75rem)] leading-none",
-                  i % 2 === 0 ? "bg-ember text-ink" : "bg-cream text-ink",
+                  i % 2 === 0 ? "bg-brand text-white" : "bg-tint text-ink",
                 )}
               >
                 <T c={pill} rich={false} tag={false} />

@@ -30,14 +30,14 @@ export default function CreditsPage() {
         <ul className="mt-12 grid gap-3 md:grid-cols-2">
           {credits.map((c) => (
             <li key={c.file} className="flex flex-col gap-2 rounded-tile border border-line bg-surface p-6">
-              <p className="label-mono text-subtle">{c.file}</p>
+              <p className="label-caps text-subtle">{c.file}</p>
               <p className="text-sm">{c.alt}</p>
-              <p className="label-mono text-muted">
+              <p className="label-caps text-muted">
                 {c.author} · {c.licence}
               </p>
               <a
                 href={c.source_url}
-                className="label-mono break-all text-accent-text underline-offset-4 hover:underline"
+                className="label-caps break-all text-accent-text underline-offset-4 hover:underline"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -48,7 +48,7 @@ export default function CreditsPage() {
         </ul>
 
         <h2 className="font-display text-display-lg mt-16">Fonts &amp; icons</h2>
-        <ul className="label-mono mt-6 space-y-3 text-muted">
+        <ul className="label-caps mt-6 space-y-3 text-muted">
           {FONTS.map(([name, by, licence]) => (
             <li key={name}>
               {name} · {by} · {licence}

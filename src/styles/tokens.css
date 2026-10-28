@@ -4,7 +4,9 @@
    Fonts are chosen in src/config/fonts.ts (next/font must run in JS).
    ========================================================================== */
 
-/* 1. BRAND PALETTE: one warm family (ember + charcoal + cream) ------------ */
+/* 1. BRAND PALETTE: warm neutrals (cream + charcoal) + ONE accent ("brand").
+      To change the accent, edit the --color-brand* and --color-tint values
+      here and the canvas palettes in PixelField / StripeBand. ------------ */
 @theme {
   /* Light neutrals */
   --color-paper: #f5f1ea; /* cream: page background */
@@ -16,14 +18,15 @@
   --color-fade: #c2b8ae; /* scrubbed / faded display words (large type only) */
   --color-rule: #ddd4c7; /* decorative hairlines only */
   --color-rule-strong: #8e847b; /* control borders (3:1) */
+  --color-cream: #fbf7f0;
 
-  /* Ember: the one accent, in both themes */
-  --color-ember: #ff5a1f; /* slabs, buttons (ink label 5.7:1), stat tiles, + marks */
-  --color-ember-ink: #b23a0c; /* small ember text on paper/panel (AA) */
-  --color-ember-deep: #2b0e04; /* small text on the ember slab */
-  --color-ember-soft: #ff7f4d; /* ember text on charcoal/coal */
-  --color-apricot: #ffb38a; /* soft accent: pills, progress, second chart colour */
-  --color-cream: #ffe6d4; /* lightest warm tint */
+  /* Brand accent: cobalt, in both themes */
+  --color-brand: #3a5bff; /* slabs, buttons (white label 5.1:1), stat tiles, + marks */
+  --color-brand-ink: #2741d6; /* small brand text on paper/panel (AA) */
+  --color-brand-deep: #0f1a5c; /* deepest brand shade (charts, canvases) */
+  --color-brand-soft: #8fa3ff; /* brand text on charcoal/coal */
+  --color-brand-hover: #2741d6;
+  --color-tint: #c9d4ff; /* soft accent: pills, progress, second chart colour */
 
   /* Darks */
   --color-charcoal: #221c19; /* dark slabs */
@@ -32,16 +35,15 @@
 
   /* Legacy aliases (older demo components keep working) */
   --color-sand: var(--color-panel);
-  --color-ember-hover: #d9440f;
-  --color-sage: #f1e6d8;
-  --color-sky: #e9e3da;
-  --color-blush: #ffd9c7;
+  --color-sage: #e6eaf5;
+  --color-sky: #dfe5ff;
+  --color-blush: #ffdcd6;
   --color-butter: #fbecd6;
 
   /* Type: families come from next/font CSS variables (src/config/fonts.ts) */
   --font-display: var(--font-display-src), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-sans-src), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono-src), ui-monospace, SFMono-Regular, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* code snippets only */
 
   /* Type scale: fluid between ~390px and ~1440px. Display is condensed caps. */
   --text-display-hero: clamp(3.4rem, 0.4rem + 12.6vw, 13.5rem);
@@ -66,7 +68,7 @@
   --text-stat--letter-spacing: -0.05em;
   --text-label: 0.75rem;
   --text-label--line-height: 1.25;
-  --text-label--letter-spacing: 0.06em;
+  --text-label--letter-spacing: 0.12em;
 
   /* Layout */
   --container-site: 90rem;
@@ -129,15 +131,15 @@
   --t-fade: var(--color-fade);
   --t-line: var(--color-rule);
   --t-line-strong: var(--color-rule-strong);
-  --t-accent: var(--color-ember);
-  --t-accent-fg: var(--color-ink);
-  --t-accent-text: var(--color-ember-ink);
-  --t-emph: var(--color-ember);
+  --t-accent: var(--color-brand);
+  --t-accent-fg: #ffffff;
+  --t-accent-text: var(--color-brand-ink);
+  --t-emph: var(--color-brand);
   --t-soft: var(--color-panel); /* second pill / chip fill */
   --t-soft-fg: var(--color-ink);
   --t-wipe: var(--color-ink);
   --t-wipe-fg: var(--color-paper);
-  --t-mark: var(--color-ember);
+  --t-mark: var(--color-brand);
   --t-focus: var(--color-ink);
   --t-edge: transparent; /* hairline around inset slabs (dark theme) */
 }
@@ -145,25 +147,25 @@
   --t-bg: var(--color-panel);
   --t-soft: var(--color-paper);
 }
-[data-tone="ember"] {
-  --t-bg: var(--color-ember);
-  --t-surface: rgb(28 23 20 / 0.08);
-  --t-fg: var(--color-ink);
-  --t-muted: var(--color-ember-deep);
-  --t-subtle: var(--color-ember-deep);
-  --t-fade: rgb(255 230 212 / 0.55);
-  --t-line: rgb(28 23 20 / 0.22);
-  --t-line-strong: rgb(28 23 20 / 0.6);
+[data-tone="brand"] {
+  --t-bg: var(--color-brand);
+  --t-surface: rgb(255 255 255 / 0.1);
+  --t-fg: #ffffff; /* 5.1:1 */
+  --t-muted: #ffffff;
+  --t-subtle: #ffffff;
+  --t-fade: rgb(255 255 255 / 0.4);
+  --t-line: rgb(255 255 255 / 0.24);
+  --t-line-strong: rgb(255 255 255 / 0.65);
   --t-accent: var(--color-ink);
   --t-accent-fg: var(--color-paper);
-  --t-accent-text: var(--color-ink);
-  --t-emph: #ffffff; /* large display only (3.1:1) */
-  --t-soft: var(--color-cream);
+  --t-accent-text: #ffffff;
+  --t-emph: var(--color-ink); /* large display only (3.5:1) */
+  --t-soft: var(--color-tint);
   --t-soft-fg: var(--color-ink);
   --t-wipe: var(--color-paper);
   --t-wipe-fg: var(--color-ink);
-  --t-mark: var(--color-ink);
-  --t-focus: var(--color-ink);
+  --t-mark: #ffffff;
+  --t-focus: #ffffff;
   --t-edge: transparent;
 }
 [data-tone="charcoal"],
@@ -176,16 +178,16 @@
   --t-fade: rgb(245 241 234 / 0.26);
   --t-line: rgb(245 241 234 / 0.14);
   --t-line-strong: rgb(245 241 234 / 0.45);
-  --t-accent: var(--color-ember);
-  --t-accent-fg: var(--color-ink);
-  --t-accent-text: var(--color-ember-soft);
-  --t-emph: var(--color-ember-soft);
-  --t-soft: var(--color-apricot);
+  --t-accent: var(--color-brand);
+  --t-accent-fg: #ffffff;
+  --t-accent-text: var(--color-brand-soft);
+  --t-emph: var(--color-brand-soft);
+  --t-soft: var(--color-tint);
   --t-soft-fg: var(--color-ink);
   --t-wipe: var(--color-paper);
   --t-wipe-fg: var(--color-ink);
-  --t-mark: var(--color-ember-soft);
-  --t-focus: var(--color-apricot);
+  --t-mark: var(--color-brand-soft);
+  --t-focus: var(--color-tint);
   --t-edge: transparent;
 }
 [data-tone="coal"] {
@@ -194,7 +196,7 @@
 }
 
 /* 3. DARK THEME: <html data-theme="dark"> (set before paint by the root
-      layout). Light tones turn dark; ember stays ember; dark slabs lift a
+      layout). Light tones turn dark; the brand slab stays cobalt; dark slabs lift a
       step and get a hairline so they still read as panels. -------------- */
 :root[data-theme="dark"],
 [data-theme="dark"] [data-tone="paper"],
@@ -207,16 +209,16 @@
   --t-fade: rgb(245 241 234 / 0.24);
   --t-line: rgb(245 241 234 / 0.13);
   --t-line-strong: rgb(245 241 234 / 0.42);
-  --t-accent: var(--color-ember);
-  --t-accent-fg: var(--color-ink);
-  --t-accent-text: var(--color-ember-soft);
-  --t-emph: var(--color-ember-soft);
+  --t-accent: var(--color-brand);
+  --t-accent-fg: #ffffff;
+  --t-accent-text: var(--color-brand-soft);
+  --t-emph: var(--color-brand-soft);
   --t-soft: var(--color-charcoal-2);
   --t-soft-fg: var(--color-paper);
   --t-wipe: var(--color-paper);
   --t-wipe-fg: var(--color-ink);
-  --t-mark: var(--color-ember-soft);
-  --t-focus: var(--color-apricot);
+  --t-mark: var(--color-brand-soft);
+  --t-focus: var(--color-tint);
   --t-edge: transparent;
 }
 [data-theme="dark"] [data-tone="panel"] {

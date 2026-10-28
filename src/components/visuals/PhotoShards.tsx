@@ -8,7 +8,7 @@ const pct = (n: number) => `${n.toFixed(1)}%`;
 
 /**
  * Wastetide-style hero band: photos cut into jagged, slightly rotated slices,
- * greyscale with one ember-red slice. Shards drop in on load (CSS .shard-in).
+ * greyscale with one brand-red slice. Shards drop in on load (CSS .shard-in).
  * Shapes are seeded, so server and client match.
  */
 export function PhotoShards({
@@ -68,7 +68,7 @@ export function PhotoShards({
           }
         >
           <div
-            className={cn("absolute inset-x-0 overflow-hidden", s.red ? "bg-ember" : "bg-ink")}
+            className={cn("absolute inset-x-0 overflow-hidden", s.red ? "bg-brand" : "bg-ink")}
             style={{
               clipPath: `polygon(${s.poly})`,
               height: `${s.height}%`,

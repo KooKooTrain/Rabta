@@ -42,7 +42,7 @@ export function Trust({ id, tone, index }: SectionProps) {
                   <span className="grid size-11 place-items-center rounded-full border border-line-strong text-accent-text">
                     <Icon name={p.icon} className="size-5" />
                   </span>
-                  <span className="label-mono text-subtle">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="label-caps text-subtle">{String(i + 1).padStart(2, "0")}</span>
                 </div>
                 <h3 className="font-display text-title mt-auto pt-8">
                   <T c={p.title} />
@@ -57,15 +57,15 @@ export function Trust({ id, tone, index }: SectionProps) {
 
         <div
           data-reveal=""
-          className="mt-3 grid gap-6 rounded-tile border border-ember-soft/60 p-6 md:grid-cols-[minmax(0,16rem)_1fr] md:items-center md:p-8"
+          className="mt-3 grid gap-6 rounded-tile border border-brand-soft/60 p-6 md:grid-cols-[minmax(0,16rem)_1fr] md:items-center md:p-8"
         >
-          <p className="label-mono text-ember-soft">
+          <p className="label-caps text-brand-soft">
             <T c={c.never.heading} rich={false} />
           </p>
           <ul className="grid gap-3 sm:grid-cols-2">
             {c.never.items.map((item, i) => (
               <li key={i} className="flex items-start gap-3">
-                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-ember-soft text-ink">
+                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-brand-soft text-ink">
                   <X aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
                 </span>
                 <span>

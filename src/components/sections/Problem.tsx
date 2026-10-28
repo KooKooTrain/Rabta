@@ -11,7 +11,7 @@ import type { SectionProps } from "./registry";
 
 /**
  * 1. Pinned manifesto whose words fill from faded to ink (Wastetide).
- * 2. Stat bento: a rounded heading tile, then paper / ember / charcoal stat tiles.
+ * 2. Stat bento: a rounded heading tile, then paper / brand / charcoal stat tiles.
  */
 export function Problem({ id, tone, index }: SectionProps) {
   const c = site.content.problem;
@@ -33,7 +33,7 @@ export function Problem({ id, tone, index }: SectionProps) {
             <h2 data-reveal="" className="font-display text-display-xl">
               <T c={c.heading} />
             </h2>
-            <p data-reveal="" className="max-w-md font-mono text-[0.8125rem] leading-relaxed text-muted md:justify-self-end">
+            <p data-reveal="" className="max-w-md text-[0.9375rem] leading-relaxed text-muted md:justify-self-end">
               <T c={c.statement} />
             </p>
           </div>
@@ -43,7 +43,7 @@ export function Problem({ id, tone, index }: SectionProps) {
               <div
                 key={i}
                 data-reveal=""
-                data-tone={(["panel", "ember", "charcoal"] as const)[i % 3]}
+                data-tone={(["panel", "brand", "charcoal"] as const)[i % 3]}
                 style={{ "--i": i } as React.CSSProperties}
                 className="flex min-h-72 flex-col justify-end rounded-card border border-edge bg-bg p-6 text-fg md:p-8"
               >

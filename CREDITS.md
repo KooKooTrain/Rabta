@@ -26,7 +26,6 @@ Everything else visual (pixel fields, stamps' perforation, stripes, logo mark, c
 | --- | --- | --- |
 | Archivo | Omnibus-Type | SIL Open Font License 1.1 |
 | Instrument Sans | Instrument | SIL Open Font License 1.1 |
-| Geist Mono | Vercel | SIL Open Font License 1.1 |
 
 ## Icons
 - [Lucide](https://lucide.dev): ISC License.

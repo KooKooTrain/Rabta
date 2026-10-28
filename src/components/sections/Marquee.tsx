@@ -18,7 +18,7 @@ function Track({ items, dup = false }: { items: Copy[]; dup?: boolean }) {
           key={i}
           className={cn(
             "font-display rounded-pill px-6 py-2.5 text-[clamp(1.25rem,1rem+1.2vw,2.25rem)] leading-none whitespace-nowrap",
-            i % 2 === 0 ? "bg-ember text-ink" : "bg-cream text-ink",
+            i % 2 === 0 ? "bg-brand text-white" : "bg-tint text-ink",
           )}
         >
           <T c={item} rich={false} tag={false} />
@@ -28,13 +28,13 @@ function Track({ items, dup = false }: { items: Copy[]; dup?: boolean }) {
   );
 }
 
-/** Rounded coal slab: apricot label pill + ember/cream pill marquee, over a pixel-field band. */
+/** Rounded coal slab: tint label pill + brand/tint pill marquee, over a pixel-field band. */
 export function Marquee({ id, tone }: SectionProps) {
   const c = site.content.marquee;
   return (
     <Section id={id} tone={tone} padded={false} guides={false} className="overflow-x-clip">
       <div className="flex flex-col md:flex-row md:items-stretch">
-        <p className="label-mono m-2 flex shrink-0 items-center justify-center gap-2 rounded-[calc(var(--radius-slab)-0.5rem)] bg-apricot px-6 py-4 whitespace-nowrap text-ink md:w-64 md:py-0">
+        <p className="label-caps m-2 flex shrink-0 items-center justify-center gap-2 rounded-[calc(var(--radius-slab)-0.5rem)] bg-tint px-6 py-4 whitespace-nowrap text-ink md:w-64 md:py-0">
           <span aria-hidden="true">[</span>
           <T c={c.label} rich={false} />
           <span aria-hidden="true">]</span>

@@ -20,7 +20,7 @@ export default function NotFound() {
             <br />
             <span className="emph">empty.</span>
           </h1>
-          <p className="mt-6 max-w-md font-mono text-[0.8125rem] leading-relaxed text-muted">
+          <p className="mt-6 max-w-md text-[0.9375rem] leading-relaxed text-muted">
             The page you were looking for doesn&apos;t exist or has moved.
           </p>
           <div className="mt-10 flex flex-wrap gap-2">
@@ -28,7 +28,7 @@ export default function NotFound() {
             <Button link={{ label: "Open the demo", href: "/demo" }} variant="secondary" size="lg" />
           </div>
         </Container>
-        <PixelField palette="ember" direction="up" className="mx-[var(--inset)] mb-[var(--inset)] h-24 rounded-slab md:h-32" />
+        <PixelField palette="brand" direction="up" className="mx-[var(--inset)] mb-[var(--inset)] h-24 rounded-slab md:h-32" />
       </main>
       <Footer />
     </>

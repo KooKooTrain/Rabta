@@ -10,9 +10,9 @@ export function EmptyState() {
       aria-labelledby="empty-heading"
       className="flex flex-col items-start gap-6 rounded-card border border-line bg-surface p-6 sm:flex-row sm:items-center sm:p-8"
     >
-      <PixelField palette="ember" direction="radial" className="aspect-[3/2] w-36 shrink-0 rounded-tile sm:w-44" />
+      <PixelField palette="brand" direction="radial" className="aspect-[3/2] w-36 shrink-0 rounded-tile sm:w-44" />
       <div className="flex min-w-0 flex-col gap-3">
-        <p className="label-mono text-accent-text">
+        <p className="label-caps text-accent-text">
           <T c={emptyState.eyebrow} rich={false} />
         </p>
         <h2 id="empty-heading" className="font-display text-display-lg">
@@ -21,7 +21,7 @@ export function EmptyState() {
         <p className="max-w-lg text-muted">
           <T c={emptyState.body} />
         </p>
-        <code className="label-mono w-fit rounded-md bg-soft px-2 py-1 normal-case tracking-normal text-soft-fg">
+        <code className="label-caps w-fit rounded-md bg-soft px-2 py-1 normal-case tracking-normal text-soft-fg">
           src/app/demo/page.tsx
         </code>
       </div>

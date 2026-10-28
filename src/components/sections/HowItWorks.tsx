@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 import { HowStack } from "./HowStack";
 import type { SectionProps } from "./registry";
 
-/** Card colours in order: 01 ember, 02 charcoal, 03 panel. */
-const CARD_TONES: Tone[] = ["ember", "charcoal", "panel"];
+/** Card colours in order: 01 brand, 02 charcoal, 03 panel. */
+const CARD_TONES: Tone[] = ["brand", "charcoal", "panel"];
 
 export function HowItWorks({ id, tone, index }: SectionProps) {
   const c = site.content.how;
@@ -32,7 +32,7 @@ export function HowItWorks({ id, tone, index }: SectionProps) {
               <div className="flex flex-col justify-between gap-8">
                 <div className="flex items-start justify-between gap-4">
                   <p className="font-display text-display-lg">{String(i + 1).padStart(2, "0")}</p>
-                  <p className="label-mono text-muted">
+                  <p className="label-caps text-muted">
                     [ {String(i + 1).padStart(2, "0")} / {total} ]
                   </p>
                 </div>
@@ -43,7 +43,7 @@ export function HowItWorks({ id, tone, index }: SectionProps) {
                   <p className="font-display text-title mt-4">
                     <T c={step.title} />
                   </p>
-                  <p className="mt-3 max-w-md font-mono text-[0.8125rem] leading-relaxed text-muted">
+                  <p className="mt-3 max-w-md text-[0.9375rem] leading-relaxed text-muted">
                     <T c={step.body} />
                   </p>
                 </div>

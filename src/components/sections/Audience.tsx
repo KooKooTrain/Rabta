@@ -20,7 +20,7 @@ export function Audience({ id, tone, index }: SectionProps) {
             <T c={c.heading} />
           </h2>
         </div>
-        <p data-reveal="" className="max-w-sm self-end font-mono text-[0.8125rem] leading-relaxed text-muted">
+        <p data-reveal="" className="max-w-sm self-end text-[0.9375rem] leading-relaxed text-muted">
           <T c={c.intro} />
         </p>
       </div>

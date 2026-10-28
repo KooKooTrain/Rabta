@@ -13,7 +13,7 @@ export function Eyebrow({
   className?: string;
 }) {
   return (
-    <p className={cn("label-mono flex flex-wrap items-center gap-x-3 gap-y-1 text-muted", className)}>
+    <p className={cn("label-caps flex flex-wrap items-center gap-x-3 gap-y-1 text-muted", className)}>
       {index !== undefined && (
         <span className="text-accent-text">[ {String(index).padStart(2, "0")} ]</span>
       )}

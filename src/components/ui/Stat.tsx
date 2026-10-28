@@ -35,11 +35,11 @@ export function Stat({
           </span>
         )}
       </p>
-      <p className="label-mono max-w-xs leading-relaxed text-muted">
+      <p className="label-caps max-w-xs leading-relaxed text-muted">
         <T c={stat.label} rich={false} />
       </p>
       {stat.source && (
-        <p className="label-mono text-subtle opacity-80">
+        <p className="label-caps text-subtle opacity-80">
           <T c={stat.source} rich={false} />
         </p>
       )}

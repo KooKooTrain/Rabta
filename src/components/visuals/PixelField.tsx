@@ -13,10 +13,10 @@ import { cn } from "@/lib/utils";
  */
 
 const PALETTES = {
-  // coal → apricot → cream: the default texture on dark sections
-  warm: ["#141110", "#221c19", "#33271f", "#5a3424", "#a14a26", "#ff7f4d", "#ffb38a", "#ffe6d4"],
-  // ink → ember → cream: hotter, for the ember slab and accents
-  ember: ["#1c1714", "#2b0e04", "#5c1f08", "#a8360f", "#e04a16", "#ff5a1f", "#ff9a70", "#ffe6d4"],
+  // coal → cobalt → pale blue: the default texture on dark sections
+  dusk: ["#141110", "#1b1a22", "#1e2340", "#22307a", "#2f47c8", "#3a5bff", "#8fa3ff", "#dfe5ff"],
+  // deep navy → cobalt → white: brighter, for the brand slab and accents
+  brand: ["#0b1033", "#0f1a5c", "#18288f", "#2741d6", "#3a5bff", "#6f86ff", "#c9d4ff", "#ffffff"],
   // warm greys for light sections
   ink: ["#1c1714", "#3a322d", "#574e48", "#8e847b", "#c2b8ae", "#ddd4c7", "#ebe4d9", "#f5f1ea"],
 } as const;
@@ -26,7 +26,7 @@ type Direction = "up" | "down" | "left" | "right" | "radial";
 
 export function PixelField({
   className,
-  palette = "warm",
+  palette = "dusk",
   cell = 22,
   gap = 2,
   direction = "up",

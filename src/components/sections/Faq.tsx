@@ -32,7 +32,7 @@ export function Faq({ id, tone, index }: SectionProps) {
               className="faq-item group rounded-tile border border-line bg-surface transition-colors duration-[var(--dur-base)] ease-hover open:border-line-strong"
             >
               <summary className="grid cursor-pointer list-none grid-cols-[2rem_1fr_auto] items-center gap-4 rounded-tile px-5 py-5 transition-colors duration-[var(--dur-base)] ease-hover hover:bg-fg/[0.04] md:grid-cols-[3.5rem_1fr_auto] md:px-7 md:py-6 [&::-webkit-details-marker]:hidden">
-                <span className="label-mono text-subtle transition-colors group-open:text-accent-text">
+                <span className="label-caps text-subtle transition-colors group-open:text-accent-text">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="font-display text-display-lg">

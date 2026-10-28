@@ -10,11 +10,11 @@ import { plain } from "@/lib/copy";
 import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
 import { cn } from "@/lib/utils";
 
-const SEGMENT_COLORS = ["var(--t-fg)", "var(--color-ember)", "var(--color-rule-strong)", "var(--color-apricot)"];
+const SEGMENT_COLORS = ["var(--t-fg)", "var(--color-brand)", "var(--color-rule-strong)", "var(--color-tint)"];
 const INTERVAL = 3400;
 
 /**
- * Split: a stacked persona list on the ember slab that auto-cycles
+ * Split: a stacked persona list on the brand slab that auto-cycles
  * (pauses on hover/focus, off-screen, and for reduced motion), its pills, and
  * a donut card on a rounded panel that swaps with the active persona.
  */
@@ -52,7 +52,7 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      {/* Ember slab: persona list + pills */}
+      {/* Brand slab: persona list + pills */}
       <div className="grid gap-8 px-[var(--gutter)] pt-4 pb-12 md:grid-cols-[1fr_auto] md:items-end lg:pb-16">
         <ul className="flex flex-col">
           {items.map((it, i) => (
@@ -75,7 +75,7 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
         <ul key={active} className="flex flex-wrap gap-2 md:flex-col md:items-end">
           {item.tags.map((tag, i) => (
             <li key={i} className="fade-up" style={{ "--delay": `${i * 80}ms` } as React.CSSProperties}>
-              <Pill className="font-display border-ink bg-transparent px-4 py-1.5 text-base leading-none text-ink">
+              <Pill className="font-display border-fg bg-transparent px-4 py-1.5 text-base leading-none text-fg">
                 <T c={tag} rich={false} tag={false} />
               </Pill>
             </li>
@@ -101,7 +101,7 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
                 sizes="(min-width: 1024px) 24rem, 90vw"
                 className="object-cover grayscale"
               />
-              <p className="label-mono absolute start-3 bottom-3 rounded-pill bg-ember px-3 py-1 text-ink">
+              <p className="label-caps absolute start-3 bottom-3 rounded-pill bg-brand px-3 py-1 text-white">
                 <T c={item.name} rich={false} tag={false} />
               </p>
             </div>
@@ -115,7 +115,7 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
                   <T c={item.chart.label} rich={false} tag={false} />
                 </span>
               </p>
-              <Pill className="label-mono px-2.5 py-0.5">Scan</Pill>
+              <Pill className="label-caps px-2.5 py-0.5">Scan</Pill>
             </div>
             <div className="mt-5 flex items-center gap-5">
               <Donut
@@ -133,11 +133,11 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
                 <span className="font-display text-[1.75rem] leading-none tabular-nums">
                   {Math.round((lead.value / total) * 100)}%
                 </span>
-                <span className="label-mono mt-1 text-[0.625rem] text-muted">
+                <span className="label-caps mt-1 text-[0.625rem] text-muted">
                   <T c={lead.label} rich={false} tag={false} />
                 </span>
               </Donut>
-              <ul aria-hidden="true" className="label-mono space-y-2 text-muted">
+              <ul aria-hidden="true" className="label-caps space-y-2 text-muted">
                 {item.chart.segments.map((s, i) => (
                   <li key={i} className="flex items-center gap-2">
                     <span className="size-2.5 rounded-full" style={{ background: SEGMENT_COLORS[i % SEGMENT_COLORS.length] }} />

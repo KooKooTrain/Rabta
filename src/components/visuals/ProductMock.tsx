@@ -7,7 +7,7 @@ import { Sparkline } from "./Sparkline";
 
 const statusDot: Record<NonNullable<MockRow["status"]>, string> = {
   ok: "bg-fg",
-  watch: "bg-ember",
+  watch: "bg-brand",
   info: "bg-rule-strong",
 };
 const statusText: Record<NonNullable<MockRow["status"]>, string> = {
@@ -45,15 +45,15 @@ export function ProductMock({
       {/* Window chrome */}
       <div className="flex items-center gap-3 bg-fg px-4 py-2.5 text-bg">
         <div className="flex shrink-0 gap-1.5" aria-hidden="true">
-          <span className="size-2.5 rounded-full bg-ember" />
+          <span className="size-2.5 rounded-full bg-brand" />
           <span className="size-2.5 rounded-full bg-rule-strong" />
           <span className="size-2.5 rounded-full bg-bg" />
         </div>
-        <p className="label-mono truncate">
+        <p className="label-caps truncate">
           <T c={title} rich={false} tag={false} />
         </p>
         {subtitle && !compact && (
-          <p className="label-mono ms-auto hidden truncate opacity-70 sm:block">
+          <p className="label-caps ms-auto hidden truncate opacity-70 sm:block">
             <T c={subtitle} rich={false} tag={false} />
           </p>
         )}
@@ -61,12 +61,12 @@ export function ProductMock({
 
       <div className={cn("grid", compact ? "gap-4 p-4" : "gap-5 p-6 md:p-7")}>
         <div className="flex items-center justify-between gap-3">
-          <span className="label-mono inline-flex items-center gap-2 rounded-pill bg-ember px-3 py-1 text-ink">
-            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-ink" />
+          <span className="label-caps inline-flex items-center gap-2 rounded-pill bg-brand px-3 py-1 text-white">
+            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-white" />
             <T c={state.status} rich={false} tag={false} />
           </span>
-          <span className="label-mono flex items-center gap-1.5 text-subtle">
-            <Glyph name="spark" className="size-3.5" color="var(--color-ember)" />
+          <span className="label-caps flex items-center gap-1.5 text-subtle">
+            <Glyph name="spark" className="size-3.5" color="var(--color-brand)" />
             AI
           </span>
         </div>
@@ -82,14 +82,14 @@ export function ProductMock({
         </p>
 
         <div className="rounded-inner bg-soft px-4 pt-3 pb-2 text-soft-fg">
-          <div className="label-mono flex items-center justify-between text-subtle">
+          <div className="label-caps flex items-center justify-between text-subtle">
             <span>Trend</span>
             <span className="flex items-center gap-1.5">
-              <span aria-hidden="true" className="size-1.5 rounded-full bg-ember" />
+              <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
               Live
             </span>
           </div>
-          <Sparkline series={state.series} height={compact ? 40 : 56} className={cn("mt-2 text-ember", compact ? "h-10" : "h-14")} />
+          <Sparkline series={state.series} height={compact ? 40 : 56} className={cn("mt-2 text-brand", compact ? "h-10" : "h-14")} />
         </div>
 
         <ul className="divide-y divide-line">

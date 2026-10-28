@@ -79,12 +79,12 @@ export function ChatPanel({
     <MotionConfig reducedMotion="user" transition={{ duration: 0.45, ease: ease.outSoft }}>
       <section className="flex h-full max-h-[min(680px,85dvh)] min-h-[420px] flex-col xl:max-h-none">
         <header className="flex items-center gap-3 border-b border-line px-5 py-4">
-          <span className="grid size-8 place-items-center rounded-full bg-apricot">
+          <span className="grid size-8 place-items-center rounded-full bg-tint">
             <Glyph name="spark" color="var(--color-ink)" className="size-5" />
           </span>
           <div className="min-w-0">
             <h2 className="font-display text-base leading-tight">{assistantName}</h2>
-            <p className="label-mono text-subtle">Explains · suggests · you decide</p>
+            <p className="label-caps text-subtle">Explains · suggests · you decide</p>
           </div>
         </header>
 
@@ -112,7 +112,7 @@ export function ChatPanel({
                 className={cn("flex gap-2.5", m.role === "user" && "justify-end")}
               >
                 {m.role === "assistant" && (
-                  <span aria-hidden="true" className="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-apricot">
+                  <span aria-hidden="true" className="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-tint">
                     <Glyph name="spark" color="var(--color-ink)" className="size-3.5" />
                   </span>
                 )}
@@ -128,7 +128,7 @@ export function ChatPanel({
                   >
                     {m.content}
                   </div>
-                  {m.mode && <p className="label-mono mt-1.5 text-[0.625rem] text-subtle">{m.mode} reply</p>}
+                  {m.mode && <p className="label-caps mt-1.5 text-[0.625rem] text-subtle">{m.mode} reply</p>}
                 </div>
               </motion.div>
             ))}
@@ -141,7 +141,7 @@ export function ChatPanel({
                 exit={{ opacity: 0 }}
                 className="flex items-center gap-2.5"
               >
-                <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-apricot">
+                <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-tint">
                   <Glyph name="spark" color="var(--color-ink)" className="size-3.5" />
                 </span>
                 <span className="inline-flex gap-1 rounded-tile border border-line bg-surface px-4 py-3.5">
@@ -161,7 +161,7 @@ export function ChatPanel({
           </AnimatePresence>
 
           {error && (
-            <div role="alert" className="flex flex-wrap items-center gap-3 rounded-tile border border-ember-ink/40 bg-blush/50 px-4 py-3 text-sm">
+            <div role="alert" className="flex flex-wrap items-center gap-3 rounded-tile border border-brand-ink/40 bg-blush/50 px-4 py-3 text-sm">
               <span className="text-ink">Couldn&apos;t get a reply: {error}</span>
               <button
                 type="button"
@@ -226,7 +226,7 @@ export function ChatPanel({
               <ArrowUp aria-hidden="true" className="size-4" />
             </button>
           </form>
-          <p className="label-mono mt-2 text-[0.625rem] text-subtle">Enter to send · Shift+Enter for a new line</p>
+          <p className="label-caps mt-2 text-[0.625rem] text-subtle">Enter to send · Shift+Enter for a new line</p>
         </div>
       </section>
     </MotionConfig>

@@ -70,14 +70,14 @@ export const site = {
     { id: "marquee", enabled: true, tone: "coal" },
     { id: "problem", enabled: true, tone: "paper", navLabel: "Problem" },
     { id: "how", enabled: true, tone: "paper", navLabel: "How it works" },
-    { id: "audience", enabled: true, tone: "ember" },
+    { id: "audience", enabled: true, tone: "brand" },
     { id: "features", enabled: true, tone: "panel", navLabel: "Features" },
     { id: "moments", enabled: true, tone: "charcoal" },
     { id: "trust", enabled: true, tone: "coal", navLabel: "Trust" },
     { id: "impact", enabled: true, tone: "paper" },
     { id: "team", enabled: true, tone: "charcoal", navLabel: "Team" },
     { id: "faq", enabled: true, tone: "paper", navLabel: "FAQ" },
-    { id: "cta", enabled: true, tone: "ember" },
+    { id: "cta", enabled: true, tone: "brand" },
   ],
 
   content: {

@@ -159,7 +159,7 @@ export function MobileMenu() {
             <div className="container-site flex shrink-0 flex-col gap-4 pt-4 pb-8">
               {isLiveHref(cta.href) && <Button link={cta} size="lg" className="w-full" />}
               <div className="flex items-center justify-between gap-4">
-                <p className="label-mono text-muted">
+                <p className="label-caps text-muted">
                   <T c={site.brand.teamName} rich={false} /> · {site.competition.theme}
                 </p>
                 <ThemeToggle />

@@ -49,9 +49,9 @@ export function Stamp({
           )}
         </div>
         {caption && photo?.caption && (
-          <figcaption className="label-mono mt-2 flex items-center justify-between gap-2 text-ink">
+          <figcaption className="label-caps mt-2 flex items-center justify-between gap-2 text-ink">
             <T c={photo.caption} rich={false} tag={false} />
-            <span aria-hidden="true" className="text-ember-ink">
+            <span aria-hidden="true" className="text-brand-ink">
               ●
             </span>
           </figcaption>
