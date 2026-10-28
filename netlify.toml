@@ -1,0 +1,9 @@
+# Netlify auto-detects Next.js and builds it with its OpenNext-based adapter.
+# No plugin pin is needed and the publish directory is handled by the adapter.
+# Set AI_* env vars in: Site configuration → Environment variables.
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"

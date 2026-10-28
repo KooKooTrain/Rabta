@@ -1,0 +1,164 @@
+/* ==========================================================================
+   DESIGN TOKENS: the ONLY place colours, type, radii, shadows and motion
+   live. Rebrand = edit block 1 (palette) and block 2 (tones).
+   Fonts are chosen in src/config/fonts.ts (next/font must run in JS).
+   ========================================================================== */
+
+/* 1. BRAND PALETTE ------------------------------------------------------- */
+@theme {
+  --color-paper: #f6f1e7;
+  --color-sand: #ede5d6;
+  --color-card: #fffdf8;
+  --color-ink: #1c1915;
+  --color-ink-muted: #5b5249;
+  --color-ink-subtle: #6b6157;
+  --color-rule: #d8ccb8; /* decorative hairlines only */
+  --color-rule-strong: #8c7e6c; /* control borders (3:1) */
+
+  --color-forest: #1f4d3f;
+  --color-night: #13201c;
+  --color-night-2: #1d2e28;
+
+  --color-ember: #d9542b; /* graphics + large display only */
+  --color-ember-ink: #b8431e; /* buttons, small accent text on paper */
+  --color-ember-hover: #9e3a19;
+  --color-ember-soft: #f28a5e; /* accent on dark */
+  --color-saffron: #f4b63f; /* the "signal": AI spark, live dot, focus on dark */
+
+  --color-sage: #cfdcc8;
+  --color-sky: #cfe0e6;
+  --color-blush: #f3d3c3;
+  --color-butter: #f6e3b4;
+
+  /* Type: families come from next/font CSS variables (src/config/fonts.ts) */
+  --font-display: var(--font-display-src), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans-src), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif-src), ui-serif, Georgia, serif;
+  --font-mono: var(--font-mono-src), ui-monospace, SFMono-Regular, monospace;
+
+  /* Type scale: fluid between ~390px and ~1440px */
+  --text-display-2xl: clamp(2.9rem, 1.55rem + 5.6vw, 6.5rem);
+  --text-display-2xl--line-height: 0.92;
+  --text-display-2xl--letter-spacing: -0.035em;
+  --text-display-xl: clamp(2.25rem, 1.4rem + 3.6vw, 4.5rem);
+  --text-display-xl--line-height: 0.98;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-lg: clamp(1.75rem, 1.3rem + 1.9vw, 3rem);
+  --text-display-lg--line-height: 1.05;
+  --text-display-lg--letter-spacing: -0.025em;
+  --text-title: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-title--line-height: 1.2;
+  --text-title--letter-spacing: -0.015em;
+  --text-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --text-lead--line-height: 1.5;
+  --text-stat: clamp(3.5rem, 2rem + 7vw, 8rem);
+  --text-stat--line-height: 0.9;
+  --text-stat--letter-spacing: -0.04em;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.08em;
+
+  /* Layout */
+  --container-site: 80rem;
+
+  /* Radii */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+
+  /* Shadows: hairline first */
+  --shadow-hair: 0 1px 0 rgb(28 25 21 / 0.04), 0 2px 6px -2px rgb(28 25 21 / 0.06);
+  --shadow-lift: 0 24px 48px -16px rgb(31 77 63 / 0.28);
+
+  /* Easings */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-wipe: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-hover: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+:root {
+  /* Spacing rhythm */
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --space-section: clamp(4.5rem, 10vw, 9rem);
+  --header-h: 4.5rem;
+
+  /* Display face width (Bricolage 'wdth' axis: 75–100) */
+  --display-stretch: 84%;
+
+  /* Motion durations */
+  --dur-fast: 160ms;
+  --dur-base: 300ms;
+  --dur-slow: 700ms;
+  --dur-slower: 900ms;
+  --stagger: 70ms;
+  --dur-marquee: 40s;
+}
+
+/* 2. TONES: sections set data-tone; components only use semantic colours -- */
+:root,
+[data-tone="paper"],
+[data-tone="sand"] {
+  --t-bg: var(--color-paper);
+  --t-surface: var(--color-card);
+  --t-fg: var(--color-ink);
+  --t-muted: var(--color-ink-muted);
+  --t-subtle: var(--color-ink-subtle);
+  --t-line: var(--color-rule);
+  --t-line-strong: var(--color-rule-strong);
+  --t-accent: var(--color-ember-ink);
+  --t-accent-hover: var(--color-ember-hover);
+  --t-accent-fg: var(--color-paper);
+  --t-accent-text: var(--color-ember-ink);
+  --t-focus: var(--color-ink);
+}
+[data-tone="sand"] {
+  --t-bg: var(--color-sand);
+  --t-accent-text: var(--color-ember-hover); /* ember-ink is only 4.35:1 on sand */
+}
+[data-tone="forest"] {
+  --t-bg: var(--color-forest);
+  --t-surface: rgb(246 241 231 / 0.07);
+  --t-fg: var(--color-paper);
+  --t-muted: #c3ccc6;
+  --t-subtle: #b9c2bc;
+  --t-line: rgb(246 241 231 / 0.18);
+  --t-line-strong: rgb(246 241 231 / 0.5);
+  --t-accent: var(--color-saffron);
+  --t-accent-hover: #f8ca6c;
+  --t-accent-fg: var(--color-ink);
+  --t-accent-text: var(--color-saffron);
+  --t-focus: var(--color-saffron);
+}
+[data-tone="night"] {
+  --t-bg: var(--color-night);
+  --t-surface: var(--color-night-2);
+  --t-fg: var(--color-paper);
+  --t-muted: #c3ccc6;
+  --t-subtle: #b9c2bc;
+  --t-line: rgb(246 241 231 / 0.14);
+  --t-line-strong: rgb(246 241 231 / 0.45);
+  --t-accent: var(--color-ember-soft);
+  --t-accent-hover: #f5a37f;
+  --t-accent-fg: var(--color-ink);
+  --t-accent-text: var(--color-ember-soft);
+  --t-focus: var(--color-saffron);
+}
+
+/* 3. SEMANTIC UTILITIES: bg-bg, bg-surface, text-fg, text-muted, border-line … */
+@theme inline {
+  --color-bg: var(--t-bg);
+  --color-surface: var(--t-surface);
+  --color-fg: var(--t-fg);
+  --color-muted: var(--t-muted);
+  --color-subtle: var(--t-subtle);
+  --color-line: var(--t-line);
+  --color-line-strong: var(--t-line-strong);
+  --color-accent: var(--t-accent);
+  --color-accent-hover: var(--t-accent-hover);
+  --color-accent-fg: var(--t-accent-fg);
+  --color-accent-text: var(--t-accent-text);
+  --color-focus: var(--t-focus);
+}
