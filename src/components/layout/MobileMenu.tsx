@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { T } from "@/components/ui/Text";
 import { site } from "@/config/site";
 import { isLiveHref, navItems } from "@/lib/nav";
+import { lockScroll } from "@/lib/smooth-scroll";
 
 const SHEET_ID = "mobile-menu";
 
@@ -34,9 +35,7 @@ export function MobileMenu() {
     const sheet = sheetRef.current;
     if (!open || !sheet) return;
 
-    const root = document.documentElement;
-    const prevOverflow = root.style.overflow;
-    root.style.overflow = "hidden";
+    lockScroll(true);
 
     const focusables = () =>
       Array.from(sheet.querySelectorAll<HTMLElement>("a[href], button:not([disabled])"));
@@ -69,7 +68,7 @@ export function MobileMenu() {
     document.addEventListener("keydown", onKey);
     mq.addEventListener("change", onMq);
     return () => {
-      root.style.overflow = prevOverflow;
+      lockScroll(false);
       window.clearTimeout(t);
       document.removeEventListener("keydown", onKey);
       mq.removeEventListener("change", onMq);
@@ -91,7 +90,7 @@ export function MobileMenu() {
         aria-expanded={open}
         aria-controls={SHEET_ID}
         onClick={() => setOpen(true)}
-        className="inline-flex size-11 items-center justify-center rounded-pill border border-line-strong text-fg transition-colors duration-[var(--dur-base)] ease-hover hover:bg-fg/5 lg:hidden"
+        className="inline-flex size-11 items-center justify-center bg-fg text-bg transition-colors duration-[var(--dur-base)] ease-hover hover:bg-signal hover:text-ink lg:hidden"
       >
         <Menu aria-hidden="true" className="size-5" />
         <span className="sr-only">Open menu</span>
@@ -105,7 +104,8 @@ export function MobileMenu() {
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
-            data-tone="forest"
+            data-tone="night"
+            data-lenis-prevent=""
             inert={!open}
             onClick={onSheetClick}
             className="fixed inset-0 z-[60] flex flex-col bg-bg text-fg lg:hidden"
@@ -122,7 +122,7 @@ export function MobileMenu() {
               <button
                 type="button"
                 onClick={closeAndRefocus}
-                className="inline-flex size-11 items-center justify-center rounded-pill border border-line-strong transition-colors duration-[var(--dur-base)] ease-hover hover:bg-fg/10"
+                className="inline-flex size-11 items-center justify-center bg-accent text-accent-fg transition-colors duration-[var(--dur-base)] ease-hover hover:bg-fg"
               >
                 <X aria-hidden="true" className="size-5" />
                 <span className="sr-only">Close menu</span>
@@ -143,7 +143,7 @@ export function MobileMenu() {
                       </span>
                       <span className="block overflow-clip">
                         <span
-                          className="font-display text-display-lg block font-semibold transition-transform duration-700 ease-out-soft group-hover:translate-x-1"
+                          className="font-display block text-[clamp(2.75rem,12vw,4.5rem)] leading-[0.9] tracking-[-0.04em] transition-[transform,color] duration-700 ease-out-soft group-hover:text-accent-text"
                           style={{
                             transform: open ? "none" : "translateY(105%)",
                             transitionDelay: open ? `${220 + i * 60}ms` : "0ms",

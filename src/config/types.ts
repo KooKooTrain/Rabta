@@ -15,14 +15,14 @@ export type SectionId =
   | "how"
   | "features"
   | "audience"
+  | "moments"
   | "trust"
   | "impact"
   | "team"
   | "faq"
   | "cta";
 
-export type Tone = "paper" | "sand" | "forest" | "night";
-export type Tint = "sage" | "sky" | "blush" | "butter";
+export type Tone = "paper" | "panel" | "signal" | "forest" | "night";
 export type GlyphName =
   | "person"
   | "bond"
@@ -32,6 +32,14 @@ export type GlyphName =
   | "kin"
   | "data"
   | "spark";
+
+/** A local photo in /public/photos (credit it in CREDITS.md). */
+export interface Photo {
+  src: string;
+  alt: string;
+  /** Short mono caption, e.g. on stamps. */
+  caption?: Copy;
+}
 
 export interface SectionEntry {
   id: SectionId;
@@ -89,6 +97,8 @@ export interface MarqueeContent {
 }
 
 export interface ProblemContent {
+  /** Giant pinned statement; words scrub from faded to ink on scroll. Keep it short. */
+  manifesto: Copy;
   eyebrow: Copy;
   heading: Copy;
   statement: Copy;
@@ -115,11 +125,26 @@ export interface FeaturesContent {
 
 export interface AudienceContent {
   eyebrow: Copy;
-  headingPrefix: Copy;
-  /** Cycling words in the heading, e.g. parents / grandparents. */
-  words: string[];
+  /** Shown above the cycling persona list on the signal slab. */
+  heading: Copy;
   intro: Copy;
-  items: { name: Copy; need: Copy; tint: Tint; glyph: GlyphName }[];
+  items: {
+    name: Copy;
+    need: Copy;
+    /** Outlined pills next to the list while this persona is active. */
+    tags: Copy[];
+    photo?: Photo;
+    /** Donut card: 2–4 segments, values in any unit (shown as %). */
+    chart: { label: Copy; segments: { label: Copy; value: number }[] };
+  }[];
+}
+
+export interface MomentsContent {
+  eyebrow: Copy;
+  heading: Copy;
+  intro: Copy;
+  /** Stamp collage; photos come from site.media.moments. */
+  pills: Copy[];
 }
 
 export interface TrustContent {
@@ -141,7 +166,7 @@ export interface TeamContent {
   eyebrow: Copy;
   heading: Copy;
   intro: Copy;
-  members: { name: Copy; role: Copy; detail?: Copy }[];
+  members: { name: Copy; role: Copy; detail?: Copy; photo?: Photo }[];
 }
 
 export interface FaqContent {
@@ -165,6 +190,7 @@ export interface SiteContent {
   how: HowContent;
   features: FeaturesContent;
   audience: AudienceContent;
+  moments: MomentsContent;
   trust: TrustContent;
   impact: ImpactContent;
   team: TeamContent;
@@ -182,7 +208,7 @@ export interface SiteConfig {
     teamName: Copy;
     productName: Copy;
     tagline: Copy;
-    /** Any string; changes the Kin Tiles pattern everywhere. */
+    /** Any string; reshuffles the pixel fields and tile patterns everywhere. */
     seed: string;
     logo: LogoConfig;
   };
@@ -193,7 +219,9 @@ export interface SiteConfig {
     /** Dashed blueprint guide lines at the container edges. */
     showBlueprintGrid: boolean;
   };
-  nav: { cta: LinkItem };
+  nav: { cta: LinkItem; secondary?: LinkItem };
+  /** All photos in one place: swap files in /public/photos and edit here. */
+  media: { hero: Photo[]; moments: Photo[] };
   sections: SectionEntry[];
   content: SiteContent;
   demo: {
@@ -208,6 +236,8 @@ export interface SiteConfig {
   };
   footer: {
     blurb: Copy;
+    /** Big lime action squares. */
+    actions: LinkItem[];
     columns: { title: string; links: LinkItem[] }[];
     legal: Copy;
   };

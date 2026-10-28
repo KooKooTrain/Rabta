@@ -8,6 +8,7 @@ import { Hero } from "./Hero";
 import { HowItWorks } from "./HowItWorks";
 import { Impact } from "./Impact";
 import { Marquee } from "./Marquee";
+import { Moments } from "./Moments";
 import { Problem } from "./Problem";
 import { Team } from "./Team";
 import { Trust } from "./Trust";
@@ -27,6 +28,7 @@ export const registry = {
   how: HowItWorks,
   features: Features,
   audience: Audience,
+  moments: Moments,
   trust: Trust,
   impact: Impact,
   team: Team,

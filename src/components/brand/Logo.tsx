@@ -13,15 +13,15 @@ export function Logo({ className, href = "/" }: { className?: string; href?: str
   return (
     <Link
       href={href}
-      className={cn("group inline-flex items-center gap-2.5 rounded-sm", className)}
+      className={cn("group inline-flex items-center gap-2.5", className)}
       aria-label={`${name}: home`}
     >
       {logo.kind === "image" ? (
         <Image src={logo.src} width={logo.width} height={logo.height} alt="" className="h-8 w-auto" />
       ) : (
-        <LogoMark className="transition-transform duration-[var(--dur-slow)] ease-out-soft group-hover:rotate-[-8deg]" />
+        <LogoMark className="transition-transform duration-[var(--dur-slow)] ease-scale group-hover:rotate-90" />
       )}
-      <span className="font-display text-[1.25rem] font-semibold tracking-[-0.02em]">{name}</span>
+      <span className="font-display text-[1.5rem] leading-none tracking-[-0.02em]">{name}</span>
     </Link>
   );
 }

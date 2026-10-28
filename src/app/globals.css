@@ -8,8 +8,9 @@
     scroll-padding-top: calc(var(--header-h) + 1rem);
     background: var(--color-paper);
   }
+  /* Native smooth scroll only when Lenis is not running */
   @media (prefers-reduced-motion: no-preference) {
-    html {
+    html:not(.lenis) {
       scroll-behavior: smooth;
     }
   }
@@ -23,13 +24,12 @@
     text-rendering: optimizeLegibility;
   }
   ::selection {
-    background: var(--color-saffron);
+    background: var(--color-signal);
     color: var(--color-ink);
   }
   :focus-visible {
     outline: 2px solid var(--t-focus);
     outline-offset: 3px;
-    border-radius: 4px;
   }
   h1,
   h2,
@@ -42,11 +42,28 @@
   }
 }
 
+/* Lenis (smooth scroll) required styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
 /* ----------------------------------------------------------- utilities -- */
+/* Condensed uppercase display face */
 @utility font-display {
   font-family: var(--font-display);
   font-stretch: var(--display-stretch);
-  font-optical-sizing: auto;
+  font-weight: var(--display-weight);
+  text-transform: uppercase;
 }
 
 /* Mono [ LABEL ] */
@@ -70,6 +87,25 @@
   padding-block: var(--space-section);
 }
 
+/* Faint square grid (Chande "wall"); inherits the tone's line colour */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--t-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--t-line) 1px, transparent 1px);
+  background-size: var(--grid-size, 96px) var(--grid-size, 96px);
+}
+
+/* Perforated postage-stamp edge. Put the photo inside with padding ≈ 2*--r. */
+@utility stamp {
+  --r: 7px;
+  padding: calc(1.8 * var(--r));
+  background: var(--color-paper);
+  mask:
+    radial-gradient(var(--r), #0000 97%, #000) round calc(-1.5 * var(--r)) calc(-1.5 * var(--r)) /
+      calc(3 * var(--r)) calc(3 * var(--r)),
+    linear-gradient(#000 0 0) no-repeat 50% / calc(100% - 3 * var(--r)) calc(100% - 3 * var(--r));
+}
+
 /* Static grain texture: apply to a positioned surface. */
 @utility grain {
   position: relative;
@@ -80,9 +116,9 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    opacity: 0.32;
+    opacity: 0.28;
     mix-blend-mode: multiply;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.11 0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.05 0 0 0 0 0.04 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     border-radius: inherit;
   }
 }
@@ -92,29 +128,25 @@
   display: inline-block;
   vertical-align: middle;
   margin-inline-start: 0.5em;
-  padding: 0.2em 0.45em 0.15em;
+  padding: 0.25em 0.45em 0.2em;
   font-family: var(--font-mono);
   font-size: 0.625rem;
   font-style: normal;
   font-weight: 500;
+  font-stretch: normal;
   line-height: 1;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--t-accent-text);
   border: 1px dashed currentColor;
-  border-radius: 4px;
   transform: translateY(-0.1em);
 }
 
-/* Serif-italic emphasis word from *word* in copy */
+/* Accent word from *word* in copy */
 @utility emph {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  font-stretch: normal;
-  letter-spacing: -0.01em;
-  color: var(--t-accent-text);
+  font-style: normal;
+  color: var(--t-emph);
 }
 
 /* ------------------------------------------------------------- motion -- */
@@ -123,10 +155,10 @@
   @media (prefers-reduced-motion: no-preference) {
     .js [data-reveal] {
       opacity: 0;
-      transform: translate3d(0, 24px, 0);
+      transform: translate3d(0, 28px, 0);
       transition:
-        opacity var(--dur-slow) var(--ease-out-soft),
-        transform var(--dur-slow) var(--ease-out-soft);
+        opacity var(--dur-slower) var(--ease-scale),
+        transform var(--dur-slower) var(--ease-scale);
       transition-delay: calc(min(var(--i, 0), 6) * var(--stagger));
     }
     .js [data-reveal][data-shown] {
@@ -137,8 +169,8 @@
     /* Hero load: lines rise inside clip masks (opacity stays 1 for LCP) */
     .rise-line > span {
       display: block;
-      animation: rise-line var(--dur-slower) var(--ease-out-soft) both;
-      animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+      animation: rise-line var(--dur-slower) var(--ease-scale) both;
+      animation-delay: calc(var(--i, 0) * 110ms + 80ms);
     }
     .fade-up {
       animation: fade-up var(--dur-slow) var(--ease-out-soft) both;
@@ -148,23 +180,21 @@
       animation: pop-in 600ms var(--ease-out-soft) both;
       animation-delay: var(--delay, 900ms);
     }
-    .tile-in {
-      animation: tile-in 700ms var(--ease-out-soft) both;
-      animation-delay: calc(var(--d, 0) * 40ms + 200ms);
+    /* Hero photo shards drop in, rotated, then settle */
+    .shard-in {
+      animation: shard-in 1100ms var(--ease-scale) both;
+      animation-delay: calc(var(--i, 0) * 80ms + 300ms);
     }
-    /* Kin Tiles glyph swap (KinTilesLive remounts the glyph) */
-    .kin-glyph {
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: tile-in 600ms var(--ease-out-soft) both;
+    .blink {
+      animation: blink 1.6s steps(1, end) infinite;
     }
   }
 
   .rise-line {
     display: block;
     overflow: clip;
-    overflow-clip-margin: 0.12em;
-    padding-bottom: 0.04em;
+    overflow-clip-margin: 0.08em;
+    padding-bottom: 0.02em;
   }
 
   /* Marquee: two identical tracks, -50% loop */
@@ -172,6 +202,9 @@
     display: flex;
     width: max-content;
     animation: marquee var(--dur-marquee) linear infinite;
+  }
+  .marquee-track[data-reverse] {
+    animation-direction: reverse;
   }
   .marquee:hover .marquee-track,
   .marquee:focus-within .marquee-track {
@@ -190,19 +223,6 @@
     }
   }
 
-  /* Statement words fill from muted to ink while scrolling (progressive) */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .scroll-fill .w {
-        color: var(--t-subtle);
-        opacity: 0.45;
-        animation: word-fill linear both;
-        animation-timeline: view();
-        animation-range: entry 60% cover 45%;
-      }
-    }
-  }
-
   /* Live dot */
   .live-dot {
     position: relative;
@@ -217,11 +237,30 @@
       animation: ping 2.4s var(--ease-out-soft) infinite;
     }
   }
+
+  /* Hover fill wipe for tiles: add .wipe-tile, children sit above ::before */
+  .wipe-tile {
+    position: relative;
+    isolation: isolate;
+  }
+  .wipe-tile::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-signal);
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path var(--dur-wipe) var(--ease-wipe);
+  }
+  .wipe-tile:hover::before,
+  .wipe-tile:focus-within::before {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 @keyframes rise-line {
   from {
-    transform: translate3d(0, 105%, 0);
+    transform: translate3d(0, 108%, 0);
   }
   to {
     transform: none;
@@ -247,14 +286,19 @@
     transform: none;
   }
 }
-@keyframes tile-in {
+@keyframes shard-in {
   from {
     opacity: 0;
-    transform: scale(0.86);
+    transform: translate3d(0, -38%, 0) rotate(var(--rot, -6deg));
+    clip-path: inset(0 0 100% 0);
+  }
+  60% {
+    opacity: 1;
   }
   to {
     opacity: 1;
-    transform: none;
+    transform: rotate(var(--rest, 0deg));
+    clip-path: inset(0 0 0 0);
   }
 }
 @keyframes marquee {
@@ -262,10 +306,9 @@
     transform: translate3d(-50%, 0, 0);
   }
 }
-@keyframes word-fill {
-  to {
-    color: var(--t-fg);
-    opacity: 1;
+@keyframes blink {
+  50% {
+    opacity: 0.25;
   }
 }
 @keyframes ping {
@@ -292,7 +335,7 @@
   }
 }
 
-/* fork C: smooth FAQ <details> open/close where supported */
+/* Smooth FAQ <details> open/close where supported */
 @supports (interpolate-size: allow-keywords) {
   @media (prefers-reduced-motion: no-preference) {
     .faq-item {
@@ -303,45 +346,13 @@
       overflow: clip;
       opacity: 0;
       transition:
-        block-size var(--dur-slow) var(--ease-out-soft),
-        opacity var(--dur-slow) var(--ease-out-soft),
+        block-size var(--dur-slow) var(--ease-scale),
+        opacity var(--dur-slow) var(--ease-scale),
         content-visibility var(--dur-slow) allow-discrete;
     }
     .faq-item[open]::details-content {
       block-size: auto;
       opacity: 1;
     }
-  }
-}
-
-/* fork B: header solidifies on scroll; How-it-works step dimming (lg+) */
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .header-frame {
-      animation: header-solid linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 140px;
-    }
-  }
-}
-@keyframes header-solid {
-  from {
-    border-color: transparent;
-    background-color: rgb(246 241 231 / 0);
-    backdrop-filter: blur(0);
-  }
-  to {
-    border-color: var(--t-line);
-    background-color: rgb(246 241 231 / 0.82);
-    backdrop-filter: blur(12px);
-  }
-}
-@media (min-width: 64rem) {
-  [data-how-dim] [data-step] {
-    opacity: 0.35;
-    transition: opacity var(--dur-slow) var(--ease-out-soft);
-  }
-  [data-how-dim] [data-step][data-active] {
-    opacity: 1;
   }
 }

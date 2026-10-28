@@ -6,7 +6,8 @@
  *   2. Reorder / toggle sections in `sections`.
  *   3. Set flags.showPlaceholderTags = false for clean screenshots.
  *
- * Text conventions: "\n" = line break (headlines), *word* = serif-italic emphasis.
+ * Text conventions: "\n" = line break (headlines), *word* = accent-coloured word.
+ * Headlines render in condensed CAPS automatically; write them in normal case.
  */
 import { ph } from "@/lib/copy";
 import type { LogoConfig, SiteConfig } from "./types";
@@ -38,28 +39,52 @@ export const site = {
 
   nav: {
     cta: { label: "Try the demo", href: "/demo" },
+    secondary: { label: "How it works", href: "/#how" },
+  },
+
+  // [PLACEHOLDER] stock photos (see CREDITS.md). Swap files in /public/photos.
+  media: {
+    hero: [
+      { src: "/photos/family-01.jpg", alt: "A family of five sharing a home-cooked meal around a table" },
+      { src: "/photos/family-02.jpg", alt: "A grandmother embraced by her granddaughter" },
+      { src: "/photos/family-03.jpg", alt: "A young woman and a small child laughing together outdoors" },
+      { src: "/photos/family-04.jpg", alt: "Children's and an adult's hands resting together" },
+      { src: "/photos/family-08.jpg", alt: "Children's and an adult's hands cutting dough in a home kitchen" },
+      { src: "/photos/family-07.jpg", alt: "A family of four walking along a woodland trail" },
+    ],
+    moments: [
+      { src: "/photos/family-01.jpg", alt: "A family of five sharing a home-cooked meal around a table", caption: ph("Sunday lunch") },
+      { src: "/photos/family-06.jpg", alt: "A boy carrying his smiling little sister on his back", caption: ph("Siblings") },
+      { src: "/photos/family-02.jpg", alt: "A grandmother embraced by her granddaughter", caption: ph("Grandma's stories") },
+      { src: "/photos/family-09.jpg", alt: "A nurse holding the hand of an elderly man in a wheelchair", caption: ph("Care, shared") },
+      { src: "/photos/family-05.jpg", alt: "A mother cuddling her young daughter beside a planter of flowers", caption: ph("Check-in") },
+      { src: "/photos/family-10.jpg", alt: "A family of five watching something together on a sofa", caption: ph("Movie night") },
+      { src: "/photos/family-03.jpg", alt: "A young woman and a small child laughing together outdoors", caption: ph("Park day") },
+      { src: "/photos/family-08.jpg", alt: "Children's and an adult's hands cutting dough in a home kitchen", caption: ph("Cook together") },
+    ],
   },
 
   // Order here = order on the page. enabled:false hides a section and its nav link.
   sections: [
     { id: "hero", enabled: true, tone: "paper" },
-    { id: "marquee", enabled: true, tone: "forest" },
+    { id: "marquee", enabled: true, tone: "night" },
     { id: "problem", enabled: true, tone: "paper", navLabel: "Problem" },
-    { id: "how", enabled: true, tone: "sand", navLabel: "How it works" },
-    { id: "features", enabled: true, tone: "paper", navLabel: "Features" },
-    { id: "audience", enabled: true, tone: "sand" },
+    { id: "how", enabled: true, tone: "paper", navLabel: "How it works" },
+    { id: "audience", enabled: true, tone: "signal" },
+    { id: "features", enabled: true, tone: "panel", navLabel: "Features" },
+    { id: "moments", enabled: true, tone: "night" },
     { id: "trust", enabled: true, tone: "night", navLabel: "Trust" },
     { id: "impact", enabled: true, tone: "paper" },
-    { id: "team", enabled: true, tone: "paper", navLabel: "Team" },
-    { id: "faq", enabled: true, tone: "sand", navLabel: "FAQ" },
-    { id: "cta", enabled: true, tone: "forest" },
+    { id: "team", enabled: true, tone: "forest", navLabel: "Team" },
+    { id: "faq", enabled: true, tone: "paper", navLabel: "FAQ" },
+    { id: "cta", enabled: true, tone: "signal" },
   ],
 
   content: {
     // [PLACEHOLDER] all hero copy
     hero: {
       eyebrow: ph("AI for Family · Working prototype"),
-      headline: ph("Everyday care\nfor the whole\n*family*"),
+      headline: ph("Family life,\n*shared.*"),
       lead: ph(
         "An AI companion that notices what your family needs, explains it in plain language, and helps everyone act together, without the guesswork.",
       ),
@@ -80,7 +105,7 @@ export const site = {
 
     // [PLACEHOLDER]
     marquee: {
-      label: ph("Designed around real family moments"),
+      label: ph("Designed around"),
       items: [
         ph("Shared routines"),
         ph("Health & wellbeing"),
@@ -95,8 +120,11 @@ export const site = {
 
     // [PLACEHOLDER] replace with the real problem + cited statistics
     problem: {
+      manifesto: ph(
+        "Families don't need another app. They need *one calm place* that sees the whole week.",
+      ),
       eyebrow: ph("The problem"),
-      heading: ph("Families carry an *invisible* load"),
+      heading: ph("The *invisible*\nload"),
       statement: ph(
         "Every household runs on hundreds of small decisions: who needs what, when, and why. Most of that work is unseen, unshared, and lands on one person. The result is stress, missed moments, and problems noticed too late.",
       ),
@@ -126,7 +154,7 @@ export const site = {
     // [PLACEHOLDER] keep three plain verbs; rewrite around the real feature
     how: {
       eyebrow: ph("How it works"),
-      heading: ph("Notice. Understand. *Support.*"),
+      heading: ph("Notice.\nUnderstand.\n*Support.*"),
       intro: ph(
         "Three simple steps turn scattered family signals into clear, shared next steps.",
       ),
@@ -190,7 +218,7 @@ export const site = {
     // [PLACEHOLDER]
     features: {
       eyebrow: ph("Features"),
-      heading: ph("Thoughtful by *design*"),
+      heading: ph("Thoughtful\nby *design*"),
       intro: ph("Everything a family needs, nothing it doesn't."),
       highlight: {
         icon: "sparkles",
@@ -213,21 +241,80 @@ export const site = {
     // [PLACEHOLDER]
     audience: {
       eyebrow: ph("Who it's for"),
-      headingPrefix: ph("Built for"),
-      words: ["parents", "grandparents", "teens", "caregivers"],
+      heading: ph("How it helps\nevery member"),
       intro: ph("Every role in the family gets a view that fits their needs."),
       items: [
-        { name: ph("Parents"), need: ph("Less mental load, fewer dropped balls."), tint: "sage", glyph: "kin" },
-        { name: ph("Grandparents"), need: ph("Stay close and supported, simply."), tint: "blush", glyph: "embrace" },
-        { name: ph("Teens"), need: ph("Independence with a safety net."), tint: "sky", glyph: "person" },
-        { name: ph("Caregivers"), need: ph("Clear handovers and shared context."), tint: "butter", glyph: "home" },
+        {
+          name: ph("Parents"),
+          need: ph("Less mental load, fewer dropped balls."),
+          tags: [ph("Shared calendar"), ph("Auto-reminders"), ph("Weekly pulse")],
+          photo: { src: "/photos/family-03.jpg", alt: "A young woman and a small child laughing together outdoors" },
+          chart: {
+            label: ph("Where time goes"),
+            segments: [
+              { label: ph("Planning"), value: 42 },
+              { label: ph("Reminders"), value: 33 },
+              { label: ph("Follow-ups"), value: 25 },
+            ],
+          },
+        },
+        {
+          name: ph("Grandparents"),
+          need: ph("Stay close and supported, simply."),
+          tags: [ph("Large text"), ph("Voice mode"), ph("Gentle check-ins")],
+          photo: { src: "/photos/family-02.jpg", alt: "A grandmother embraced by her granddaughter" },
+          chart: {
+            label: ph("Support needs"),
+            segments: [
+              { label: ph("Health"), value: 48 },
+              { label: ph("Connection"), value: 32 },
+              { label: ph("Errands"), value: 20 },
+            ],
+          },
+        },
+        {
+          name: ph("Teens"),
+          need: ph("Independence with a safety net."),
+          tags: [ph("Private by default"), ph("Study plans"), ph("Quick check-ins")],
+          photo: { src: "/photos/family-05.jpg", alt: "A mother cuddling her young daughter beside a planter of flowers" },
+          chart: {
+            label: ph("Week balance"),
+            segments: [
+              { label: ph("School"), value: 45 },
+              { label: ph("Activities"), value: 30 },
+              { label: ph("Rest"), value: 25 },
+            ],
+          },
+        },
+        {
+          name: ph("Caregivers"),
+          need: ph("Clear handovers and shared context."),
+          tags: [ph("Handover notes"), ph("Medication log"), ph("Shared tasks")],
+          photo: { src: "/photos/family-09.jpg", alt: "A nurse holding the hand of an elderly man in a wheelchair" },
+          chart: {
+            label: ph("Care tasks"),
+            segments: [
+              { label: ph("Medication"), value: 38 },
+              { label: ph("Appointments"), value: 36 },
+              { label: ph("Daily care"), value: 26 },
+            ],
+          },
+        },
       ],
+    },
+
+    // [PLACEHOLDER]
+    moments: {
+      eyebrow: ph("Real moments"),
+      heading: ph("Made for the\nmoments that *matter*"),
+      intro: ph("Less time coordinating. More time for the things families actually remember."),
+      pills: [ph("Mealtimes"), ph("Bedtimes"), ph("School runs"), ph("Visits"), ph("Weekends")],
     },
 
     // Mostly real principles; adapt to the actual problem.
     trust: {
       eyebrow: "Responsible AI",
-      heading: ph("Trust is the *first* feature"),
+      heading: ph("Trust is the\n*first* feature"),
       intro: ph(
         "Family data is the most personal data there is. These principles shaped every decision we made.",
       ),
@@ -251,7 +338,7 @@ export const site = {
     // [PLACEHOLDER] label clearly as projected / target outcomes
     impact: {
       eyebrow: ph("Projected impact"),
-      heading: ph("Small changes, *felt* every day"),
+      heading: ph("The *family*\neffect"),
       note: ph("Targets based on our prototype testing assumptions; not yet independently measured."),
       stats: [
         { value: 2, suffix: "+", unit: ph("hrs"), label: ph("saved per family, per week") },
@@ -263,7 +350,7 @@ export const site = {
     // [PLACEHOLDER]
     team: {
       eyebrow: ph("The team"),
-      heading: ph("Made by *students*, for families"),
+      heading: ph("Made by\n*students*"),
       intro: ph("Advanced Track · Grades 9–12 · Abu Dhabi University COE STEM Competition 2026"),
       members: [
         { name: ph("Member One"), role: ph("Lead developer"), detail: ph("Grade 11 · School name") },
@@ -275,7 +362,7 @@ export const site = {
     // [PLACEHOLDER]
     faq: {
       eyebrow: "FAQ",
-      heading: ph("Questions families *ask*"),
+      heading: ph("Questions\nfamilies *ask*"),
       items: [
         { q: ph("Is my family's data safe?"), a: ph("Yes. We collect the minimum, encrypt it, and never sell it. Each member controls what they share and can delete it at any time.") },
         { q: ph("Does the AI make decisions for us?"), a: ph("No. It suggests and explains; a person always decides. Important actions always ask for confirmation.") },
@@ -288,7 +375,7 @@ export const site = {
     // [PLACEHOLDER]
     cta: {
       eyebrow: ph("See it in action"),
-      heading: ph("Bring the family *together*"),
+      heading: ph("Less juggling.\nMore *together.*"),
       body: ph("Explore the working prototype and see how it supports a real family week."),
       primary: { label: "Open the demo", href: "/demo" },
       secondary: { label: "Read the FAQ", href: "#faq" },
@@ -322,6 +409,10 @@ export const site = {
 
   footer: {
     blurb: ph("An AI companion for everyday family life, built for the ADU COE STEM Competition 2026."),
+    actions: [
+      { label: "Try the demo", href: "/demo" },
+      { label: "Read the FAQ", href: "/#faq" },
+    ],
     columns: [
       {
         title: "Product",

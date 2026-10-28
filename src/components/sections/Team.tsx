@@ -1,66 +1,81 @@
 import { site } from "@/config/site";
+import type { TeamContent } from "@/config/types";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/Card";
-import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { T } from "@/components/ui/Text";
-import { Monogram } from "@/components/visuals/Monogram";
+import { PixelField } from "@/components/visuals/PixelField";
+import { Stamp } from "@/components/visuals/Stamp";
 import { plain } from "@/lib/copy";
-import { cn } from "@/lib/utils";
+import { TeamSlider } from "./TeamSlider";
 import type { SectionProps } from "./registry";
 
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase())
+    .join("");
+
+const TILTS = [-3, 2, -1.5, 3];
+
+/** Members as perforated stamps (photo, or a seeded pixel monogram) in a slider. */
 export function Team({ id, tone, index }: SectionProps) {
   const c = site.content.team;
-  const n = c.members.length;
-  const cols = n >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3";
+  const members: TeamContent["members"] = c.members;
 
   return (
-    <Section id={id} tone={tone}>
+    <Section id={id} tone={tone} className="overflow-x-clip">
       <Container>
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <header className="flex max-w-3xl flex-col gap-5">
-            <div data-reveal="">
-              <Eyebrow c={c.eyebrow} index={index} />
-            </div>
-            <h2
-              data-reveal=""
-              style={{ "--i": 1 } as React.CSSProperties}
-              className="font-display text-display-xl font-semibold"
-            >
-              <T c={c.heading} />
-            </h2>
-          </header>
-          <p
-            data-reveal=""
-            style={{ "--i": 2 } as React.CSSProperties}
-            className="label-mono max-w-sm text-muted lg:text-end"
-          >
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+          <SectionHeading eyebrow={c.eyebrow} heading={c.heading} index={index} size="2xl" className="lg:col-span-7" />
+          <p data-reveal="" className="label-mono max-w-sm leading-relaxed text-muted lg:col-span-5 lg:justify-self-end">
             <T c={c.intro} rich={false} />
           </p>
         </div>
 
-        <ul className={cn("mt-12 grid gap-4 sm:grid-cols-2 md:mt-16", cols)}>
-          {c.members.map((m, i) => (
-            <li key={i} data-reveal="" style={{ "--i": i } as React.CSSProperties}>
-              <Card interactive className="flex h-full flex-col gap-5 p-4 md:p-5">
-                <Monogram name={plain(m.name)} className="max-w-36" />
-                <div className="flex flex-col gap-1.5 px-1 pb-1">
-                  <p className="label-mono text-accent-text">
-                    <T c={m.role} rich={false} />
-                  </p>
-                  <h3 className="font-display text-title font-semibold">
-                    <T c={m.name} />
-                  </h3>
-                  {m.detail && (
-                    <p className="text-sm text-muted">
-                      <T c={m.detail} />
+        <div className="mt-12 md:mt-16">
+          <TeamSlider count={members.length}>
+            {members.map((m, i) => {
+              const name = plain(m.name);
+              return (
+                <li key={i} data-reveal="" style={{ "--i": i } as React.CSSProperties} className="w-[78%] shrink-0 snap-start sm:w-[46%] lg:w-auto">
+                  <Stamp photo={m.photo} rotate={TILTS[i % TILTS.length]} caption={false} aspect="aspect-square">
+                    <PixelField
+                      className="absolute inset-0"
+                      direction="radial"
+                      cell={16}
+                      seed={`${site.brand.seed}:${name}`}
+                      wave={0.1}
+                    />
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 grid place-items-center"
+                    >
+                      <span className="font-display bg-paper px-3 pt-1 text-[clamp(3rem,7vw,5.5rem)] leading-[0.9] text-ink">
+                        {initials(name)}
+                      </span>
+                    </span>
+                  </Stamp>
+                  <div className="mt-6 border-t border-dashed border-line pt-4">
+                    <p className="label-mono text-accent-text">
+                      [ <T c={m.role} rich={false} tag={false} /> ]
                     </p>
-                  )}
-                </div>
-              </Card>
-            </li>
-          ))}
-        </ul>
+                    <h3 className="font-display text-display-lg mt-2">
+                      <T c={m.name} />
+                    </h3>
+                    {m.detail && (
+                      <p className="mt-2 text-sm text-muted">
+                        <T c={m.detail} />
+                      </p>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </TeamSlider>
+        </div>
       </Container>
     </Section>
   );

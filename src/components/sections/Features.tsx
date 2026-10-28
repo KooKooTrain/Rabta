@@ -1,135 +1,117 @@
 import { site } from "@/config/site";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
 import { Pill } from "@/components/ui/Pill";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { T } from "@/components/ui/Text";
-import { Donut } from "@/components/visuals/Donut";
 import { Sparkline } from "@/components/visuals/Sparkline";
 import { plain } from "@/lib/copy";
+import { cn } from "@/lib/utils";
 import type { SectionProps } from "./registry";
 
-const TINTS = ["bg-sage", "bg-blush", "bg-sky", "bg-butter", "bg-sage"] as const;
-
+/** Hairline bento: one large live-chart tile + icon tiles that fill red on hover. */
 export function Features({ id, tone, index }: SectionProps) {
   const c = site.content.features;
   const h = c.highlight;
   const first = h.series[0];
   const last = h.series[h.series.length - 1];
   const change = Math.round(((last - first) / (first || 1)) * 100);
+  // Stretch the last tile so the grid never ends with empty cells
+  // (lg: highlight fills 2×2 next to 4 tiles, then rows of 4; md: rows of 2)
+  const n = c.items.length;
+  const lgRem = n > 4 ? (n - 4) % 4 : 0;
+  const lastSpan = cn(
+    n % 2 === 1 && "md:col-span-2",
+    lgRem === 0 ? "lg:col-span-1" : ({ 1: "lg:col-span-4", 2: "lg:col-span-3", 3: "lg:col-span-2" } as const)[lgRem],
+  );
 
   return (
     <Section id={id} tone={tone}>
       <Container>
-        <SectionHeading eyebrow={c.eyebrow} heading={c.heading} intro={c.intro} index={index} />
+        <SectionHeading
+          eyebrow={c.eyebrow}
+          heading={c.heading}
+          intro={c.intro}
+          index={index}
+          align="center"
+          size="2xl"
+        />
 
-        <div className="mt-12 grid gap-4 md:mt-16 md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+        <div className="mt-12 grid gap-px border border-line-strong bg-line-strong md:mt-16 md:grid-cols-2 lg:grid-cols-4">
           {/* Highlight tile */}
           <div
             data-reveal=""
-            className="relative flex flex-col overflow-hidden rounded-lg border border-line bg-surface p-6 md:col-span-2 md:p-8 lg:row-span-2"
+            data-tone="night"
+            className="relative flex flex-col bg-bg p-6 text-fg md:col-span-2 md:p-8 lg:row-span-2"
           >
             <div className="flex items-start justify-between gap-4">
-              <span className="grid size-10 place-items-center rounded-sm bg-forest text-sage">
+              <span className="grid size-11 place-items-center bg-accent text-accent-fg">
                 <Icon name={h.icon} className="size-5" />
               </span>
               <Pill dot className="label-mono text-muted">
                 Live
               </Pill>
             </div>
-            <h3 className="mt-6 max-w-md font-display text-display-lg font-semibold">
+            <h3 className="font-display text-display-lg mt-8 max-w-md">
               <T c={h.title} />
             </h3>
-            <p className="mt-3 max-w-lg text-muted">
+            <p className="mt-3 max-w-lg font-mono text-[0.8125rem] leading-relaxed text-muted">
               <T c={h.body} />
             </p>
 
-            {/* Chart panel */}
-            <div className="mt-8 grid flex-1 gap-4 rounded-md border border-dashed border-line-strong/60 bg-bg/60 p-4 sm:grid-cols-[1fr_auto] sm:p-5">
-              <div className="flex min-w-0 flex-col">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <div className="mt-auto pt-10">
+              <div className="flex flex-wrap items-end justify-between gap-2 border-b border-dashed border-line pb-3">
+                <div>
                   <p className="label-mono text-muted">
                     <T c={h.chartLabel} rich={false} />
                   </p>
-                  <p className="label-mono text-accent-text">
-                    {change >= 0 ? "▲" : "▼"} {Math.abs(change)}% / 12 wks
-                  </p>
+                  <p className="font-display text-display-xl mt-2 tabular-nums">{last}</p>
                 </div>
-                <p className="mt-2 font-display text-display-lg font-semibold tabular-nums">{last}</p>
-                <div className="relative mt-3 flex-1">
-                  {/* Gridlines */}
-                  <div aria-hidden="true" className="absolute inset-0 flex flex-col justify-between">
-                    {[0, 1, 2, 3].map((i) => (
-                      <span key={i} className="border-t border-dashed border-line" />
-                    ))}
-                  </div>
-                  <Sparkline
-                    series={h.series}
-                    height={96}
-                    className="relative h-28 text-forest [--spark-fill:var(--color-forest)] md:h-36"
-                    label={`${plain(h.chartLabel)}: ${first} to ${last}`}
-                  />
-                </div>
-                <div aria-hidden="true" className="label-mono mt-2 flex justify-between text-subtle">
-                  <span>W1</span>
-                  <span>W6</span>
-                  <span>W12</span>
-                </div>
+                <p className="label-mono text-accent-text">
+                  {change >= 0 ? "▲" : "▼"} {Math.abs(change)}% / 12 wks
+                </p>
               </div>
-
-              <div className="flex items-center gap-4 border-t border-dashed border-line pt-4 sm:flex-col sm:justify-center sm:border-s sm:border-t-0 sm:ps-5 sm:pt-0">
-                <Donut
-                  className="w-24 shrink-0 sm:w-28"
-                  thickness={16}
-                  label="Breakdown: routines 48%, health 32%, connection 20%"
-                  segments={[
-                    { value: 48, color: "var(--color-forest)" },
-                    { value: 32, color: "var(--color-ember)" },
-                    { value: 20, color: "var(--color-saffron)" },
-                  ]}
-                >
-                  <span className="font-display text-lg font-semibold">3</span>
-                  <span className="label-mono text-[0.625rem] text-muted">areas</span>
-                </Donut>
-                <ul aria-hidden="true" className="label-mono space-y-1.5 text-muted">
-                  {[
-                    ["bg-forest", "Routines"],
-                    ["bg-ember", "Health"],
-                    ["bg-saffron", "Connect"],
-                  ].map(([bg, l]) => (
-                    <li key={l} className="flex items-center gap-2">
-                      <span className={`size-2 rounded-full ${bg}`} />
-                      {l}
-                    </li>
-                  ))}
-                </ul>
+              <Sparkline
+                series={h.series}
+                height={96}
+                className="mt-4 h-28 text-lime [--spark-fill:var(--color-lime)] md:h-36"
+                label={`${plain(h.chartLabel)}: ${first} to ${last}`}
+              />
+              <div aria-hidden="true" className="label-mono mt-2 flex justify-between text-subtle">
+                <span>W1</span>
+                <span>W6</span>
+                <span>W12</span>
               </div>
             </div>
           </div>
 
           {/* Feature tiles */}
           {c.items.map((item, i) => (
-            <Card
+            <div
               key={i}
-              interactive
               data-reveal=""
               style={{ "--i": i + 1 } as React.CSSProperties}
-              className="flex flex-col gap-4"
+              className={cn(
+                "wipe-tile group flex min-h-60 flex-col bg-bg p-6 text-fg transition-colors duration-[var(--dur-wipe)] ease-wipe hover:text-ink md:p-7",
+                i === c.items.length - 1 && lastSpan,
+              )}
             >
-              <span
-                className={`grid size-10 place-items-center rounded-sm text-ink ${TINTS[i % TINTS.length]}`}
-              >
-                <Icon name={item.icon} className="size-5" />
-              </span>
-              <h3 className="font-display text-title font-semibold">
+              <div className="flex items-start justify-between">
+                <span className="grid size-11 place-items-center border border-current">
+                  <Icon name={item.icon} className="size-5" />
+                </span>
+                <span className="label-mono text-muted transition-colors duration-[var(--dur-wipe)] group-hover:text-ink">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <h3 className="font-display text-title mt-auto pt-10">
                 <T c={item.title} />
               </h3>
-              <p className="text-muted">
+              <p className="mt-2 text-sm text-muted transition-colors duration-[var(--dur-wipe)] group-hover:text-ink">
                 <T c={item.body} />
               </p>
-            </Card>
+            </div>
           ))}
         </div>
       </Container>

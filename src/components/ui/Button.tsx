@@ -8,23 +8,23 @@ type Variant = "primary" | "secondary" | "ghost";
 type Size = "md" | "lg";
 
 const base =
-  "group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-pill font-medium whitespace-nowrap " +
-  "transition-[color,background-color,border-color,transform] duration-[var(--dur-base)] ease-hover " +
-  "active:scale-[0.98] focus-visible:outline-offset-4";
+  "group/btn relative isolate inline-flex items-center justify-center gap-2.5 overflow-hidden font-mono text-[0.8125rem] font-semibold uppercase tracking-[0.06em] whitespace-nowrap " +
+  "transition-[color,background-color,border-color] duration-[var(--dur-wipe)] ease-wipe focus-visible:outline-offset-4";
 
 const variants: Record<Variant, string> = {
-  // Fill wipes in from the start edge on hover (::before)
+  // A block of --wipe colour slides up from the bottom on hover (::before)
   primary:
-    "bg-accent text-accent-fg before:absolute before:inset-0 before:-z-0 before:origin-[left_center] rtl:before:origin-[right_center] before:scale-x-0 before:bg-accent-hover " +
-    "before:transition-transform before:duration-[450ms] before:ease-wipe hover:before:scale-x-100",
+    "bg-accent text-accent-fg hover:text-wipe-fg " +
+    "before:absolute before:inset-0 before:-z-10 before:bg-wipe before:[clip-path:inset(100%_0_0_0)] " +
+    "before:transition-[clip-path] before:duration-[var(--dur-wipe)] before:ease-wipe hover:before:[clip-path:inset(0_0_0_0)]",
   secondary:
-    "border border-dashed border-line-strong text-fg hover:border-solid hover:border-fg hover:bg-fg/5",
+    "border border-dashed border-line-strong text-fg duration-[var(--dur-base)] ease-hover hover:border-solid hover:border-fg hover:bg-fg hover:text-bg",
   ghost: "text-fg underline-offset-4 hover:underline",
 };
 
 const sizes: Record<Size, string> = {
-  md: "h-11 px-5 text-[0.9375rem]",
-  lg: "h-13 px-7 text-base",
+  md: "h-11 px-5",
+  lg: "h-14 px-7",
 };
 
 const isExternal = (href: string) => /^https?:\/\//.test(href);
@@ -46,13 +46,13 @@ export function Button({
   const Arrow = external ? ArrowUpRight : ArrowRight;
   const content = (
     <>
-      <span className="relative z-10">
+      <span>
         <T c={link.label} rich={false} />
       </span>
       {icon && (
         <Arrow
           aria-hidden="true"
-          className="relative z-10 size-4 transition-transform duration-[var(--dur-base)] ease-hover group-hover/btn:translate-x-[3px] rtl:-scale-x-100 rtl:group-hover/btn:-translate-x-[3px]"
+          className="size-4 transition-transform duration-[var(--dur-base)] ease-hover group-hover/btn:translate-x-[3px] rtl:-scale-x-100 rtl:group-hover/btn:-translate-x-[3px]"
         />
       )}
     </>

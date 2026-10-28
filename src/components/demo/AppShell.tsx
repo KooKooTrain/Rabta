@@ -24,7 +24,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <p className="hidden truncate text-sm text-muted md:block">
             <T c={demo.title} tag={false} />
           </p>
-          <span className="label-mono hidden rounded-xs bg-ink px-2 py-1 text-paper sm:inline-block">
+          <span className="label-mono hidden bg-ink px-2 py-1 text-paper sm:inline-block">
             Prototype
           </span>
           <ModeBadge className="hidden min-[400px]:inline-flex" />

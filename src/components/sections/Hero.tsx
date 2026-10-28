@@ -3,11 +3,8 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { LiveClock } from "@/components/motion/LiveClock";
 import { Button } from "@/components/ui/Button";
-import { Pill } from "@/components/ui/Pill";
 import { PhTag, T, renderInline } from "@/components/ui/Text";
-import { Glyph } from "@/components/visuals/Glyph";
-import { KinTilesLive } from "@/components/visuals/KinTilesLive";
-import { Mesh } from "@/components/visuals/Mesh";
+import { PhotoShards } from "@/components/visuals/PhotoShards";
 import { site } from "@/config/site";
 import { plain } from "@/lib/copy";
 import { enabledSections, isLiveHref } from "@/lib/nav";
@@ -15,6 +12,11 @@ import type { SectionProps } from "./registry";
 
 const cssVars = (v: Record<string, string | number>) => v as React.CSSProperties;
 
+/**
+ * Wastetide-style hero: giant caps headline with a Chande inline pill, a band
+ * of sliced photos, and a three-part bottom bar. The load sequence is pure CSS
+ * (runs before hydration): lines rise, shards drop, bar fades up.
+ */
 export function Hero({ id, tone }: SectionProps) {
   const c = site.content.hero;
   const lines = plain(c.headline).split("\n");
@@ -23,110 +25,99 @@ export function Hero({ id, tone }: SectionProps) {
   const next = enabledSections[pos + 1];
 
   return (
-    <Section id={id} tone={tone} padded={false} className="grain overflow-hidden">
-      <Mesh />
-      <Container className="flex flex-col pt-10 md:pt-14 lg:min-h-[calc(100svh-var(--header-h))] lg:pt-16">
-        <div className="grid flex-1 grid-cols-1 items-center gap-14 pb-16 lg:grid-cols-12 lg:gap-8 lg:pb-14">
-          {/* Copy */}
-          <div className="min-w-0 lg:col-span-7">
-            <div className="fade-up" style={cssVars({ "--delay": "0ms" })}>
-              <Pill dot className="label-mono max-w-full bg-surface/70 py-1.5 whitespace-normal backdrop-blur-sm">
-                <T c={c.eyebrow} rich={false} />
-              </Pill>
-            </div>
-
-            <h1 className="font-display text-display-2xl mt-7 font-semibold">
-              {lines.map((line, i) => (
-                <span key={i} className="rise-line" style={cssVars({ "--i": i })}>
-                  <span>
-                    {renderInline(line)}
-                    {i === lines.length - 1 && <PhTag c={c.headline} />}
-                  </span>
-                </span>
-              ))}
-            </h1>
-
-            <p
-              className="fade-up mt-7 max-w-xl text-lead text-muted"
-              style={cssVars({ "--delay": "350ms" })}
-            >
-              <T c={c.lead} />
-            </p>
-
-            {ctas.length > 0 && (
-              <div
-                className="fade-up mt-9 flex flex-wrap items-center gap-3"
-                style={cssVars({ "--delay": "450ms" })}
-              >
-                {ctas.map((link, i) => (
-                  <Button
-                    key={link.href}
-                    link={link}
-                    size="lg"
-                    variant={i === 0 ? "primary" : "secondary"}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Visual */}
-          <div className="min-w-0 lg:col-span-5">
-            <div className="relative mx-auto w-full max-w-[22rem] sm:max-w-sm lg:max-w-[30rem]">
-              <p className="label-mono mb-3 flex items-center justify-between text-subtle">
-                <span>[ fig. 01 ]</span>
-                <span>Family signals</span>
-              </p>
-              <div className="rounded-xl border border-line bg-surface/60 p-3 shadow-hair backdrop-blur-sm sm:p-4">
-                <KinTilesLive cols={4} rows={4} seed={site.brand.seed} animateIn />
-              </div>
-
-              {/* Floating AI insight chip */}
-              <div
-                data-tone="paper"
-                className="pop-in absolute -bottom-8 start-3 flex max-w-[16.5rem] items-start gap-3 rounded-md border border-line bg-card p-3.5 text-fg shadow-lift sm:-start-8 lg:-start-12"
-                style={cssVars({ "--delay": "900ms" })}
-              >
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-saffron">
-                  <Glyph name="spark" className="size-6" color="var(--color-ink)" />
-                </span>
-                <span className="min-w-0">
-                  <span className="label-mono flex items-center gap-1.5 text-subtle">
-                    <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-ember" />
-                    <T c={c.insight.label} rich={false} tag={false} />
-                  </span>
-                  <span className="font-display mt-1 block text-[1.0625rem] leading-tight font-semibold">
-                    <T c={c.insight.title} tag={false} />
-                  </span>
-                  <span className="mt-0.5 block text-sm text-muted">
-                    <T c={c.insight.detail} />
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
+    <Section
+      id={id}
+      tone={tone}
+      padded={false}
+      guides={false}
+      className="overflow-x-clip"
+      innerClassName="flex flex-col lg:min-h-[calc(100svh-var(--header-h))]"
+    >
+      <Container className="pt-5 md:pt-7">
+        <div
+          className="fade-up label-mono flex items-center justify-between gap-4 text-muted"
+          style={cssVars({ "--delay": "0ms" })}
+        >
+          <p className="flex items-center gap-2">
+            <span aria-hidden="true" className="live-dot size-1.5 bg-signal" />
+            <T c={c.eyebrow} rich={false} />
+          </p>
+          <p className="hidden sm:block">[ {site.competition.date} ]</p>
         </div>
 
-        {/* Bottom bar */}
-        <div className="label-mono mt-6 flex items-center justify-between gap-4 border-t border-dashed border-line py-5 text-muted lg:mt-0">
-          <p className="flex items-center gap-2">
-            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-ember" />
+        <h1 className="font-display text-display-hero mt-4 md:mt-6">
+          {lines.map((line, i) => (
+            <span key={i} className="rise-line" style={cssVars({ "--i": i })}>
+              <span>
+                {renderInline(line)}
+                {i === 0 && (
+                  <span
+                    aria-hidden="true"
+                    className="ms-[0.12em] inline-flex h-[0.62em] w-[1.5em] translate-y-[-0.06em] items-center justify-end rounded-pill border-[0.07em] border-signal p-[0.06em] align-middle"
+                  >
+                    <span className="block aspect-square h-full rounded-full bg-signal" />
+                  </span>
+                )}
+                {i === lines.length - 1 && <PhTag c={c.headline} />}
+              </span>
+            </span>
+          ))}
+        </h1>
+      </Container>
+
+      {/* Sliced photo band */}
+      <div className="relative mt-6 flex h-[clamp(13rem,36vw,30rem)] flex-col md:mt-8 lg:h-auto lg:min-h-[15rem] lg:flex-1">
+        <PhotoShards photos={site.media.hero} preload className="min-h-0 flex-1 px-[2%]" />
+
+        {/* Floating AI insight */}
+        <div
+          data-tone="paper"
+          className="pop-in absolute end-[var(--gutter)] -bottom-6 z-10 hidden max-w-[19rem] border border-ink bg-card text-fg sm:block"
+          style={cssVars({ "--delay": "1300ms" })}
+        >
+          <p className="label-mono flex items-center gap-2 bg-ink px-3 py-1.5 text-paper">
+            <span aria-hidden="true" className="live-dot size-1.5 bg-signal" />
+            <T c={c.insight.label} rich={false} tag={false} />
+          </p>
+          <div className="p-3.5">
+            <p className="font-display text-[1.375rem] leading-none tracking-[-0.02em]">
+              <T c={c.insight.title} tag={false} />
+            </p>
+            <p className="mt-1.5 text-sm text-muted">
+              <T c={c.insight.detail} />
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom bar */}
+      <Container
+        className="fade-up mt-10 grid grid-cols-1 items-center gap-6 border-t border-dashed border-line py-6 md:mt-12 md:grid-cols-[1fr_auto_1fr]"
+        style={cssVars({ "--delay": "900ms" })}
+      >
+        <p className="max-w-md font-mono text-[0.8125rem] leading-relaxed text-muted">
+          <T c={c.lead} />
+        </p>
+        {ctas.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 md:justify-center">
+            {ctas.map((link, i) => (
+              <Button key={link.href} link={link} size="lg" variant={i === 0 ? "primary" : "secondary"} />
+            ))}
+          </div>
+        )}
+        <div className="label-mono flex items-center justify-between gap-4 text-muted md:justify-end">
+          <p className="flex items-center gap-2 md:hidden xl:flex">
             <LiveClock timeZone={c.bottomBar.timeZone} className="text-fg" />
-            <span>{c.bottomBar.clockLabel}</span>
+            {c.bottomBar.clockLabel}
           </p>
-          <p className="hidden text-center md:block">
-            <T c={c.bottomBar.tagline} rich={false} />
-          </p>
-          {next ? (
+          {next && (
             <a
               href={`#${next.id}`}
-              className="group inline-flex items-center gap-2 rounded-sm transition-colors duration-[var(--dur-base)] ease-hover hover:text-fg"
+              className="group inline-flex items-center gap-2 transition-colors duration-[var(--dur-base)] ease-hover hover:text-fg"
             >
               {c.bottomBar.scrollHint}
               <ArrowDown aria-hidden="true" className="size-3.5 motion-safe:animate-bounce" />
             </a>
-          ) : (
-            <span />
           )}
         </div>
       </Container>

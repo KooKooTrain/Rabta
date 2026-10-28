@@ -3,7 +3,7 @@ import { CountUp } from "@/components/motion/CountUp";
 import { cn } from "@/lib/utils";
 import { T } from "./Text";
 
-/** Big number + small inline unit + label (+ optional source). */
+/** Big condensed number + small inline unit + mono label (+ optional source). */
 export function Stat({
   stat,
   size = "lg",
@@ -14,13 +14,13 @@ export function Stat({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-3", className)}>
+    <div className={cn("flex flex-col gap-4", className)}>
       <p
         className={cn(
-          "font-display font-semibold",
+          "font-display",
           size === "xl" && "text-stat",
-          size === "lg" && "text-display-xl",
-          size === "md" && "text-display-lg",
+          size === "lg" && "text-display-2xl",
+          size === "md" && "text-display-xl",
         )}
       >
         <CountUp
@@ -30,16 +30,16 @@ export function Stat({
           suffix={stat.suffix}
         />
         {stat.unit && (
-          <span className="label-mono ms-2 align-baseline text-muted">
+          <span className="ms-2 align-baseline text-[0.3em] tracking-[-0.01em] whitespace-nowrap">
             <T c={stat.unit} rich={false} />
           </span>
         )}
       </p>
-      <p className="max-w-xs text-muted">
-        <T c={stat.label} />
+      <p className="label-mono max-w-xs leading-relaxed text-muted">
+        <T c={stat.label} rich={false} />
       </p>
       {stat.source && (
-        <p className="label-mono text-subtle">
+        <p className="label-mono text-subtle opacity-80">
           <T c={stat.source} rich={false} />
         </p>
       )}

@@ -43,8 +43,8 @@ export function NavLinks({ className }: { className?: string }) {
 
   return (
     <nav aria-label="Primary" className={cn("items-center", className)}>
-      <ul className="flex items-center gap-1">
-        {navItems.map((item) => {
+      <ul className="flex items-center">
+        {navItems.map((item, i) => {
           const isActive = current === item.id;
           return (
             <li key={item.id}>
@@ -52,18 +52,16 @@ export function NavLinks({ className }: { className?: string }) {
                 href={item.href}
                 aria-current={isActive ? "true" : undefined}
                 className={cn(
-                  "relative inline-flex items-center gap-1.5 rounded-pill px-3 py-2 text-[0.9375rem] text-muted transition-colors duration-[var(--dur-base)] ease-hover hover:text-fg",
-                  "after:absolute after:inset-x-3 after:bottom-1 after:h-px after:origin-[left_center] after:scale-x-0 after:bg-current after:transition-transform after:duration-[var(--dur-base)] after:ease-hover hover:after:scale-x-100 rtl:after:origin-[right_center]",
-                  isActive && "text-fg after:scale-x-100",
+                  "label-mono inline-flex items-baseline gap-1.5 px-3 py-2 transition-colors duration-[var(--dur-base)] ease-hover",
+                  isActive ? "bg-fg text-bg" : "text-fg hover:bg-fg/[0.07]",
                 )}
               >
                 <span
                   aria-hidden="true"
-                  className={cn(
-                    "size-1.5 rounded-full bg-saffron transition-[opacity,transform] duration-[var(--dur-base)] ease-out-soft",
-                    isActive ? "scale-100 opacity-100" : "scale-0 opacity-0",
-                  )}
-                />
+                  className={cn("text-[0.625rem]", isActive ? "text-signal" : "text-accent-text")}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 {item.label}
               </Link>
             </li>

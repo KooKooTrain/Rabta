@@ -83,7 +83,7 @@ export function ChatPanel({
             <Glyph name="spark" color="var(--color-ink)" className="size-5" />
           </span>
           <div className="min-w-0">
-            <h2 className="font-display text-base font-semibold leading-tight">{assistantName}</h2>
+            <h2 className="font-display text-base leading-tight">{assistantName}</h2>
             <p className="label-mono text-subtle">Explains · suggests · you decide</p>
           </div>
         </header>
@@ -96,7 +96,7 @@ export function ChatPanel({
           className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-5"
         >
           {empty && (
-            <div className="rounded-md border border-dashed border-line-strong p-4">
+            <div className="border border-dashed border-line-strong p-4">
               <p className="text-sm text-muted">
                 Ask anything about the family week. Replies are scripted in mock mode, so it works with no API key.
               </p>
@@ -120,10 +120,10 @@ export function ChatPanel({
                   <p className="sr-only">{m.role === "user" ? "You said:" : `${assistantName} said:`}</p>
                   <div
                     className={cn(
-                      "rounded-md px-4 py-3 text-start text-[0.9375rem] leading-relaxed whitespace-pre-line",
+                      "px-4 py-3 text-start text-[0.9375rem] leading-relaxed whitespace-pre-line",
                       m.role === "user"
-                        ? "rounded-ee-xs bg-ink text-paper"
-                        : "rounded-es-xs border border-line bg-surface text-fg",
+                        ? "bg-ink text-paper"
+                        : "border border-line bg-surface text-fg",
                     )}
                   >
                     {m.content}
@@ -144,7 +144,7 @@ export function ChatPanel({
                 <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-saffron">
                   <Glyph name="spark" color="var(--color-ink)" className="size-3.5" />
                 </span>
-                <span className="inline-flex gap-1 rounded-md border border-line bg-surface px-4 py-3.5">
+                <span className="inline-flex gap-1 border border-line bg-surface px-4 py-3.5">
                   <span className="sr-only">{assistantName} is typing</span>
                   {[0, 1, 2].map((i) => (
                     <motion.span
@@ -161,7 +161,7 @@ export function ChatPanel({
           </AnimatePresence>
 
           {error && (
-            <div role="alert" className="flex flex-wrap items-center gap-3 rounded-md border border-ember-ink/40 bg-blush/50 px-4 py-3 text-sm">
+            <div role="alert" className="flex flex-wrap items-center gap-3 border border-ember-ink/40 bg-blush/50 px-4 py-3 text-sm">
               <span className="text-ink">Couldn&apos;t get a reply: {error}</span>
               <button
                 type="button"
@@ -197,7 +197,7 @@ export function ChatPanel({
               e.preventDefault();
               send(input);
             }}
-            className="flex items-end gap-2 rounded-md border border-line-strong bg-surface p-2 focus-within:border-fg"
+            className="flex items-end gap-2 border border-line-strong bg-surface p-2 focus-within:border-fg"
           >
             <label htmlFor={inputId} className="sr-only">
               Message {assistantName}
@@ -221,7 +221,7 @@ export function ChatPanel({
               type="submit"
               aria-label="Send message"
               disabled={pending || input.trim().length === 0}
-              className="grid size-10 shrink-0 place-items-center rounded-full bg-accent text-accent-fg transition-colors duration-[var(--dur-fast)] hover:bg-accent-hover disabled:bg-line disabled:text-subtle"
+              className="grid size-10 shrink-0 place-items-center rounded-full bg-accent text-accent-fg transition-colors duration-[var(--dur-fast)] hover:bg-fg hover:text-bg disabled:bg-line disabled:text-subtle"
             >
               <ArrowUp aria-hidden="true" className="size-4" />
             </button>

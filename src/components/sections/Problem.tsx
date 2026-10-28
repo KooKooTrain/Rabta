@@ -1,75 +1,57 @@
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/Card";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ScrubWords } from "@/components/motion/ScrubWords";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Stat } from "@/components/ui/Stat";
-import { PhTag, renderInline } from "@/components/ui/Text";
-import { KinTiles } from "@/components/visuals/KinTiles";
+import { PhTag, T } from "@/components/ui/Text";
+import { Words } from "@/components/ui/Words";
 import { site } from "@/config/site";
 import { plain } from "@/lib/copy";
-import { cn } from "@/lib/utils";
 import type { SectionProps } from "./registry";
 
-const tints = ["bg-sage", "bg-blush", "bg-sky", "bg-butter"];
-
+/**
+ * 1. Pinned manifesto whose words fill from faded to ink (Wastetide).
+ * 2. Stat bento: copy on the left, a giant number + signal and panel tiles on the right.
+ */
 export function Problem({ id, tone, index }: SectionProps) {
   const c = site.content.problem;
   const [lead, ...rest] = c.stats;
-  // Keep *emphasis* groups together; each word fills in on scroll
-  const words = plain(c.statement).match(/\*[^*]+\*|\S+/g) ?? [];
 
   return (
-    <Section id={id} tone={tone}>
+    <Section id={id} tone={tone} padded={false} className="overflow-x-clip">
       <Container>
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
-          <SectionHeading
-            eyebrow={c.eyebrow}
-            heading={c.heading}
-            index={index}
-            className="lg:col-span-6"
-          />
-          <p
-            data-reveal=""
-            className="scroll-fill font-display text-[clamp(1.375rem,1.1rem+1.1vw,2rem)] leading-[1.3] font-medium tracking-[-0.015em] lg:col-span-6 lg:pt-12"
-          >
-            {words.map((w, i) => (
-              <span key={i}>
-                <span className="w">{renderInline(w)}</span>{" "}
-              </span>
-            ))}
-            <PhTag c={c.statement} />
+        <ScrubWords pin className="flex min-h-[70svh] flex-col justify-center py-section">
+          <Eyebrow c={c.eyebrow} index={index} />
+          <p className="font-display text-display-xl mt-8 max-w-[22ch] text-fg">
+            <Words text={plain(c.manifesto)} />
+            <PhTag c={c.manifesto} />
           </p>
-        </div>
+        </ScrubWords>
 
-        {lead && (
-          <div className="mt-14 grid gap-4 md:grid-cols-3 lg:mt-20">
-            <Card
-              data-reveal=""
-              className={cn(
-                "flex flex-col justify-between gap-10 p-7 md:col-span-2 md:p-10",
-                rest.length > 0 && "md:row-span-2",
-              )}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <p className="label-mono text-subtle">[ Key figure ]</p>
-                <span aria-hidden="true" className="live-dot size-2 rounded-full bg-ember" />
-              </div>
-              <Stat stat={lead} size="xl" />
-              <KinTiles cols={10} rows={1} spark={false} radius={18} className="opacity-90" />
-            </Card>
-            {rest.map((stat, i) => (
+        <div className="mb-section grid gap-px border border-line bg-line">
+          <div className="grid gap-8 bg-bg p-6 md:grid-cols-2 md:items-end md:p-10">
+            <h2 data-reveal="" className="font-display text-display-xl">
+              <T c={c.heading} />
+            </h2>
+            <p data-reveal="" className="max-w-md font-mono text-[0.8125rem] leading-relaxed text-muted md:justify-self-end">
+              <T c={c.statement} />
+            </p>
+          </div>
+
+          <div className="grid gap-px bg-line md:grid-cols-3">
+            {[lead, ...rest].filter(Boolean).map((stat, i) => (
               <div
                 key={i}
                 data-reveal=""
-                data-tone="paper"
-                style={{ "--i": i + 1 } as React.CSSProperties}
-                className={cn("rounded-md p-7 text-ink", tints[i % tints.length])}
+                data-tone={(["paper", "signal", "night"] as const)[i % 3]}
+                style={{ "--i": i } as React.CSSProperties}
+                className="flex min-h-72 flex-col justify-end bg-bg p-6 text-fg md:p-8"
               >
                 <Stat stat={stat} size="md" />
               </div>
             ))}
           </div>
-        )}
+        </div>
       </Container>
     </Section>
   );

@@ -35,7 +35,7 @@ export function SampleWidgets() {
   return (
     <section aria-labelledby="widgets-heading" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="widgets-heading" className="font-display text-title font-semibold">
+        <h2 id="widgets-heading" className="font-display text-title">
           This week
         </h2>
         <p className="label-mono text-subtle">Sample widgets: copy these patterns</p>
@@ -48,14 +48,14 @@ export function SampleWidgets() {
             <p className="label-mono text-muted">Tasks done</p>
             <Icon name="list-checks" className="size-4 text-muted" />
           </div>
-          <p className="font-display text-display-xl font-semibold tabular-nums">
+          <p className="font-display text-display-xl tabular-nums">
             18<span className="text-muted">/24</span>
           </p>
           <div className="h-1.5 overflow-hidden rounded-pill bg-sand" role="img" aria-label="75 percent complete">
-            <div className="h-full w-3/4 rounded-pill bg-forest" />
+            <div className="h-full w-3/4 rounded-pill bg-signal" />
           </div>
           <p className="text-sm text-muted">
-            <span className="font-medium text-forest">+12%</span> vs last week
+            <span className="font-medium text-signal-ink">+12%</span> vs last week
           </p>
         </Card>
 
@@ -89,13 +89,13 @@ export function SampleWidgets() {
               className="w-28 shrink-0"
               label="Share of tasks: parents 46%, teens 28%, grandparents 16%, kids 10%"
             >
-              <span className="font-display text-xl font-semibold">46%</span>
+              <span className="font-display text-xl">46%</span>
               <span className="label-mono text-[0.625rem] text-subtle">Parents</span>
             </Donut>
             <ul className="flex flex-col gap-1.5 text-sm">
               {split.map((s) => (
                 <li key={s.label} className="flex items-center gap-2">
-                  <span aria-hidden="true" className="size-2.5 rounded-[3px]" style={{ background: s.color }} />
+                  <span aria-hidden="true" className="size-2.5" style={{ background: s.color }} />
                   <span className="text-muted">{s.label}</span>
                   <span className="ms-auto ps-2 tabular-nums">{s.value}%</span>
                 </li>
@@ -108,12 +108,12 @@ export function SampleWidgets() {
         <Card className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <p className="label-mono text-muted">Wellbeing index</p>
-            <span className="rounded-pill bg-sage px-2 py-0.5 text-xs font-medium text-forest">↑ 6 pts</span>
+            <span className="rounded-pill bg-lime px-2 py-0.5 text-xs font-medium text-ink">↑ 6 pts</span>
           </div>
-          <p className="font-display text-display-lg font-semibold tabular-nums">78</p>
+          <p className="font-display text-display-lg tabular-nums">78</p>
           <Sparkline
             series={[52, 55, 54, 58, 61, 60, 64, 67, 66, 71, 74, 78]}
-            className="h-16 text-forest"
+            className="h-16 text-signal"
             label="Wellbeing index rising from 52 to 78 over 12 weeks"
           />
         </Card>

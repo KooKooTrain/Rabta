@@ -12,7 +12,7 @@ function PlaceholderTag() {
   );
 }
 
-/** Renders *word* as serif-italic emphasis and \n as line breaks. */
+/** Renders *word* as the accent-coloured word and \n as line breaks. */
 export function renderInline(text: string): ReactNode {
   const lines = text.split("\n");
   return lines.map((line, li) => (

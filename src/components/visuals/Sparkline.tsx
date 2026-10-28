@@ -73,7 +73,7 @@ export function Sparkline({
           cx={last[0]}
           cy={last[1]}
           r={4}
-          fill="var(--color-saffron)"
+          fill="var(--color-paper)"
           stroke="currentColor"
           strokeWidth={1.5}
           vectorEffect="non-scaling-stroke"

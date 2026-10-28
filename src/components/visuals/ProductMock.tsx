@@ -6,9 +6,9 @@ import { Glyph } from "./Glyph";
 import { Sparkline } from "./Sparkline";
 
 const statusDot: Record<NonNullable<MockRow["status"]>, string> = {
-  ok: "bg-forest",
+  ok: "bg-ink",
   watch: "bg-ember",
-  info: "bg-sky ring-1 ring-forest/40",
+  info: "bg-rule-strong",
 };
 const statusText: Record<NonNullable<MockRow["status"]>, string> = {
   ok: "Good",
@@ -37,23 +37,23 @@ export function ProductMock({
     <div
       data-tone="paper"
       className={cn(
-        "overflow-hidden rounded-lg border border-line bg-card text-fg",
-        compact ? "shadow-hair" : "shadow-lift",
+        "overflow-hidden border border-ink bg-card text-fg",
+        !compact && "shadow-lift",
         className,
       )}
     >
       {/* Window chrome */}
-      <div className="flex items-center gap-3 border-b border-line bg-paper/60 px-4 py-3">
+      <div className="flex items-center gap-3 border-b border-ink bg-ink px-4 py-2.5 text-paper">
         <div className="flex shrink-0 gap-1.5" aria-hidden="true">
-          <span className="size-2.5 rounded-full bg-blush" />
-          <span className="size-2.5 rounded-full bg-butter" />
-          <span className="size-2.5 rounded-full bg-sage" />
+          <span className="size-2.5 bg-signal" />
+          <span className="size-2.5 bg-rule-strong" />
+          <span className="size-2.5 bg-ink" />
         </div>
-        <p className="label-mono truncate text-subtle">
+        <p className="label-mono truncate">
           <T c={title} rich={false} tag={false} />
         </p>
         {subtitle && !compact && (
-          <p className="label-mono ms-auto hidden truncate text-subtle sm:block">
+          <p className="label-mono ms-auto hidden truncate opacity-70 sm:block">
             <T c={subtitle} rich={false} tag={false} />
           </p>
         )}
@@ -61,8 +61,8 @@ export function ProductMock({
 
       <div className={cn("grid", compact ? "gap-4 p-4" : "gap-5 p-6 md:p-7")}>
         <div className="flex items-center justify-between gap-3">
-          <span className="label-mono inline-flex items-center gap-2 rounded-pill bg-forest px-3 py-1.5 text-paper">
-            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-saffron" />
+          <span className="label-mono inline-flex items-center gap-2 bg-signal px-2.5 py-1 text-ink">
+            <span aria-hidden="true" className="live-dot size-1.5 bg-ink" />
             <T c={state.status} rich={false} tag={false} />
           </span>
           <span className="label-mono flex items-center gap-1.5 text-subtle">
@@ -73,23 +73,23 @@ export function ProductMock({
 
         <p
           className={cn(
-            "font-display font-semibold",
-            compact ? "text-title" : "text-[clamp(1.5rem,1.2rem+1vw,2.125rem)] leading-[1.1] tracking-[-0.02em]",
+            "font-display",
+            compact ? "text-title" : "text-display-lg",
           )}
         >
           <T c={state.headline} tag={false} />
           <PhTag c={state.headline} />
         </p>
 
-        <div className="rounded-md border border-line bg-paper/70 px-4 pt-3 pb-2 text-forest">
+        <div className="border border-dashed border-line-strong bg-paper px-4 pt-3 pb-2 text-ink">
           <div className="label-mono flex items-center justify-between text-subtle">
             <span>Trend</span>
             <span className="flex items-center gap-1.5">
-              <span aria-hidden="true" className="size-1.5 rounded-full bg-saffron" />
+              <span aria-hidden="true" className="size-1.5 bg-signal" />
               Live
             </span>
           </div>
-          <Sparkline series={state.series} height={compact ? 40 : 56} className={cn("mt-2", compact ? "h-10" : "h-14")} />
+          <Sparkline series={state.series} height={compact ? 40 : 56} className={cn("mt-2 text-signal", compact ? "h-10" : "h-14")} />
         </div>
 
         <ul className="divide-y divide-line">
@@ -98,7 +98,7 @@ export function ProductMock({
               <span className="flex min-w-0 items-center gap-2.5">
                 {row.status && (
                   <>
-                    <span aria-hidden="true" className={cn("size-2 shrink-0 rounded-full", statusDot[row.status])} />
+                    <span aria-hidden="true" className={cn("size-2 shrink-0", statusDot[row.status])} />
                     <span className="sr-only">{statusText[row.status]}:</span>
                   </>
                 )}
