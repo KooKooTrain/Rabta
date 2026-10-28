@@ -35,15 +35,15 @@ export function FinalCta({ id, tone, index }: SectionProps) {
 
         <div data-reveal="" style={{ "--i": 2 } as React.CSSProperties} className="lg:col-span-5 [perspective:900px]">
           <div className="flex items-stretch [transform:rotateY(-16deg)_rotateZ(-3deg)]">
-            <span aria-hidden="true" className="w-2 shrink-0 bg-ink" />
+            <span aria-hidden="true" className="me-1.5 w-2 shrink-0 rounded-full bg-ink" />
             <PixelField
-              palette="signal"
+              palette="ember"
               direction="radial"
               cell={20}
               wave={0.32}
               speed={1.6}
               noise={0.12}
-              className="aspect-[4/3] flex-1"
+              className="aspect-[4/3] flex-1 rounded-tile"
             />
           </div>
         </div>

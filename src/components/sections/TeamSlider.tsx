@@ -4,8 +4,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
- * Chande-style slider: horizontal snap row with a lime progress bar and square
- * prev/next buttons below lg. At lg+ the cards sit in a grid and the controls hide.
+ * Slider: horizontal snap row with an ember progress bar and round prev/next
+ * buttons below xl. At xl+ the cards sit in one row and the controls hide.
  */
 export function TeamSlider({ children, count }: { children: ReactNode; count: number }) {
   const ref = useRef<HTMLUListElement>(null);
@@ -40,22 +40,22 @@ export function TeamSlider({ children, count }: { children: ReactNode; count: nu
       <ul
         ref={ref}
         data-lenis-prevent-wheel=""
-        className="-mx-[var(--gutter)] flex snap-x snap-mandatory scroll-px-[var(--gutter)] gap-4 overflow-x-auto px-[var(--gutter)] pb-2 [scrollbar-width:none] lg:mx-0 lg:grid lg:gap-8 lg:overflow-visible lg:px-0"
+        className="-mx-[var(--gutter)] flex snap-x snap-mandatory scroll-px-[var(--gutter)] gap-4 overflow-x-auto px-[var(--gutter)] pt-2 pb-4 [scrollbar-width:none] xl:mx-0 xl:grid xl:gap-6 xl:overflow-visible xl:px-0"
         style={{ gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}
       >
         {children}
       </ul>
-      <div className="mt-8 flex items-stretch gap-px lg:hidden">
-        <div className="relative h-11 flex-1 bg-surface" aria-hidden="true">
+      <div className="mt-8 flex items-center gap-2 xl:hidden">
+        <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-surface" aria-hidden="true">
           <span
-            className="absolute inset-y-0 start-0 bg-lime transition-[width] duration-[var(--dur-base)] ease-hover"
+            className="absolute inset-y-0 start-0 rounded-full bg-accent transition-[width] duration-[var(--dur-base)] ease-hover"
             style={{ width: `${Math.max(progress, 1 / Math.max(count, 1)) * 100}%` }}
           />
         </div>
         <button
           type="button"
           onClick={() => step(-1)}
-          className="grid size-11 place-items-center bg-lime text-ink transition-colors hover:bg-paper"
+          className="grid size-11 place-items-center rounded-full bg-accent text-accent-fg transition-colors hover:bg-fg hover:text-bg"
         >
           <ChevronLeft aria-hidden="true" className="size-5 rtl:-scale-x-100" />
           <span className="sr-only">Previous member</span>
@@ -63,7 +63,7 @@ export function TeamSlider({ children, count }: { children: ReactNode; count: nu
         <button
           type="button"
           onClick={() => step(1)}
-          className="grid size-11 place-items-center bg-lime text-ink transition-colors hover:bg-paper"
+          className="grid size-11 place-items-center rounded-full bg-accent text-accent-fg transition-colors hover:bg-fg hover:text-bg"
         >
           <ChevronRight aria-hidden="true" className="size-5 rtl:-scale-x-100" />
           <span className="sr-only">Next member</span>

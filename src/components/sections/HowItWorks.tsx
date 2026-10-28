@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 import { HowStack } from "./HowStack";
 import type { SectionProps } from "./registry";
 
-/** Card colours in order (Wastetide: 01 red, 02 black, 03 grey). */
-const CARD_TONES: Tone[] = ["signal", "night", "panel"];
+/** Card colours in order: 01 ember, 02 charcoal, 03 panel. */
+const CARD_TONES: Tone[] = ["ember", "charcoal", "panel"];
 
 export function HowItWorks({ id, tone, index }: SectionProps) {
   const c = site.content.how;
@@ -26,7 +26,7 @@ export function HowItWorks({ id, tone, index }: SectionProps) {
               key={i}
               data-tone={CARD_TONES[i % CARD_TONES.length]}
               className={cn(
-                "grid h-full gap-6 overflow-hidden border border-line bg-bg p-6 text-fg sm:p-8 md:grid-cols-[1fr_minmax(0,17rem)] md:gap-8 lg:p-9",
+                "grid h-full gap-6 overflow-hidden rounded-card border border-edge bg-bg p-6 text-fg sm:p-8 md:grid-cols-[1fr_minmax(0,17rem)] md:gap-8 lg:p-9",
               )}
             >
               <div className="flex flex-col justify-between gap-8">

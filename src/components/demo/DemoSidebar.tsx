@@ -20,10 +20,10 @@ export function DemoSidebar({ items }: { items: { label: string; icon: IconName 
         onClick={() => setActive(i)}
         aria-current={active === i ? "true" : undefined}
         className={cn(
-          "flex items-center gap-2.5 text-sm font-medium transition-colors duration-[var(--dur-fast)] ease-hover",
+          "flex items-center gap-2.5 rounded-pill text-sm font-medium transition-colors duration-[var(--dur-fast)] ease-hover",
           layout === "col" ? "w-full px-3 py-2.5" : "px-3.5 py-2",
           active === i
-            ? "bg-ink text-paper"
+            ? "bg-fg text-bg"
             : "text-muted hover:bg-fg/5 hover:text-fg",
         )}
       >
@@ -50,7 +50,7 @@ export function DemoSidebar({ items }: { items: { label: string; icon: IconName 
         >
           <p className="label-mono px-3 pt-2 text-subtle">Workspace</p>
           <ul className="-mt-3 flex flex-col gap-1">{items.map((it, i) => item(it, i, "col"))}</ul>
-          <div className="mt-auto border border-dashed border-line-strong p-4">
+          <div className="mt-auto rounded-tile bg-soft p-4">
             <p className="label-mono text-subtle">Sample data</p>
             <p className="mt-2 text-sm text-muted">
               Everything shown here is illustrative. No real family data is used.

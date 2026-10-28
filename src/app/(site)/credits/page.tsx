@@ -27,9 +27,9 @@ export default function CreditsPage() {
           licence listed for each one. Photos may be cropped, recoloured or cut into shapes.
         </p>
 
-        <ul className="mt-12 grid gap-px border border-line bg-line md:grid-cols-2">
+        <ul className="mt-12 grid gap-3 md:grid-cols-2">
           {credits.map((c) => (
-            <li key={c.file} className="flex flex-col gap-2 bg-bg p-6">
+            <li key={c.file} className="flex flex-col gap-2 rounded-tile border border-line bg-surface p-6">
               <p className="label-mono text-subtle">{c.file}</p>
               <p className="text-sm">{c.alt}</p>
               <p className="label-mono text-muted">

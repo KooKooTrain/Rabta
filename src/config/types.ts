@@ -22,7 +22,7 @@ export type SectionId =
   | "faq"
   | "cta";
 
-export type Tone = "paper" | "panel" | "signal" | "forest" | "night";
+export type Tone = "paper" | "panel" | "ember" | "charcoal" | "coal";
 export type GlyphName =
   | "person"
   | "bond"
@@ -125,7 +125,7 @@ export interface FeaturesContent {
 
 export interface AudienceContent {
   eyebrow: Copy;
-  /** Shown above the cycling persona list on the signal slab. */
+  /** Shown above the cycling persona list on the ember slab. */
   heading: Copy;
   intro: Copy;
   items: {
@@ -236,7 +236,7 @@ export interface SiteConfig {
   };
   footer: {
     blurb: Copy;
-    /** Big lime action squares. */
+    /** Big apricot action squares. */
     actions: LinkItem[];
     columns: { title: string; links: LinkItem[] }[];
     legal: Copy;

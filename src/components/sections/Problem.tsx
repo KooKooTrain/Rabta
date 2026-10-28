@@ -11,7 +11,7 @@ import type { SectionProps } from "./registry";
 
 /**
  * 1. Pinned manifesto whose words fill from faded to ink (Wastetide).
- * 2. Stat bento: copy on the left, a giant number + signal and panel tiles on the right.
+ * 2. Stat bento: a rounded heading tile, then paper / ember / charcoal stat tiles.
  */
 export function Problem({ id, tone, index }: SectionProps) {
   const c = site.content.problem;
@@ -28,8 +28,8 @@ export function Problem({ id, tone, index }: SectionProps) {
           </p>
         </ScrubWords>
 
-        <div className="mb-section grid gap-px border border-line bg-line">
-          <div className="grid gap-8 bg-bg p-6 md:grid-cols-2 md:items-end md:p-10">
+        <div className="mb-section grid gap-3">
+          <div data-tone="panel" className="grid gap-8 rounded-card bg-bg p-6 text-fg md:grid-cols-2 md:items-end md:p-10">
             <h2 data-reveal="" className="font-display text-display-xl">
               <T c={c.heading} />
             </h2>
@@ -38,14 +38,14 @@ export function Problem({ id, tone, index }: SectionProps) {
             </p>
           </div>
 
-          <div className="grid gap-px bg-line md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-3">
             {[lead, ...rest].filter(Boolean).map((stat, i) => (
               <div
                 key={i}
                 data-reveal=""
-                data-tone={(["paper", "signal", "night"] as const)[i % 3]}
+                data-tone={(["panel", "ember", "charcoal"] as const)[i % 3]}
                 style={{ "--i": i } as React.CSSProperties}
-                className="flex min-h-72 flex-col justify-end bg-bg p-6 text-fg md:p-8"
+                className="flex min-h-72 flex-col justify-end rounded-card border border-edge bg-bg p-6 text-fg md:p-8"
               >
                 <Stat stat={stat} size="md" />
               </div>

@@ -7,12 +7,13 @@ import { T } from "@/components/ui/Text";
 import { PixelField } from "@/components/visuals/PixelField";
 import { plain } from "@/lib/copy";
 import { isLiveHref } from "@/lib/nav";
+import { cn } from "@/lib/utils";
 import { Container } from "./Container";
 
 const linkCls =
   "underline-offset-4 decoration-line-strong transition-colors duration-[var(--dur-base)] ease-hover hover:text-fg hover:underline";
 
-/** Night footer: lime action squares, [ mono ] link columns, pixel block, giant wordmark. */
+/** Rounded coal footer: ember + cream action tiles, [ mono ] link columns, pixel block, giant wordmark. */
 export function Footer() {
   const f = site.footer;
   const comp = site.competition;
@@ -22,28 +23,27 @@ export function Footer() {
     .filter((col) => col.links.length > 0);
 
   return (
-    <footer data-tone="night" className="relative overflow-x-clip bg-bg text-fg">
-      {/* Action squares */}
+    <footer data-tone="coal" className="relative mx-[var(--inset)] mb-[var(--inset)] overflow-clip rounded-slab border border-edge bg-bg text-fg">
+      {/* Action tiles */}
       {actions.length > 0 && (
-        <div className="grid border-b border-line md:grid-cols-2">
+        <div className="grid gap-2 p-2 md:grid-cols-2">
           {actions.map((a, i) => (
             <Link
               key={a.href}
               href={a.href}
-              className="group flex items-stretch border-line md:[&:nth-child(2)]:border-s"
+              className={cn(
+                "group flex items-center justify-between gap-4 rounded-[calc(var(--radius-slab)-0.5rem)] px-6 py-6 text-ink transition-colors duration-[var(--dur-base)] ease-hover hover:bg-apricot md:px-8 md:py-8",
+                i === 0 ? "bg-ember" : "bg-cream",
+              )}
             >
-              <span className="grid w-16 shrink-0 place-items-center bg-lime text-ink md:w-20">
+              <span className="font-display text-[clamp(1.5rem,1.1rem+1.6vw,2.5rem)] leading-none">
+                <T c={a.label} rich={false} />
+              </span>
+              <span className="grid size-12 shrink-0 place-items-center rounded-full bg-ink text-paper md:size-14">
                 <ArrowRight
                   aria-hidden="true"
                   className="size-6 transition-transform duration-[var(--dur-base)] ease-hover group-hover:translate-x-1 rtl:-scale-x-100"
                 />
-              </span>
-              <span
-                className={`font-display flex flex-1 items-center px-5 py-6 text-[clamp(1.5rem,1.1rem+1.6vw,2.5rem)] leading-none transition-colors duration-[var(--dur-base)] ease-hover group-hover:bg-lime group-hover:text-ink md:px-8 md:py-8 ${
-                  i === 0 ? "bg-forest" : "bg-night-2"
-                }`}
-              >
-                <T c={a.label} rich={false} />
               </span>
             </Link>
           ))}
@@ -57,7 +57,7 @@ export function Footer() {
             <p className="max-w-sm text-sm text-muted">
               <T c={f.blurb} />
             </p>
-            <PixelField className="h-20 w-full max-w-xs" direction="right" cell={14} />
+            <PixelField className="h-20 w-full max-w-xs rounded-tile" direction="right" cell={14} />
           </div>
 
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8">
@@ -99,7 +99,7 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="label-mono mt-16 flex flex-col gap-4 border-t border-dashed border-line py-6 text-subtle md:flex-row md:items-center md:justify-between">
+        <div className="label-mono mt-16 flex flex-col gap-4 border-t border-line py-6 text-subtle md:flex-row md:items-center md:justify-between">
           <p>
             [ © 2026 <T c={site.brand.teamName} rich={false} /> ]
           </p>

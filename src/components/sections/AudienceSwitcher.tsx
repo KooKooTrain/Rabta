@@ -10,13 +10,13 @@ import { plain } from "@/lib/copy";
 import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
 import { cn } from "@/lib/utils";
 
-const SEGMENT_COLORS = ["var(--color-ink)", "var(--color-signal)", "var(--color-rule-strong)", "var(--color-lime)"];
+const SEGMENT_COLORS = ["var(--t-fg)", "var(--color-ember)", "var(--color-rule-strong)", "var(--color-apricot)"];
 const INTERVAL = 3400;
 
 /**
- * Wastetide split: a stacked persona list on the signal slab that auto-cycles
+ * Split: a stacked persona list on the ember slab that auto-cycles
  * (pauses on hover/focus, off-screen, and for reduced motion), its pills, and
- * a white donut card on the grey panel that swaps with the active persona.
+ * a donut card on a rounded panel that swaps with the active persona.
  */
 export function AudienceSwitcher({ items }: { items: AudienceContent["items"] }) {
   const [active, setActive] = useState(0);
@@ -52,7 +52,7 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      {/* Signal slab: persona list + pills */}
+      {/* Ember slab: persona list + pills */}
       <div className="grid gap-8 px-[var(--gutter)] pt-4 pb-12 md:grid-cols-[1fr_auto] md:items-end lg:pb-16">
         <ul className="flex flex-col">
           {items.map((it, i) => (
@@ -64,7 +64,7 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
                 onClick={() => setActive(i)}
                 className={cn(
                   "font-display text-start text-display-xl transition-colors duration-[var(--dur-slow)] ease-scale",
-                  i === active ? "text-emph" : "text-fg hover:text-paper/80",
+                  i === active ? "text-emph" : "text-fg hover:text-emph/80",
                 )}
               >
                 <T c={it.name} rich={false} tag={false} />
@@ -75,7 +75,7 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
         <ul key={active} className="flex flex-wrap gap-2 md:flex-col md:items-end">
           {item.tags.map((tag, i) => (
             <li key={i} className="fade-up" style={{ "--delay": `${i * 80}ms` } as React.CSSProperties}>
-              <Pill className="border-ink bg-transparent font-mono text-xs text-ink uppercase">
+              <Pill className="font-display border-ink bg-transparent px-4 py-1.5 text-base leading-none text-ink">
                 <T c={tag} rich={false} tag={false} />
               </Pill>
             </li>
@@ -83,13 +83,13 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
         </ul>
       </div>
 
-      {/* Grey panel: persona card */}
-      <div data-tone="panel" className="bg-bg px-[var(--gutter)] py-10 text-fg lg:py-12">
+      {/* Rounded panel: persona card */}
+      <div data-tone="panel" className="m-[var(--inset)] mt-0 rounded-card bg-bg px-[var(--gutter)] py-10 text-fg lg:mt-[var(--inset)] lg:ms-0 lg:px-8 lg:py-12">
         <div
           id={panelId}
           key={active}
           aria-live="polite"
-          className="fade-up mx-auto max-w-sm overflow-hidden rounded-lg bg-card"
+          className="fade-up mx-auto max-w-sm overflow-hidden rounded-tile bg-surface"
           style={{ "--delay": "0ms" } as React.CSSProperties}
         >
           {item.photo && (
@@ -101,7 +101,7 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
                 sizes="(min-width: 1024px) 24rem, 90vw"
                 className="object-cover grayscale"
               />
-              <p className="label-mono absolute start-3 bottom-3 bg-signal px-2 py-1 text-ink">
+              <p className="label-mono absolute start-3 bottom-3 rounded-pill bg-ember px-3 py-1 text-ink">
                 <T c={item.name} rich={false} tag={false} />
               </p>
             </div>
@@ -140,7 +140,7 @@ export function AudienceSwitcher({ items }: { items: AudienceContent["items"] })
               <ul aria-hidden="true" className="label-mono space-y-2 text-muted">
                 {item.chart.segments.map((s, i) => (
                   <li key={i} className="flex items-center gap-2">
-                    <span className="size-2.5" style={{ background: SEGMENT_COLORS[i % SEGMENT_COLORS.length] }} />
+                    <span className="size-2.5 rounded-full" style={{ background: SEGMENT_COLORS[i % SEGMENT_COLORS.length] }} />
                     <T c={s.label} rich={false} tag={false} />
                   </li>
                 ))}

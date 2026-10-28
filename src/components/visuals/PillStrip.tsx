@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Chande-style strip of solid pills (lime / bone alternating) on a dark bar.
+ * Strip of solid pills (ember / cream alternating) on a dark bar.
  * Decorative; for a text marquee use the Marquee section.
  */
 export function PillStrip({
@@ -16,15 +16,15 @@ export function PillStrip({
   return (
     <div
       aria-hidden="true"
-      className={cn("flex h-10 items-stretch gap-1.5 bg-night-2 p-1.5 md:h-12", className)}
+      className={cn("flex h-10 items-stretch gap-1.5 bg-surface p-1.5 md:h-12", className)}
     >
       {Array.from({ length: count }, (_, i) => (
         <span
           key={i}
           className={cn(
             "min-w-0 flex-1 rounded-pill",
-            i % 2 === 0 ? "bg-lime" : "bg-paper",
-            i === 0 && "max-w-10 rounded-s-none",
+            i % 2 === 0 ? "bg-ember" : "bg-cream",
+            i === 0 && "max-w-10",
             pillClassName,
           )}
         />

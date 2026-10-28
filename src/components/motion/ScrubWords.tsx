@@ -25,16 +25,15 @@ export function ScrubWords({
       const el = ref.current;
       if (!el) return;
       const words = el.querySelectorAll<HTMLElement>("[data-w]");
-      // GSAP can't tween var(); resolve the tone's colours to real values
-      const css = getComputedStyle(el);
-      const tone = (name: string) => css.getPropertyValue(name).trim();
+      // Tween a 0→1 mix (--p, see globals.css) rather than resolved colours,
+      // so switching light/dark mid-scroll keeps the right tone colours
       const mm = gsap.matchMedia();
       const fade = (opts: ScrollTrigger.Vars) =>
         gsap.fromTo(
           words,
-          { color: tone("--t-fade") },
+          { "--p": 0 },
           {
-            color: (_: number, w: HTMLElement) => tone(w.classList.contains("emph") ? "--t-emph" : "--t-fg"),
+            "--p": 1,
             ease: "none",
             stagger: 0.1,
             scrollTrigger: { trigger: el, scrub: 0.6, ...opts },

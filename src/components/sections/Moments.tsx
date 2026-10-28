@@ -11,7 +11,7 @@ import { seededRandom } from "@/lib/seeded";
 import { cn } from "@/lib/utils";
 import type { SectionProps } from "./registry";
 
-/** Chande stamp collage of family photos on a dark grid, then a pill + pixel band. */
+/** Stamp collage of family photos on a dark grid, then a pill + pixel band. */
 export function Moments({ id, tone, index }: SectionProps) {
   const c = site.content.moments;
   const photos = site.media.moments;
@@ -47,7 +47,7 @@ export function Moments({ id, tone, index }: SectionProps) {
                 key={i}
                 className={cn(
                   "font-display rounded-pill px-5 py-2 text-[clamp(1.125rem,1rem+0.8vw,1.75rem)] leading-none",
-                  i % 2 === 0 ? "bg-lime text-ink" : "bg-paper text-ink",
+                  i % 2 === 0 ? "bg-ember text-ink" : "bg-cream text-ink",
                 )}
               >
                 <T c={pill} rich={false} tag={false} />
@@ -56,11 +56,9 @@ export function Moments({ id, tone, index }: SectionProps) {
           </ul>
         </Container>
       </div>
-      <div className="grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-        <PixelField className="h-24 md:h-28" direction="up" cell={18} />
-        <div className="flex flex-col justify-center bg-night-2">
-          <PillStrip count={9} className="h-full min-h-12" />
-        </div>
+      <div className="grid gap-2 p-2 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <PixelField className="h-24 rounded-[calc(var(--radius-slab)-0.5rem)] md:h-28" direction="up" cell={18} />
+        <PillStrip count={9} className="h-full min-h-12 rounded-[calc(var(--radius-slab)-0.5rem)]" />
       </div>
     </Section>
   );

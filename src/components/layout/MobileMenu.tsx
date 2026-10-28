@@ -7,13 +7,14 @@ import { createPortal } from "react-dom";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { T } from "@/components/ui/Text";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { site } from "@/config/site";
 import { isLiveHref, navItems } from "@/lib/nav";
 import { lockScroll } from "@/lib/smooth-scroll";
 
 const SHEET_ID = "mobile-menu";
 
-/** Full-screen menu for < lg. Clip-path wipe, focus trap, Esc to close. */
+/** Full-screen menu for < lg. Clip-path wipe, focus trap, Esc to close, theme switch. */
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
   // Portal target only exists on the client. The header uses backdrop-filter,
@@ -90,7 +91,7 @@ export function MobileMenu() {
         aria-expanded={open}
         aria-controls={SHEET_ID}
         onClick={() => setOpen(true)}
-        className="inline-flex size-11 items-center justify-center bg-fg text-bg transition-colors duration-[var(--dur-base)] ease-hover hover:bg-signal hover:text-ink lg:hidden"
+        className="inline-flex size-10 items-center justify-center rounded-pill bg-fg text-bg transition-colors duration-[var(--dur-base)] ease-hover hover:bg-accent hover:text-accent-fg lg:hidden"
       >
         <Menu aria-hidden="true" className="size-5" />
         <span className="sr-only">Open menu</span>
@@ -104,7 +105,7 @@ export function MobileMenu() {
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
-            data-tone="night"
+            data-tone="charcoal"
             data-lenis-prevent=""
             inert={!open}
             onClick={onSheetClick}
@@ -122,7 +123,7 @@ export function MobileMenu() {
               <button
                 type="button"
                 onClick={closeAndRefocus}
-                className="inline-flex size-11 items-center justify-center bg-accent text-accent-fg transition-colors duration-[var(--dur-base)] ease-hover hover:bg-fg"
+                className="inline-flex size-10 items-center justify-center rounded-pill bg-accent text-accent-fg transition-colors duration-[var(--dur-base)] ease-hover hover:bg-fg hover:text-bg"
               >
                 <X aria-hidden="true" className="size-5" />
                 <span className="sr-only">Close menu</span>
@@ -130,17 +131,14 @@ export function MobileMenu() {
             </div>
 
             <nav aria-label="Mobile" className="container-site flex-1 overflow-y-auto py-6">
-              <ol className="border-t border-dashed border-line">
+              <ul className="border-t border-line">
                 {navItems.map((item, i) => (
-                  <li key={item.id} className="border-b border-dashed border-line">
+                  <li key={item.id} className="border-b border-line">
                     <Link
                       href={item.href}
                       data-autofocus={i === 0 ? "" : undefined}
-                      className="group flex items-baseline gap-4 py-4"
+                      className="group flex items-baseline py-4"
                     >
-                      <span className="label-mono w-6 text-accent-text">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
                       <span className="block overflow-clip">
                         <span
                           className="font-display block text-[clamp(2.75rem,12vw,4.5rem)] leading-[0.9] tracking-[-0.04em] transition-[transform,color] duration-700 ease-out-soft group-hover:text-accent-text"
@@ -155,14 +153,17 @@ export function MobileMenu() {
                     </Link>
                   </li>
                 ))}
-              </ol>
+              </ul>
             </nav>
 
             <div className="container-site flex shrink-0 flex-col gap-4 pt-4 pb-8">
               {isLiveHref(cta.href) && <Button link={cta} size="lg" className="w-full" />}
-              <p className="label-mono text-muted">
-                <T c={site.brand.teamName} rich={false} /> · {site.competition.theme}
-              </p>
+              <div className="flex items-center justify-between gap-4">
+                <p className="label-mono text-muted">
+                  <T c={site.brand.teamName} rich={false} /> · {site.competition.theme}
+                </p>
+                <ThemeToggle />
+              </div>
             </div>
           </div>,
           document.body,

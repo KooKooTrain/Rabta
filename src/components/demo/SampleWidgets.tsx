@@ -17,18 +17,18 @@ const tasks = [
 ] as const;
 
 const statusDot = {
-  ok: "bg-forest",
+  ok: "bg-charcoal",
   watch: "bg-ember",
-  info: "bg-saffron",
+  info: "bg-apricot",
 } as const;
 
 const statusLabel = { ok: "On track", watch: "Needs attention", info: "Upcoming" } as const;
 
 const split = [
-  { label: "Parents", value: 46, color: "var(--color-forest)" },
+  { label: "Parents", value: 46, color: "var(--t-fg)" },
   { label: "Teens", value: 28, color: "var(--color-ember)" },
-  { label: "Grandparents", value: 16, color: "var(--color-saffron)" },
-  { label: "Kids", value: 10, color: "var(--color-sky)" },
+  { label: "Grandparents", value: 16, color: "var(--color-apricot)" },
+  { label: "Kids", value: 10, color: "var(--color-rule-strong)" },
 ];
 
 export function SampleWidgets() {
@@ -51,11 +51,11 @@ export function SampleWidgets() {
           <p className="font-display text-display-xl tabular-nums">
             18<span className="text-muted">/24</span>
           </p>
-          <div className="h-1.5 overflow-hidden rounded-pill bg-sand" role="img" aria-label="75 percent complete">
-            <div className="h-full w-3/4 rounded-pill bg-signal" />
+          <div className="h-1.5 overflow-hidden rounded-pill bg-soft" role="img" aria-label="75 percent complete">
+            <div className="h-full w-3/4 rounded-pill bg-ember" />
           </div>
           <p className="text-sm text-muted">
-            <span className="font-medium text-signal-ink">+12%</span> vs last week
+            <span className="font-medium text-ember-ink">+12%</span> vs last week
           </p>
         </Card>
 
@@ -95,7 +95,7 @@ export function SampleWidgets() {
             <ul className="flex flex-col gap-1.5 text-sm">
               {split.map((s) => (
                 <li key={s.label} className="flex items-center gap-2">
-                  <span aria-hidden="true" className="size-2.5" style={{ background: s.color }} />
+                  <span aria-hidden="true" className="size-2.5 rounded-full" style={{ background: s.color }} />
                   <span className="text-muted">{s.label}</span>
                   <span className="ms-auto ps-2 tabular-nums">{s.value}%</span>
                 </li>
@@ -108,12 +108,12 @@ export function SampleWidgets() {
         <Card className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <p className="label-mono text-muted">Wellbeing index</p>
-            <span className="rounded-pill bg-lime px-2 py-0.5 text-xs font-medium text-ink">↑ 6 pts</span>
+            <span className="rounded-pill bg-apricot px-2 py-0.5 text-xs font-medium text-ink">↑ 6 pts</span>
           </div>
           <p className="font-display text-display-lg tabular-nums">78</p>
           <Sparkline
             series={[52, 55, 54, 58, 61, 60, 64, 67, 66, 71, 74, 78]}
-            className="h-16 text-signal"
+            className="h-16 text-ember"
             label="Wellbeing index rising from 52 to 78 over 12 weeks"
           />
         </Card>

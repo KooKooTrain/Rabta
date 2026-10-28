@@ -1,11 +1,13 @@
 # Hearthline: AI for Family (hackathon frame)
 
 A home page and base frame for the **6th Annual ADU COE STEM Programming with AI Competition**
-(Advanced Track · theme: *AI for Family* · 29 Oct 2026). The visual language blends two references:
-- **Wastetide-style structure:** bone background, giant condensed caps, one red-orange "signal" accent,
-  a dashed grid with `+` marks, sliced photo hero, pinned stacking cards, stat bentos.
-- **Chande-style texture:** night and forest slabs with neon lime, animated pixel fields, pill strips,
-  striped bands, perforated photo stamps, `[ MONO ]` labels.
+(Advanced Track · theme: *AI for Family* · 29 Oct 2026). The visual language:
+- **One warm palette:** cream background, ember (red-orange) as the only accent, warm charcoal and coal
+  for dark slabs, apricot and cream as soft tints. Light and dark mode (toggle in the header).
+- **Rounded shapes:** pill buttons and tags in condensed caps, rounded tiles and cards, and coloured
+  sections drawn as rounded slabs inset from the page edges.
+- **Structure and texture:** giant condensed caps, sliced photo hero, pinned stacking cards, stat
+  bentos, animated pixel fields, pill strips, striped bands, perforated photo stamps, `[ MONO ]` labels.
 
 **Stack:** Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS v4 · lucide-react ·
 GSAP + ScrollTrigger + Lenis (home page motion) · `motion` (only on /demo). There is no backend logic,
@@ -47,8 +49,9 @@ Node 20.9+ is required (Node 22 or 24 recommended).
 - Fake text is wrapped in `ph("…")`, which renders a visible **[PLACEHOLDER]** tag. Replace
   `ph("old")` with a plain `"new"` string and the tag disappears.
 - Set `flags.showPlaceholderTags: false` to hide every tag at once, for screenshots.
-- In headlines, `\n` is a line break and `*word*` becomes the accent-coloured word (red on light,
-  lime on dark). Headlines render in CAPS automatically, so write them in normal case.
+- In headlines, `\n` is a line break and `*word*` becomes the accent-coloured word (ember on light and
+  dark sections, white on the ember slab). Headlines render in CAPS automatically, so write them in
+  normal case.
 - **Photos:** drop files in `public/photos/`, point `site.media.hero` (the sliced hero band) and
   `site.media.moments` (the stamp collage) at them, and log them in `photo-credits.json` + CREDITS.md.
   Team members and audience personas take an optional `photo` too.
@@ -58,12 +61,17 @@ Node 20.9+ is required (Node 22 or 24 recommended).
   import it there.
 
 ### Editing tokens (rebrand in minutes)
-`src/styles/tokens.css` has three blocks:
+`src/styles/tokens.css` has four blocks:
 1. **Brand palette** (`@theme`): change the hex values. Keep the text/background contrast at AA (4.5:1).
-2. **Tones** (`[data-tone=paper|panel|signal|forest|night]`): which palette colour each section tone uses.
-   Signal is the red slab; forest and night switch the accent to lime.
-3. **Semantic utilities** (`bg-bg`, `text-fg`, `text-muted`, `border-line`, `bg-accent`, …).
-   Components only use these, so steps 1 and 2 restyle everything.
+2. **Tones** (`[data-tone=paper|panel|ember|charcoal|coal]`): which palette colour each section tone uses.
+   `paper` sections run full-bleed; every other tone is drawn as a rounded slab inset from the edges.
+3. **Dark theme** (`[data-theme="dark"]`): overrides for the tones. The theme follows the OS until the
+   visitor uses the toggle; the choice is saved in `localStorage`. Logic lives in `src/lib/theme.ts`.
+4. **Semantic utilities** (`bg-bg`, `text-fg`, `text-muted`, `border-line`, `bg-accent`, `bg-soft`, …).
+   Components only use these, so steps 1–3 restyle everything in both themes.
+
+Radii are tokens too: `rounded-pill` (buttons, tags), `rounded-inner`, `rounded-tile`, `rounded-card`,
+`rounded-slab`.
 
 Fonts: swap the imports in `src/config/fonts.ts` and keep the `variable` names.
 `brand.seed` in `site.ts` reshuffles the pixel fields and photo-shard shapes everywhere.
@@ -140,7 +148,8 @@ Keys are only read on the server. Never prefix them with `NEXT_PUBLIC_`.
 - [ ] Export all the AI chats into one PDF.
 
 ## Accessibility and performance notes
-- Skip link, landmarks, visible focus rings (saffron on dark), AA colour pairs, and native `<details>` for the FAQ.
+- Skip link, landmarks, visible focus rings (apricot on dark), AA colour pairs in both themes, and native
+  `<details>` for the FAQ. The theme toggle is a real button with `aria-pressed`.
 - `prefers-reduced-motion` is respected everywhere: CSS globally, `gsap.matchMedia()` for scroll
   effects, no Lenis, hooks in JS components, and `MotionConfig` in /demo.
 - Content stays visible without JS. Reveal animations only hide content once JS has added `html.js`.

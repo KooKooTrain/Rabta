@@ -67,17 +67,17 @@ export const site = {
   // Order here = order on the page. enabled:false hides a section and its nav link.
   sections: [
     { id: "hero", enabled: true, tone: "paper" },
-    { id: "marquee", enabled: true, tone: "night" },
+    { id: "marquee", enabled: true, tone: "coal" },
     { id: "problem", enabled: true, tone: "paper", navLabel: "Problem" },
     { id: "how", enabled: true, tone: "paper", navLabel: "How it works" },
-    { id: "audience", enabled: true, tone: "signal" },
+    { id: "audience", enabled: true, tone: "ember" },
     { id: "features", enabled: true, tone: "panel", navLabel: "Features" },
-    { id: "moments", enabled: true, tone: "night" },
-    { id: "trust", enabled: true, tone: "night", navLabel: "Trust" },
+    { id: "moments", enabled: true, tone: "charcoal" },
+    { id: "trust", enabled: true, tone: "coal", navLabel: "Trust" },
     { id: "impact", enabled: true, tone: "paper" },
-    { id: "team", enabled: true, tone: "forest", navLabel: "Team" },
+    { id: "team", enabled: true, tone: "charcoal", navLabel: "Team" },
     { id: "faq", enabled: true, tone: "paper", navLabel: "FAQ" },
-    { id: "cta", enabled: true, tone: "signal" },
+    { id: "cta", enabled: true, tone: "ember" },
   ],
 
   content: {
@@ -356,6 +356,8 @@ export const site = {
         { name: ph("Member One"), role: ph("Lead developer"), detail: ph("Grade 11 · School name") },
         { name: ph("Member Two"), role: ph("AI & data"), detail: ph("Grade 11 · School name") },
         { name: ph("Member Three"), role: ph("Design & research"), detail: ph("Grade 10 · School name") },
+        { name: ph("Member Four"), role: ph("Frontend & UX"), detail: ph("Grade 10 · School name") },
+        { name: ph("Member Five"), role: ph("Pitch & testing"), detail: ph("Grade 9 · School name") },
       ],
     },
 

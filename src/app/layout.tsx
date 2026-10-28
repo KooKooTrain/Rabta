@@ -3,6 +3,7 @@ import { fontVariables } from "@/config/fonts";
 import { site } from "@/config/site";
 import { RevealObserver } from "@/components/motion/RevealObserver";
 import { SkipLink } from "@/components/layout/SkipLink";
+import { themeScript } from "@/lib/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,12 +19,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f4f3ee",
-  colorScheme: "light",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f1ea" },
+    { media: "(prefers-color-scheme: dark)", color: "#141110" },
+  ],
+  colorScheme: "light dark",
 };
-
-// Adds `js` class before paint so reveal animations never hide content without JS.
-const jsFlag = `document.documentElement.classList.add('js')`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -34,7 +35,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
+        {/* Before paint: adds the `js` class (reveal animations never hide content
+            without JS) and sets data-theme (saved choice, else the OS setting). */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="min-h-dvh">
         <SkipLink />

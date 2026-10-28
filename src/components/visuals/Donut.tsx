@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 export interface DonutSegment {
   value: number;
-  /** Any CSS colour, e.g. "var(--color-forest)" */
+  /** Any CSS colour, e.g. "var(--color-charcoal)" */
   color: string;
   label?: string;
 }

@@ -35,7 +35,7 @@ export function Stamp({
       style={{ "--rot": `${rotate}deg` } as React.CSSProperties}
     >
       <div className="stamp">
-        <div className={cn("relative overflow-hidden bg-night-2", aspect)}>
+        <div className={cn("relative overflow-hidden bg-charcoal-2", aspect)}>
           {photo ? (
             <Image
               src={photo.src}
@@ -51,7 +51,7 @@ export function Stamp({
         {caption && photo?.caption && (
           <figcaption className="label-mono mt-2 flex items-center justify-between gap-2 text-ink">
             <T c={photo.caption} rich={false} tag={false} />
-            <span aria-hidden="true" className="text-signal-ink">
+            <span aria-hidden="true" className="text-ember-ink">
               ●
             </span>
           </figcaption>

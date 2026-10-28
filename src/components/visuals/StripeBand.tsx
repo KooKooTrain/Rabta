@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 
-const STEPS = ["#0d1411", "#13221a", "#1e4d33", "#3d6b4a", "#7d9a74", "#b9c4a3", "#e2e2cf", "#f4f3ee"];
+const STEPS = ["#141110", "#221c19", "#3a2219", "#7a2e10", "#d9440f", "#ff7f4d", "#ffb38a", "#ffe6d4"];
 
 /**
- * Horizontal stripes stepping between night and bone; the light stripes get
- * slanted ends (Chande). Use as a transition between sections.
+ * Horizontal stripes stepping between coal, ember and cream; the light
+ * stripes get slanted, rounded-off ends. Use as a transition between sections.
  */
 export function StripeBand({
   direction = "dark-to-light",
@@ -15,7 +15,7 @@ export function StripeBand({
 }) {
   const steps = direction === "dark-to-light" ? STEPS : [...STEPS].reverse();
   return (
-    <div aria-hidden="true" className={cn("flex flex-col bg-night", className)}>
+    <div aria-hidden="true" className={cn("flex flex-col", className)}>
       {steps.map((color, i) => {
         const light = STEPS.indexOf(color) >= STEPS.length - 3;
         return (
@@ -25,6 +25,7 @@ export function StripeBand({
             style={{
               backgroundColor: color,
               clipPath: light ? "polygon(0 0, 100% 0, calc(100% - 14px) 100%, 14px 100%)" : undefined,
+              borderRadius: light ? "0 0 999px 999px" : undefined,
             }}
           />
         );

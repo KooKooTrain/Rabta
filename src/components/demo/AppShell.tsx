@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { T } from "@/components/ui/Text";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { site } from "@/config/site";
 import { plain } from "@/lib/copy";
 import { ChatPanel } from "./ChatPanel";
@@ -24,7 +25,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <p className="hidden truncate text-sm text-muted md:block">
             <T c={demo.title} tag={false} />
           </p>
-          <span className="label-mono hidden bg-ink px-2 py-1 text-paper sm:inline-block">
+          <span className="label-mono hidden rounded-pill bg-fg px-2.5 py-1 text-bg sm:inline-block">
             Prototype
           </span>
           <ModeBadge className="hidden min-[400px]:inline-flex" />
@@ -36,6 +37,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="hidden sm:inline">Back to site</span>
             <span className="sm:hidden">Site</span>
           </Link>
+          <ThemeToggle className="size-9" />
         </div>
       </header>
 

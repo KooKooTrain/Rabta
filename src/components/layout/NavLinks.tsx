@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { navItems } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
-/** Desktop nav. Highlights the section currently in view (home page only). */
+/**
+ * Desktop nav: plain tabs with one underline that slides to the section
+ * currently in view (home page only).
+ */
 export function NavLinks({ className }: { className?: string }) {
   const pathname = usePathname();
   const [active, setActive] = useState<string | null>(null);
@@ -41,32 +44,53 @@ export function NavLinks({ className }: { className?: string }) {
 
   const current = pathname === "/" ? active : null;
 
+  // Underline: measure the active tab and move one bar under it
+  const listRef = useRef<HTMLUListElement>(null);
+  const [bar, setBar] = useState<{ x: number; w: number } | null>(null);
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const measure = () => {
+      const el = current ? list.querySelector<HTMLElement>(`[data-nav="${current}"]`) : null;
+      setBar(el ? { x: el.offsetLeft, w: el.offsetWidth } : null);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(list);
+    return () => ro.disconnect();
+  }, [current]);
+
   return (
-    <nav aria-label="Primary" className={cn("items-center", className)}>
-      <ul className="flex items-center">
-        {navItems.map((item, i) => {
+    <nav aria-label="Primary" className={cn("items-stretch", className)}>
+      <ul ref={listRef} className="relative flex items-stretch gap-1">
+        {navItems.map((item) => {
           const isActive = current === item.id;
           return (
-            <li key={item.id}>
+            <li key={item.id} className="flex">
               <Link
                 href={item.href}
+                data-nav={item.id}
                 aria-current={isActive ? "true" : undefined}
                 className={cn(
-                  "label-mono inline-flex items-baseline gap-1.5 px-3 py-2 transition-colors duration-[var(--dur-base)] ease-hover",
-                  isActive ? "bg-fg text-bg" : "text-fg hover:bg-fg/[0.07]",
+                  "relative inline-flex items-center px-3 text-[0.9375rem] font-medium transition-colors duration-[var(--dur-base)] ease-hover",
+                  "after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-line-strong after:transition-transform after:duration-[var(--dur-base)] after:ease-hover hover:after:scale-x-100",
+                  isActive ? "text-fg after:opacity-0" : "text-muted hover:text-fg",
                 )}
               >
-                <span
-                  aria-hidden="true"
-                  className={cn("text-[0.625rem]", isActive ? "text-signal" : "text-accent-text")}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
                 {item.label}
               </Link>
             </li>
           );
         })}
+        <li
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0 left-0 h-[3px] rounded-full bg-accent transition-[transform,width,opacity] duration-[var(--dur-slow)] ease-out-soft"
+          style={{
+            width: bar ? bar.w - 24 : 0,
+            transform: `translateX(${bar ? bar.x + 12 : 0}px)`,
+            opacity: bar ? 1 : 0,
+          }}
+        />
       </ul>
     </nav>
   );

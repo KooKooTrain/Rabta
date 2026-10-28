@@ -7,8 +7,8 @@ import { T } from "@/components/ui/Text";
 import type { SectionProps } from "./registry";
 
 /**
- * "The effect" bento (Wastetide): heading + note on the left; a giant number
- * with a signal tile and a grey tile under it on the right.
+ * "The effect" bento: heading + note on the left; a giant number with an
+ * ember tile and a charcoal tile under it on the right. All rounded tiles.
  */
 export function Impact({ id, tone, index }: SectionProps) {
   const c = site.content.impact;
@@ -17,8 +17,8 @@ export function Impact({ id, tone, index }: SectionProps) {
   return (
     <Section id={id} tone={tone}>
       <Container>
-        <div className="grid gap-px border border-line bg-line lg:grid-cols-2">
-          <div className="flex flex-col justify-between gap-12 bg-bg p-6 md:p-10">
+        <div className="grid gap-3 lg:grid-cols-2">
+          <div data-tone="panel" className="flex flex-col justify-between gap-12 rounded-card bg-bg p-6 text-fg md:p-10">
             <div className="flex flex-col gap-6">
               <div data-reveal="">
                 <Eyebrow c={c.eyebrow} index={index} />
@@ -32,9 +32,9 @@ export function Impact({ id, tone, index }: SectionProps) {
             </p>
           </div>
 
-          <div className="grid gap-px bg-line sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {lead && (
-              <div data-reveal="" className="flex flex-col items-end bg-bg p-6 text-end sm:col-span-2 md:p-10">
+              <div data-reveal="" data-tone="panel" className="flex flex-col items-end rounded-card bg-bg p-6 text-end text-fg sm:col-span-2 md:p-10">
                 <Stat stat={lead} size="xl" className="items-end" />
               </div>
             )}
@@ -42,9 +42,9 @@ export function Impact({ id, tone, index }: SectionProps) {
               <div
                 key={i}
                 data-reveal=""
-                data-tone={i === 0 ? "signal" : "panel"}
+                data-tone={i === 0 ? "ember" : "charcoal"}
                 style={{ "--i": i + 1 } as React.CSSProperties}
-                className="flex min-h-64 flex-col justify-end bg-bg p-6 text-fg md:p-8"
+                className="flex min-h-64 flex-col justify-end rounded-card border border-edge bg-bg p-6 text-fg md:p-8"
               >
                 <Stat stat={stat} size="md" />
               </div>

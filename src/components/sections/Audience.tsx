@@ -16,7 +16,7 @@ export function Audience({ id, tone, index }: SectionProps) {
           <div data-reveal="">
             <Eyebrow c={c.eyebrow} index={index} />
           </div>
-          <h2 data-reveal="" className="font-display text-display-lg text-paper">
+          <h2 data-reveal="" className="font-display text-display-lg">
             <T c={c.heading} />
           </h2>
         </div>

@@ -79,7 +79,7 @@ export function ChatPanel({
     <MotionConfig reducedMotion="user" transition={{ duration: 0.45, ease: ease.outSoft }}>
       <section className="flex h-full max-h-[min(680px,85dvh)] min-h-[420px] flex-col xl:max-h-none">
         <header className="flex items-center gap-3 border-b border-line px-5 py-4">
-          <span className="grid size-8 place-items-center rounded-full bg-saffron">
+          <span className="grid size-8 place-items-center rounded-full bg-apricot">
             <Glyph name="spark" color="var(--color-ink)" className="size-5" />
           </span>
           <div className="min-w-0">
@@ -96,7 +96,7 @@ export function ChatPanel({
           className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-5"
         >
           {empty && (
-            <div className="border border-dashed border-line-strong p-4">
+            <div className="rounded-tile bg-soft p-4">
               <p className="text-sm text-muted">
                 Ask anything about the family week. Replies are scripted in mock mode, so it works with no API key.
               </p>
@@ -112,7 +112,7 @@ export function ChatPanel({
                 className={cn("flex gap-2.5", m.role === "user" && "justify-end")}
               >
                 {m.role === "assistant" && (
-                  <span aria-hidden="true" className="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-saffron">
+                  <span aria-hidden="true" className="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-apricot">
                     <Glyph name="spark" color="var(--color-ink)" className="size-3.5" />
                   </span>
                 )}
@@ -120,9 +120,9 @@ export function ChatPanel({
                   <p className="sr-only">{m.role === "user" ? "You said:" : `${assistantName} said:`}</p>
                   <div
                     className={cn(
-                      "px-4 py-3 text-start text-[0.9375rem] leading-relaxed whitespace-pre-line",
+                      "rounded-tile px-4 py-3 text-start text-[0.9375rem] leading-relaxed whitespace-pre-line",
                       m.role === "user"
-                        ? "bg-ink text-paper"
+                        ? "rounded-ee-md bg-fg text-bg"
                         : "border border-line bg-surface text-fg",
                     )}
                   >
@@ -141,10 +141,10 @@ export function ChatPanel({
                 exit={{ opacity: 0 }}
                 className="flex items-center gap-2.5"
               >
-                <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-saffron">
+                <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-apricot">
                   <Glyph name="spark" color="var(--color-ink)" className="size-3.5" />
                 </span>
-                <span className="inline-flex gap-1 border border-line bg-surface px-4 py-3.5">
+                <span className="inline-flex gap-1 rounded-tile border border-line bg-surface px-4 py-3.5">
                   <span className="sr-only">{assistantName} is typing</span>
                   {[0, 1, 2].map((i) => (
                     <motion.span
@@ -161,7 +161,7 @@ export function ChatPanel({
           </AnimatePresence>
 
           {error && (
-            <div role="alert" className="flex flex-wrap items-center gap-3 border border-ember-ink/40 bg-blush/50 px-4 py-3 text-sm">
+            <div role="alert" className="flex flex-wrap items-center gap-3 rounded-tile border border-ember-ink/40 bg-blush/50 px-4 py-3 text-sm">
               <span className="text-ink">Couldn&apos;t get a reply: {error}</span>
               <button
                 type="button"
@@ -184,7 +184,7 @@ export function ChatPanel({
                     type="button"
                     onClick={() => send(p)}
                     disabled={pending}
-                    className="rounded-pill border border-dashed border-line-strong px-3 py-1.5 text-start text-sm text-muted transition-colors duration-[var(--dur-fast)] hover:border-solid hover:border-fg hover:text-fg disabled:opacity-50"
+                    className="rounded-pill border border-line-strong px-3 py-1.5 text-start text-sm text-muted transition-colors duration-[var(--dur-fast)] hover:border-fg hover:text-fg disabled:opacity-50"
                   >
                     {p}
                   </button>
@@ -197,7 +197,7 @@ export function ChatPanel({
               e.preventDefault();
               send(input);
             }}
-            className="flex items-end gap-2 border border-line-strong bg-surface p-2 focus-within:border-fg"
+            className="flex items-end gap-2 rounded-[1.5rem] border border-line-strong bg-surface p-2 focus-within:border-fg"
           >
             <label htmlFor={inputId} className="sr-only">
               Message {assistantName}

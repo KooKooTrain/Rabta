@@ -6,7 +6,7 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: calc(var(--header-h) + 1rem);
-    background: var(--color-paper);
+    background: var(--t-bg);
   }
   /* Native smooth scroll only when Lenis is not running */
   @media (prefers-reduced-motion: no-preference) {
@@ -24,7 +24,7 @@
     text-rendering: optimizeLegibility;
   }
   ::selection {
-    background: var(--color-signal);
+    background: var(--color-ember);
     color: var(--color-ink);
   }
   :focus-visible {
@@ -248,13 +248,14 @@ html.lenis body {
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: var(--color-signal);
-    clip-path: inset(100% 0 0 0);
+    border-radius: inherit;
+    background: var(--color-ember);
+    clip-path: inset(100% 0 0 0 round var(--radius-tile));
     transition: clip-path var(--dur-wipe) var(--ease-wipe);
   }
   .wipe-tile:hover::before,
   .wipe-tile:focus-within::before {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(0 0 0 0 round var(--radius-tile));
   }
 }
 
@@ -321,6 +322,17 @@ html.lenis body {
     transform: scale(2.6);
     opacity: 0;
   }
+}
+
+/* Scrubbed words (ScrubWords): GSAP tweens --p from 0 to 1; the colour mixes
+   the tone's faded colour into ink (or the accent for *emph* words). Unlayered
+   so it beats the .emph utility. Without JS --p stays 1 (full colour). */
+[data-w] {
+  --w-to: var(--t-fg);
+  color: color-mix(in oklab, var(--w-to) calc(var(--p, 1) * 100%), var(--t-fade));
+}
+[data-w].emph {
+  --w-to: var(--t-emph);
 }
 
 /* Global reduced-motion guard */

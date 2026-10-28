@@ -6,19 +6,19 @@ import { seededRandom } from "@/lib/seeded";
 import { cn } from "@/lib/utils";
 
 /**
- * The brand texture: a grid of square "keys" whose colour steps along a
+ * The brand texture: a grid of soft-cornered "keys" whose colour steps along a
  * gradient, dithered by seeded noise, with a slow wave rippling through it.
  * Canvas, DPR-aware, pauses off-screen, static under reduced motion.
  * Size it with the wrapper (className); the canvas fills it.
  */
 
 const PALETTES = {
-  // dark → light (Chande)
-  lime: ["#0d1411", "#11271b", "#1e4d33", "#2c7a2c", "#48b726", "#6cf02d", "#b9f78f", "#f4f3ee"],
-  // dark → light (Wastetide red)
-  signal: ["#170d0a", "#2a0b05", "#5c140a", "#a32210", "#e0321a", "#ff3b1f", "#ff8a70", "#f4f3ee"],
-  // greys for light sections
-  ink: ["#170d0a", "#3b3532", "#57504c", "#8d8780", "#b9b1ae", "#d6d3cb", "#e9e8e1", "#f4f3ee"],
+  // coal → apricot → cream: the default texture on dark sections
+  warm: ["#141110", "#221c19", "#33271f", "#5a3424", "#a14a26", "#ff7f4d", "#ffb38a", "#ffe6d4"],
+  // ink → ember → cream: hotter, for the ember slab and accents
+  ember: ["#1c1714", "#2b0e04", "#5c1f08", "#a8360f", "#e04a16", "#ff5a1f", "#ff9a70", "#ffe6d4"],
+  // warm greys for light sections
+  ink: ["#1c1714", "#3a322d", "#574e48", "#8e847b", "#c2b8ae", "#ddd4c7", "#ebe4d9", "#f5f1ea"],
 } as const;
 
 export type PixelPalette = keyof typeof PALETTES;
@@ -26,7 +26,7 @@ type Direction = "up" | "down" | "left" | "right" | "radial";
 
 export function PixelField({
   className,
-  palette = "lime",
+  palette = "warm",
   cell = 22,
   gap = 2,
   direction = "up",
@@ -101,6 +101,7 @@ export function PixelField({
     const draw = (t: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const s = cell - gap;
+      const radius = Math.min(s * 0.28, 6);
       const steps = colors.length - 1;
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
@@ -110,14 +111,9 @@ export function PixelField({
           const px = x * cell;
           const py = y * cell;
           ctx.fillStyle = colors[idx];
-          ctx.fillRect(px, py, s, s);
-          // "key" bevel: light top edge, dark bottom edge
-          if (idx > 0 && s > 8) {
-            ctx.fillStyle = "rgba(255,255,255,0.18)";
-            ctx.fillRect(px, py, s, Math.max(2, s * 0.14));
-            ctx.fillStyle = "rgba(0,0,0,0.22)";
-            ctx.fillRect(px, py + s - Math.max(2, s * 0.14), s, Math.max(2, s * 0.14));
-          }
+          ctx.beginPath();
+          ctx.roundRect(px, py, s, s, radius);
+          ctx.fill();
         }
       }
     };

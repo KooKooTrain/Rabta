@@ -6,10 +6,12 @@ import { cn } from "@/lib/utils";
 const showGrid: boolean = site.flags.showBlueprintGrid;
 
 /**
- * Section wrapper: sets the tone (colours flip via tokens.css), the anchor id,
- * vertical rhythm, a dashed top rule, and the blueprint guides at the container
- * edges with "+" marks where they meet the rule.
- * Use `overflow-x-clip` (not overflow-hidden) on sections so the marks show.
+ * Section wrapper: sets the tone (colours flip via tokens.css), the anchor id
+ * and vertical rhythm.
+ * - `paper` sections run full-bleed with a dashed top rule and blueprint
+ *   guides at the container edges ("+" marks where they meet the rule).
+ * - Every other tone is a rounded slab inset from the page edges.
+ * Use `overflow-x-clip` (not overflow-hidden) on paper sections so the marks show.
  */
 export function Section({
   id,
@@ -27,12 +29,18 @@ export function Section({
   guides?: boolean;
   innerClassName?: string;
 } & React.ComponentProps<"section">) {
-  const grid = showGrid && guides;
+  const slab = tone !== "paper";
+  const grid = showGrid && guides && !slab;
   return (
     <section
       id={id}
       data-tone={tone}
-      className={cn("relative bg-bg text-fg", grid && "border-t border-dashed border-line", className)}
+      className={cn(
+        "relative bg-bg text-fg",
+        slab && "mx-[var(--inset)] my-[var(--inset)] overflow-clip rounded-slab border border-edge",
+        grid && "border-t border-dashed border-line",
+        className,
+      )}
       {...props}
     >
       {grid && (

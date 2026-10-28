@@ -28,7 +28,7 @@ export default function NotFound() {
             <Button link={{ label: "Open the demo", href: "/demo" }} variant="secondary" size="lg" />
           </div>
         </Container>
-        <PixelField palette="signal" direction="up" className="h-24 md:h-32" />
+        <PixelField palette="ember" direction="up" className="mx-[var(--inset)] mb-[var(--inset)] h-24 rounded-slab md:h-32" />
       </main>
       <Footer />
     </>

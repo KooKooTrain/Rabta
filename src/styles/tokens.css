@@ -1,45 +1,42 @@
 /* ==========================================================================
    DESIGN TOKENS: the ONLY place colours, type, radii, shadows and motion
-   live. Rebrand = edit block 1 (palette) and block 2 (tones).
+   live. Rebrand = edit block 1 (palette), block 2 (tones) and block 3 (dark).
    Fonts are chosen in src/config/fonts.ts (next/font must run in JS).
    ========================================================================== */
 
-/* 1. BRAND PALETTE ------------------------------------------------------- */
+/* 1. BRAND PALETTE: one warm family (ember + charcoal + cream) ------------ */
 @theme {
-  /* Neutrals */
-  --color-paper: #f4f3ee; /* bone: page background */
-  --color-panel: #e9e8e1; /* grey panels */
+  /* Light neutrals */
+  --color-paper: #f5f1ea; /* cream: page background */
+  --color-panel: #ebe4d9; /* warm grey panels */
   --color-card: #ffffff;
-  --color-ink: #170d0a; /* warm near-black */
-  --color-ink-muted: #57504c; /* 7.1:1 on paper */
-  --color-ink-subtle: #6e6763; /* 5.0:1 on paper, 4.5:1 on panel */
-  --color-fade: #b9b1ae; /* scrubbed / faded display words (large type only) */
-  --color-rule: #d6d3cb; /* decorative hairlines only */
-  --color-rule-strong: #8d8780; /* control borders (3:1) */
+  --color-ink: #1c1714; /* warm near-black */
+  --color-ink-muted: #574e48; /* 7.6:1 on paper */
+  --color-ink-subtle: #6b625c; /* 5.6:1 on paper, 4.9:1 on panel */
+  --color-fade: #c2b8ae; /* scrubbed / faded display words (large type only) */
+  --color-rule: #ddd4c7; /* decorative hairlines only */
+  --color-rule-strong: #8e847b; /* control borders (3:1) */
 
-  /* Signal: the one loud accent on light surfaces */
-  --color-signal: #ff3b1f; /* slabs, buttons (ink label 5.4:1), stat tiles, + markers */
-  --color-signal-ink: #c42a12; /* small red text on paper/panel (AA) */
-  --color-signal-deep: #2a0b05; /* small text on signal (5.1:1) */
-  --color-signal-soft: #ff6a50; /* red on dark (6.6:1 on night) */
+  /* Ember: the one accent, in both themes */
+  --color-ember: #ff5a1f; /* slabs, buttons (ink label 5.7:1), stat tiles, + marks */
+  --color-ember-ink: #b23a0c; /* small ember text on paper/panel (AA) */
+  --color-ember-deep: #2b0e04; /* small text on the ember slab */
+  --color-ember-soft: #ff7f4d; /* ember text on charcoal/coal */
+  --color-apricot: #ffb38a; /* soft accent: pills, progress, second chart colour */
+  --color-cream: #ffe6d4; /* lightest warm tint */
 
-  /* Darks + lime: the accent on dark surfaces only */
-  --color-forest: #1e4d33;
-  --color-night: #0d1411;
-  --color-night-2: #1a2523;
-  --color-lime: #6cf02d; /* 12.6:1 on night, 6.5:1 on forest; never on light */
+  /* Darks */
+  --color-charcoal: #221c19; /* dark slabs */
+  --color-charcoal-2: #2e2622; /* panels on dark */
+  --color-coal: #141110; /* darkest: footer, marquee, dark-mode page */
 
-  /* Legacy aliases (older components + /demo keep working) */
+  /* Legacy aliases (older demo components keep working) */
   --color-sand: var(--color-panel);
-  --color-ember: var(--color-signal);
-  --color-ember-ink: var(--color-signal-ink);
-  --color-ember-hover: #a32210;
-  --color-ember-soft: var(--color-signal-soft);
-  --color-saffron: var(--color-lime);
-  --color-sage: #d4ecc4;
-  --color-sky: #dfe3dd;
-  --color-blush: #ffd5cc;
-  --color-butter: #ecf3c6;
+  --color-ember-hover: #d9440f;
+  --color-sage: #f1e6d8;
+  --color-sky: #e9e3da;
+  --color-blush: #ffd9c7;
+  --color-butter: #fbecd6;
 
   /* Type: families come from next/font CSS variables (src/config/fonts.ts) */
   --font-display: var(--font-display-src), ui-sans-serif, system-ui, sans-serif;
@@ -74,17 +71,21 @@
   /* Layout */
   --container-site: 90rem;
 
-  /* Radii: square by default; pills for tags only */
-  --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Radii: pills for controls and tags, soft corners for every surface */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-inner: 0.875rem; /* chips, small cards inside tiles */
+  --radius-tile: 1.25rem; /* bento tiles, FAQ rows */
+  --radius-card: 1.75rem; /* big cards, slabs inside sections */
+  --radius-slab: 2rem; /* tonal sections, footer */
   --radius-pill: 999px;
 
   /* Shadows: hairlines, no soft drop shadows */
-  --shadow-hair: 0 0 0 1px rgb(23 13 10 / 0.08);
-  --shadow-lift: 0 0 0 1px rgb(23 13 10 / 0.1), 0 18px 40px -24px rgb(23 13 10 / 0.35);
+  --shadow-hair: 0 0 0 1px rgb(28 23 20 / 0.08);
+  --shadow-lift: 0 0 0 1px rgb(28 23 20 / 0.1), 0 18px 40px -24px rgb(28 23 20 / 0.35);
 
   /* Easings */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -97,7 +98,9 @@
   /* Spacing rhythm */
   --gutter: clamp(1rem, 3.2vw, 2.5rem);
   --space-section: clamp(4.5rem, 9vw, 8.5rem);
-  --header-h: 4rem;
+  --header-h: 4.25rem;
+  /* Gap between the page edge and inset (rounded) tonal sections */
+  --inset: clamp(0.375rem, 0.9vw, 0.75rem);
 
   /* Display face width (Archivo 'wdth' axis: 62–125) */
   --display-stretch: 72%;
@@ -113,7 +116,8 @@
   --dur-marquee: 36s;
 }
 
-/* 2. TONES: sections set data-tone; components only use semantic colours -- */
+/* 2. TONES (light theme): sections set data-tone; components only use the
+      semantic colours below, so tones and themes restyle everything. ------ */
 :root,
 [data-tone="paper"],
 [data-tone="panel"] {
@@ -125,62 +129,119 @@
   --t-fade: var(--color-fade);
   --t-line: var(--color-rule);
   --t-line-strong: var(--color-rule-strong);
-  --t-accent: var(--color-signal);
+  --t-accent: var(--color-ember);
   --t-accent-fg: var(--color-ink);
-  --t-accent-text: var(--color-signal-ink);
-  --t-emph: var(--color-signal);
+  --t-accent-text: var(--color-ember-ink);
+  --t-emph: var(--color-ember);
+  --t-soft: var(--color-panel); /* second pill / chip fill */
+  --t-soft-fg: var(--color-ink);
   --t-wipe: var(--color-ink);
   --t-wipe-fg: var(--color-paper);
-  --t-mark: var(--color-signal);
+  --t-mark: var(--color-ember);
   --t-focus: var(--color-ink);
+  --t-edge: transparent; /* hairline around inset slabs (dark theme) */
 }
 [data-tone="panel"] {
   --t-bg: var(--color-panel);
+  --t-soft: var(--color-paper);
 }
-[data-tone="signal"] {
-  --t-bg: var(--color-signal);
-  --t-surface: rgb(23 13 10 / 0.06);
+[data-tone="ember"] {
+  --t-bg: var(--color-ember);
+  --t-surface: rgb(28 23 20 / 0.08);
   --t-fg: var(--color-ink);
-  --t-muted: var(--color-signal-deep);
-  --t-subtle: var(--color-signal-deep);
-  --t-fade: rgb(244 243 238 / 0.5);
-  --t-line: rgb(23 13 10 / 0.22);
-  --t-line-strong: rgb(23 13 10 / 0.6);
+  --t-muted: var(--color-ember-deep);
+  --t-subtle: var(--color-ember-deep);
+  --t-fade: rgb(255 230 212 / 0.55);
+  --t-line: rgb(28 23 20 / 0.22);
+  --t-line-strong: rgb(28 23 20 / 0.6);
   --t-accent: var(--color-ink);
   --t-accent-fg: var(--color-paper);
   --t-accent-text: var(--color-ink);
-  --t-emph: var(--color-paper); /* large display only */
+  --t-emph: #ffffff; /* large display only (3.1:1) */
+  --t-soft: var(--color-cream);
+  --t-soft-fg: var(--color-ink);
   --t-wipe: var(--color-paper);
   --t-wipe-fg: var(--color-ink);
   --t-mark: var(--color-ink);
   --t-focus: var(--color-ink);
+  --t-edge: transparent;
 }
-[data-tone="forest"],
-[data-tone="night"] {
-  --t-bg: var(--color-forest);
-  --t-surface: rgb(244 243 238 / 0.06);
+[data-tone="charcoal"],
+[data-tone="coal"] {
+  --t-bg: var(--color-charcoal);
+  --t-surface: var(--color-charcoal-2);
   --t-fg: var(--color-paper);
-  --t-muted: #c6d2c9;
-  --t-subtle: #afc0b3;
-  --t-fade: rgb(244 243 238 / 0.28);
-  --t-line: rgb(244 243 238 / 0.16);
-  --t-line-strong: rgb(244 243 238 / 0.48);
-  --t-accent: var(--color-lime);
+  --t-muted: #cfc4ba;
+  --t-subtle: #b3a79c;
+  --t-fade: rgb(245 241 234 / 0.26);
+  --t-line: rgb(245 241 234 / 0.14);
+  --t-line-strong: rgb(245 241 234 / 0.45);
+  --t-accent: var(--color-ember);
   --t-accent-fg: var(--color-ink);
-  --t-accent-text: var(--color-lime);
-  --t-emph: var(--color-lime);
+  --t-accent-text: var(--color-ember-soft);
+  --t-emph: var(--color-ember-soft);
+  --t-soft: var(--color-apricot);
+  --t-soft-fg: var(--color-ink);
   --t-wipe: var(--color-paper);
   --t-wipe-fg: var(--color-ink);
-  --t-mark: var(--color-lime);
-  --t-focus: var(--color-lime);
+  --t-mark: var(--color-ember-soft);
+  --t-focus: var(--color-apricot);
+  --t-edge: transparent;
 }
-[data-tone="night"] {
-  --t-bg: var(--color-night);
-  --t-surface: var(--color-night-2);
-  --t-mark: var(--color-signal-soft);
+[data-tone="coal"] {
+  --t-bg: var(--color-coal);
+  --t-surface: var(--color-charcoal);
 }
 
-/* 3. SEMANTIC UTILITIES: bg-bg, bg-surface, text-fg, text-muted, border-line … */
+/* 3. DARK THEME: <html data-theme="dark"> (set before paint by the root
+      layout). Light tones turn dark; ember stays ember; dark slabs lift a
+      step and get a hairline so they still read as panels. -------------- */
+:root[data-theme="dark"],
+[data-theme="dark"] [data-tone="paper"],
+[data-theme="dark"] [data-tone="panel"] {
+  --t-bg: var(--color-coal);
+  --t-surface: var(--color-charcoal);
+  --t-fg: var(--color-paper);
+  --t-muted: #cfc4ba;
+  --t-subtle: #b3a79c;
+  --t-fade: rgb(245 241 234 / 0.24);
+  --t-line: rgb(245 241 234 / 0.13);
+  --t-line-strong: rgb(245 241 234 / 0.42);
+  --t-accent: var(--color-ember);
+  --t-accent-fg: var(--color-ink);
+  --t-accent-text: var(--color-ember-soft);
+  --t-emph: var(--color-ember-soft);
+  --t-soft: var(--color-charcoal-2);
+  --t-soft-fg: var(--color-paper);
+  --t-wipe: var(--color-paper);
+  --t-wipe-fg: var(--color-ink);
+  --t-mark: var(--color-ember-soft);
+  --t-focus: var(--color-apricot);
+  --t-edge: transparent;
+}
+[data-theme="dark"] [data-tone="panel"] {
+  --t-bg: var(--color-charcoal);
+  --t-surface: var(--color-charcoal-2);
+  --t-soft: var(--color-coal);
+}
+[data-theme="dark"] [data-tone="charcoal"] {
+  --t-bg: #2a231f;
+  --t-surface: #3a312c;
+  --t-edge: rgb(245 241 234 / 0.1);
+}
+[data-theme="dark"] [data-tone="coal"] {
+  --t-bg: #1d1916;
+  --t-surface: #2a231f;
+  --t-edge: rgb(245 241 234 / 0.1);
+}
+:root {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* 4. SEMANTIC UTILITIES: bg-bg, bg-surface, text-fg, text-muted, border-line … */
 @theme inline {
   --color-bg: var(--t-bg);
   --color-surface: var(--t-surface);
@@ -194,8 +255,11 @@
   --color-accent-fg: var(--t-accent-fg);
   --color-accent-text: var(--t-accent-text);
   --color-emph: var(--t-emph);
+  --color-soft: var(--t-soft);
+  --color-soft-fg: var(--t-soft-fg);
   --color-wipe: var(--t-wipe);
   --color-wipe-fg: var(--t-wipe-fg);
   --color-mark: var(--t-mark);
   --color-focus: var(--t-focus);
+  --color-edge: var(--t-edge);
 }

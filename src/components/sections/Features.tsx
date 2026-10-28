@@ -10,7 +10,7 @@ import { plain } from "@/lib/copy";
 import { cn } from "@/lib/utils";
 import type { SectionProps } from "./registry";
 
-/** Hairline bento: one large live-chart tile + icon tiles that fill red on hover. */
+/** Rounded bento: one large live-chart tile + icon tiles that fill ember on hover. */
 export function Features({ id, tone, index }: SectionProps) {
   const c = site.content.features;
   const h = c.highlight;
@@ -38,15 +38,15 @@ export function Features({ id, tone, index }: SectionProps) {
           size="2xl"
         />
 
-        <div className="mt-12 grid gap-px border border-line-strong bg-line-strong md:mt-16 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-3 md:mt-16 md:grid-cols-2 lg:grid-cols-4">
           {/* Highlight tile */}
           <div
             data-reveal=""
-            data-tone="night"
-            className="relative flex flex-col bg-bg p-6 text-fg md:col-span-2 md:p-8 lg:row-span-2"
+            data-tone="charcoal"
+            className="relative flex flex-col rounded-card border border-edge bg-bg p-6 text-fg md:col-span-2 md:p-8 lg:row-span-2"
           >
             <div className="flex items-start justify-between gap-4">
-              <span className="grid size-11 place-items-center bg-accent text-accent-fg">
+              <span className="grid size-11 place-items-center rounded-full bg-accent text-accent-fg">
                 <Icon name={h.icon} className="size-5" />
               </span>
               <Pill dot className="label-mono text-muted">
@@ -75,7 +75,7 @@ export function Features({ id, tone, index }: SectionProps) {
               <Sparkline
                 series={h.series}
                 height={96}
-                className="mt-4 h-28 text-lime [--spark-fill:var(--color-lime)] md:h-36"
+                className="mt-4 h-28 text-accent-text [--spark-fill:var(--t-accent-text)] md:h-36"
                 label={`${plain(h.chartLabel)}: ${first} to ${last}`}
               />
               <div aria-hidden="true" className="label-mono mt-2 flex justify-between text-subtle">
@@ -93,12 +93,12 @@ export function Features({ id, tone, index }: SectionProps) {
               data-reveal=""
               style={{ "--i": i + 1 } as React.CSSProperties}
               className={cn(
-                "wipe-tile group flex min-h-60 flex-col bg-bg p-6 text-fg transition-colors duration-[var(--dur-wipe)] ease-wipe hover:text-ink md:p-7",
+                "wipe-tile group flex min-h-60 flex-col rounded-tile bg-surface p-6 text-fg transition-colors duration-[var(--dur-wipe)] ease-wipe hover:text-ink md:p-7",
                 i === c.items.length - 1 && lastSpan,
               )}
             >
               <div className="flex items-start justify-between">
-                <span className="grid size-11 place-items-center border border-current">
+                <span className="grid size-11 place-items-center rounded-full border border-current">
                   <Icon name={item.icon} className="size-5" />
                 </span>
                 <span className="label-mono text-muted transition-colors duration-[var(--dur-wipe)] group-hover:text-ink">

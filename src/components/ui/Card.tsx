@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Square hairline card on the tone's surface colour. `interactive` adds a border hover. */
+/** Rounded hairline card on the tone's surface colour. `interactive` adds a border hover. */
 export function Card({
   className,
   interactive = false,
@@ -10,7 +10,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "relative border border-line bg-surface p-6 md:p-7",
+        "relative rounded-card border border-line bg-surface p-6 md:p-7",
         interactive &&
           "transition-[border-color] duration-[var(--dur-base)] ease-hover hover:border-fg",
         className,

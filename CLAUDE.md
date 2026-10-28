@@ -8,9 +8,12 @@ Read README.md first.
 - **Content** lives only in `src/config/site.ts` (typed by `src/config/types.ts`). Never hardcode copy in components.
   Wrap unconfirmed copy in `ph("…")`; render Copy values with `<T c={…} />`. Use `plain()` for attributes.
 - **Tokens** live only in `src/styles/tokens.css`. Components use semantic utilities (`bg-bg`, `text-fg`,
-  `text-muted`, `border-line`, `bg-surface`, `bg-accent`, `text-accent-text`, `text-emph`) so section tones
-  (`paper | panel | signal | forest | night`) work. Lime is for dark tones only; never put it on light surfaces.
-- **Look**: square corners (pills only for tags), hairlines not shadows, `font-display` = condensed CAPS,
+  `text-muted`, `border-line`, `bg-surface`, `bg-soft`, `bg-accent`, `text-accent-text`, `text-emph`) so section
+  tones (`paper | panel | ember | charcoal | coal`) AND light/dark mode (`html[data-theme]`) both work. One warm
+  palette: ember is the single accent; no greens. Fixed colours (`bg-ember`, `bg-cream`, `text-ink`) only where
+  the background is fixed too. Check both themes after any colour change.
+- **Look**: rounded. Buttons and tags are pills (`Button`, `Pill`); surfaces use `rounded-inner | tile | card |
+  slab`; non-paper sections render as inset rounded slabs (`Section`). Hairlines not shadows, `font-display` = condensed CAPS,
   `label-mono` for `[ LABELS ]`, paragraphs stay sentence case. Custom text sizes are registered in
   `lib/utils.ts` (tailwind-merge); add new ones there too.
 - **Sections**: `components/sections/*`, registered in `registry.ts`, ordered/toggled by `site.sections`.

@@ -39,7 +39,7 @@ export function Hero({ id, tone }: SectionProps) {
           style={cssVars({ "--delay": "0ms" })}
         >
           <p className="flex items-center gap-2">
-            <span aria-hidden="true" className="live-dot size-1.5 bg-signal" />
+            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-ember" />
             <T c={c.eyebrow} rich={false} />
           </p>
           <p className="hidden sm:block">[ {site.competition.date} ]</p>
@@ -53,9 +53,9 @@ export function Hero({ id, tone }: SectionProps) {
                 {i === 0 && (
                   <span
                     aria-hidden="true"
-                    className="ms-[0.12em] inline-flex h-[0.62em] w-[1.5em] translate-y-[-0.06em] items-center justify-end rounded-pill border-[0.07em] border-signal p-[0.06em] align-middle"
+                    className="ms-[0.12em] inline-flex h-[0.62em] w-[1.5em] translate-y-[-0.06em] items-center justify-end rounded-pill border-[0.07em] border-ember p-[0.06em] align-middle"
                   >
-                    <span className="block aspect-square h-full rounded-full bg-signal" />
+                    <span className="block aspect-square h-full rounded-full bg-ember" />
                   </span>
                 )}
                 {i === lines.length - 1 && <PhTag c={c.headline} />}
@@ -72,14 +72,14 @@ export function Hero({ id, tone }: SectionProps) {
         {/* Floating AI insight */}
         <div
           data-tone="paper"
-          className="pop-in absolute end-[var(--gutter)] -bottom-6 z-10 hidden max-w-[19rem] border border-ink bg-card text-fg sm:block"
+          className="pop-in absolute end-[var(--gutter)] -bottom-6 z-10 hidden max-w-[19rem] overflow-hidden rounded-tile border border-line bg-surface text-fg shadow-lift sm:block"
           style={cssVars({ "--delay": "1300ms" })}
         >
-          <p className="label-mono flex items-center gap-2 bg-ink px-3 py-1.5 text-paper">
-            <span aria-hidden="true" className="live-dot size-1.5 bg-signal" />
+          <p className="label-mono flex items-center gap-2 bg-fg px-4 py-2 text-bg">
+            <span aria-hidden="true" className="live-dot size-1.5 rounded-full bg-ember" />
             <T c={c.insight.label} rich={false} tag={false} />
           </p>
-          <div className="p-3.5">
+          <div className="p-4">
             <p className="font-display text-[1.375rem] leading-none tracking-[-0.02em]">
               <T c={c.insight.title} tag={false} />
             </p>

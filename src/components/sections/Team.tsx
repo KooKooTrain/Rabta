@@ -18,7 +18,7 @@ const initials = (name: string) =>
     .map((p) => p[0]?.toUpperCase())
     .join("");
 
-const TILTS = [-3, 2, -1.5, 3];
+const TILTS = [-3, 2, -1.5, 3, -2.5];
 
 /** Members as perforated stamps (photo, or a seeded pixel monogram) in a slider. */
 export function Team({ id, tone, index }: SectionProps) {
@@ -40,7 +40,7 @@ export function Team({ id, tone, index }: SectionProps) {
             {members.map((m, i) => {
               const name = plain(m.name);
               return (
-                <li key={i} data-reveal="" style={{ "--i": i } as React.CSSProperties} className="w-[78%] shrink-0 snap-start sm:w-[46%] lg:w-auto">
+                <li key={i} data-reveal="" style={{ "--i": i } as React.CSSProperties} className="w-[72%] shrink-0 snap-start sm:w-[44%] md:w-[34%] lg:w-[27%] xl:w-auto">
                   <Stamp photo={m.photo} rotate={TILTS[i % TILTS.length]} caption={false} aspect="aspect-square">
                     <PixelField
                       className="absolute inset-0"
@@ -53,16 +53,16 @@ export function Team({ id, tone, index }: SectionProps) {
                       aria-hidden="true"
                       className="absolute inset-0 grid place-items-center"
                     >
-                      <span className="font-display bg-paper px-3 pt-1 text-[clamp(3rem,7vw,5.5rem)] leading-[0.9] text-ink">
+                      <span className="font-display rounded-inner bg-paper px-4 pt-1.5 pb-0.5 text-[clamp(2.75rem,5vw,4.5rem)] leading-[0.9] text-ink">
                         {initials(name)}
                       </span>
                     </span>
                   </Stamp>
-                  <div className="mt-6 border-t border-dashed border-line pt-4">
+                  <div className="mt-6 border-t border-line pt-4">
                     <p className="label-mono text-accent-text">
                       [ <T c={m.role} rich={false} tag={false} /> ]
                     </p>
-                    <h3 className="font-display text-display-lg mt-2">
+                    <h3 className="font-display text-title mt-2">
                       <T c={m.name} />
                     </h3>
                     {m.detail && (
