@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ShieldAlert, ShieldCheck } from "lucide-react";
+import { gameById } from "@/config/games";
 import { ActionButton } from "@/components/ui/Button";
 import { Pill } from "@/components/ui/Pill";
 import { appliedEvents, formatClock, pendingEvents, type MatchApi } from "@/lib/games/match";
@@ -15,6 +16,7 @@ const fileUrl = (runId: string, file: string) => `/api/judge-files/${runId}/${fi
 export function JudgeStep({ m }: { m: MatchApi }) {
   const { state } = m;
   const { report } = state;
+  const game = gameById(state.gameId);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,9 @@ export function JudgeStep({ m }: { m: MatchApi }) {
         body: raw,
       });
       const result = (await res.json()) as VerifyResult;
-      if (result.status === "verified") {
+      if (result.status === "verified" && result.payload.game !== game.id) {
+        setError(`That report is for ${gameById(result.payload.game).name}, but this match is ${game.name}.`);
+      } else if (result.status === "verified") {
         m.loadReport(result.payload);
         setText("");
       } else if (result.status === "invalid") {
@@ -148,9 +152,9 @@ export function JudgeStep({ m }: { m: MatchApi }) {
           </div>
 
           <section className="flex flex-col gap-4">
-            <p className="label-caps text-muted">[ Goals I spotted ]</p>
+            <p className="label-caps text-muted">[ Every {game.scoreWord} I spotted ]</p>
             {report.events.length === 0 && (
-              <p className="text-muted">I didn&apos;t see a goal in this clip, so I&apos;m not proposing any score change.</p>
+              <p className="text-muted">I didn&apos;t see a {game.scoreWord} in this clip, so I&apos;m not proposing any score change.</p>
             )}
             <ul className="grid gap-4 md:grid-cols-2">
               {report.events.map((ev) => {
@@ -204,7 +208,7 @@ export function JudgeStep({ m }: { m: MatchApi }) {
           <section className="flex flex-col gap-4">
             <p className="label-caps text-muted">[ Who is who ]</p>
             <p className="text-muted">
-              My tracker numbers people, it doesn&apos;t know names. Match each track to a player so possession and MVP
+              My tracker numbers people, it doesn&apos;t know names. Match each track to a player so the stats and MVP
               use real names.
             </p>
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -212,7 +216,8 @@ export function JudgeStep({ m }: { m: MatchApi }) {
                 <li key={t.track_id} className="flex flex-col gap-2 rounded-tile border border-line p-3">
                   <span className="text-sm">
                     Track {t.track_id}
-                    {t.team ? ` · ${state.teams[t.team].name}` : ""} · {formatClock(t.possession_ms)} on the ball
+                    {t.team ? ` · ${state.teams[t.team].name}` : ""}
+                    {game.ball && ` · ${formatClock(t.possession_ms)} on the ball`}
                   </span>
                   <select
                     className={field}

@@ -1,4 +1,8 @@
-"""Bayt football judge: video -> signed report.json + annotated.mp4.
+"""Bayt AI judge: video -> signed report.json + annotated.mp4.
+
+Games (config "game"): football / basketball / volleyball score when the ball sits in a zone;
+al-karabi eliminates a player whose feet leave the arena; al-ghomaidah scores a tag when a
+seeker touches an opponent. Placeholder heuristics until the MediaPipe pipeline replaces them.
 
 CLI:  python judge.py --input samples/demo.mp4 --config match.json --out outputs/demo [--preview]
 Lib:  from judge import run_judge; run_judge(input, config_dict, out)
@@ -38,7 +42,29 @@ JUDGE_DEFAULTS = {
     "goal_cooldown_s": 3,
     "review_threshold": 70,
     "ball_min_conf": 0.15,
+    "arena": [0.1, 0.1, 0.9, 0.97],
+    "out_min_frames": 3,
+    "seeker": "A",
+    "tag_radius": 0.45,
+    "tag_min_frames": 2,
+    "tag_cooldown_s": 3,
 }
+
+# Per game: event type, overlay word, and the judge defaults that differ from football.
+# Zones use "defending" (the other team scores) or "award": "last-touch" (the last holder's team scores).
+GAMES = {
+    "football": {"event": "goal", "word": "GOAL!", "judge": {}},
+    "basketball": {"event": "basket", "word": "BASKET!", "judge": {
+        "goal_zones": [{"name": "hoop", "award": "last-touch", "rect": [0.4, 0.05, 0.6, 0.3]}],
+        "goal_cooldown_s": 2}},
+    "volleyball": {"event": "point", "word": "POINT!", "judge": {
+        "goal_zones": [{"name": "left court", "defending": "A", "rect": [0.0, 0.7, 0.5, 1.0]},
+                       {"name": "right court", "defending": "B", "rect": [0.5, 0.7, 1.0, 1.0]}],
+        "goal_min_frames": 2, "goal_cooldown_s": 4}},
+    "al-karabi": {"event": "elimination", "word": "OUT!", "judge": {}},
+    "al-ghomaidah": {"event": "tag", "word": "TAG!", "judge": {}},
+}
+BALL_GAMES = {"football", "basketball", "volleyball"}
 
 
 class JudgeError(Exception):
@@ -69,11 +95,17 @@ def normalise_config(cfg):
     for t in teams:
         hex_to_bgr(t["color"])  # validates
     cfg = dict(cfg)
-    cfg["judge"] = {**JUDGE_DEFAULTS, **(cfg.get("judge") or {})}
+    cfg.setdefault("game", "football")
+    if cfg["game"] not in GAMES:
+        raise JudgeError(f"Unknown game {cfg['game']!r}. Use one of: {', '.join(GAMES)}.")
+    cfg["judge"] = {**JUDGE_DEFAULTS, **GAMES[cfg["game"]]["judge"], **(cfg.get("judge") or {})}
     ids = {t["id"] for t in teams}
     for z in cfg["judge"]["goal_zones"]:
-        if z.get("defending") not in ids or len(z.get("rect", [])) != 4:
-            raise JudgeError(f"Bad goal zone {z!r}: 'defending' must be a team id and rect [x0,y0,x1,y1].")
+        if (z.get("defending") not in ids and z.get("award") != "last-touch") or len(z.get("rect", [])) != 4:
+            raise JudgeError(f"Bad zone {z!r}: needs 'defending' (a team id) or 'award': 'last-touch', "
+                             "and rect [x0,y0,x1,y1].")
+    if cfg["judge"]["seeker"] not in ids:
+        raise JudgeError("judge.seeker must be a team id.")
     cfg.setdefault("players", [])
     cfg.setdefault("rules", {})
     return cfg
@@ -203,8 +235,8 @@ def draw_zones(img, zones, team_names):
         x0, y0, x1, y1 = z["rect"]
         p0, p1 = (int(x0 * W), int(y0 * H)), (int(x1 * W) - 1, int(y1 * H) - 1)
         cv2.rectangle(img, p0, p1, (255, 255, 255), 2)
-        put_label(img, f"{z['name']} (def {team_names.get(z['defending'], z['defending'])})",
-                  (p0[0] + 2, p0[1] + 16), (60, 60, 60), 0.4)
+        tag = f"def {team_names.get(z['defending'], z['defending'])}" if "defending" in z else "last touch"
+        put_label(img, f"{z['name']} ({tag})", (p0[0] + 2, p0[1] + 16), (60, 60, 60), 0.4)
 
 
 def draw_score_bar(img, teams, score):
@@ -216,13 +248,20 @@ def draw_score_bar(img, teams, score):
     cv2.putText(img, text, ((W - tw) // 2, 19), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2, cv2.LINE_AA)
 
 
-def draw_goal_flash(img):
+def draw_goal_flash(img, word="GOAL!"):
     H, W = img.shape[:2]
-    scale = W / 220
-    (tw, th), _ = cv2.getTextSize("GOAL!", cv2.FONT_HERSHEY_DUPLEX, scale, 4)
+    scale = W / (44 * len(word))
+    (tw, th), _ = cv2.getTextSize(word, cv2.FONT_HERSHEY_DUPLEX, scale, 4)
     org = ((W - tw) // 2, (H + th) // 2)
-    cv2.putText(img, "GOAL!", org, cv2.FONT_HERSHEY_DUPLEX, scale, (0, 0, 0), 10, cv2.LINE_AA)
-    cv2.putText(img, "GOAL!", org, cv2.FONT_HERSHEY_DUPLEX, scale, (0, 215, 255), 4, cv2.LINE_AA)
+    cv2.putText(img, word, org, cv2.FONT_HERSHEY_DUPLEX, scale, (0, 0, 0), 10, cv2.LINE_AA)
+    cv2.putText(img, word, org, cv2.FONT_HERSHEY_DUPLEX, scale, (0, 215, 255), 4, cv2.LINE_AA)
+
+
+def draw_arena(img, rect):
+    H, W = img.shape[:2]
+    x0, y0, x1, y1 = rect
+    cv2.rectangle(img, (int(x0 * W), int(y0 * H)), (int(x1 * W) - 1, int(y1 * H) - 1), (255, 255, 255), 2)
+    put_label(img, "arena", (int(x0 * W) + 2, int(y0 * H) + 16), (60, 60, 60), 0.4)
 
 
 # ---------------------------------------------------------------- preview
@@ -234,7 +273,10 @@ def run_preview(input_path, cfg, out, width=None):
     cap.release()
     img = resize(frame, width)
     cands = ball_candidates(img, j["ball_hsv_lower"], j["ball_hsv_upper"])
-    draw_zones(img, j["goal_zones"], {t["id"]: t["name"] for t in cfg["teams"]})
+    if cfg["game"] in BALL_GAMES:
+        draw_zones(img, j["goal_zones"], {t["id"]: t["name"] for t in cfg["teams"]})
+    elif cfg["game"] == "al-karabi":
+        draw_arena(img, j["arena"])
     for i, (_, (x0, y0, x1, y1)) in enumerate(cands):
         cv2.rectangle(img, (x0, y0), (x1, y1), (255, 0, 255) if i == 0 else (0, 255, 255), 2)
     out = Path(out)
@@ -282,7 +324,15 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
     team_bgr = {t["id"]: hex_to_bgr(t["color"]) for t in teams}
     team_hsv = {tid: bgr_to_hsv(c) for tid, c in team_bgr.items()}
     points = int(cfg["rules"].get("pointsPerGoal", 1))
-    zones = j["goal_zones"]
+    game = cfg["game"]
+    etype, word = GAMES[game]["event"], GAMES[game]["word"]
+    ball_game = game in BALL_GAMES
+    zones = j["goal_zones"] if ball_game else []
+    out_runs = defaultdict(int)         # al-karabi: track -> consecutive samples outside the arena
+    eliminated = set()
+    tag_runs = defaultdict(int)         # al-ghomaidah: (seeker, other) -> consecutive touching samples
+    tag_cool = {}
+    thumbs_done = 0
 
     cap, first, fps, total = open_video(input_path)
     model = load_model()
@@ -313,7 +363,7 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
             img = resize(frame, width)
             H, W = img.shape[:2]
             t_ms = int(round(frame_idx * 1000 / fps))
-            res = model.track(img, persist=True, tracker="bytetrack.yaml", classes=[0, 32],
+            res = model.track(img, persist=True, tracker="bytetrack.yaml", classes=[0, 32] if ball_game else [0],
                               imgsz=width, conf=0.15, verbose=False)[0]
             persons, ball = [], None
             b = res.boxes
@@ -328,7 +378,7 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
                         persons.append((int(tid), box))
                     elif c == 32 and cf >= j["ball_min_conf"] and (ball is None or cf > ball[2]):
                         ball = (box, "yolo", float(cf))
-            if ball is None:
+            if ball is None and ball_game:
                 cands = ball_candidates(img, j["ball_hsv_lower"], j["ball_hsv_upper"])
                 if cands:
                     ball = (cands[0][1], "colour", None)
@@ -377,13 +427,21 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
                 st["run"].append((ball[1], ball[2]))
                 ev = st["event"]
                 if ev is None and st["armed"] and t_ms >= st["cool_until"] and len(st["run"]) >= j["goal_min_frames"]:
-                    scorer = next(t for t in team_ids if t != z["defending"])
+                    if "defending" in z:
+                        scorer, unsure = next(t for t in team_ids if t != z["defending"]), False
+                    else:  # last touch: the holder's team, or the team nearest the ball if nobody held it
+                        near = sorted(persons, key=lambda p: math.hypot((p[1][0] + p[1][2]) / 2 / W - nb[0],
+                                                                        p[1][3] / H - nb[1]))
+                        guess = cur_team.get(last_holder) or next((cur_team.get(p[0]) for p in near
+                                                                   if cur_team.get(p[0])), None)
+                        scorer, unsure = guess or team_ids[0], cur_team.get(last_holder) is None
                     score[scorer] += points
+                    n = len(events) + 1
                     ev = {
-                        "id": f"goal-{len(events) + 1}", "type": "goal", "t_ms": t_ms, "team": scorer,
-                        "scorer_track": last_holder, "thumb": f"thumbs/goal-{len(events) + 1}.jpg",
+                        "id": f"{etype}-{n}", "type": etype, "t_ms": t_ms, "team": scorer,
+                        "scorer_track": last_holder, "thumb": f"thumbs/{etype}-{n}.jpg",
                         "score_change": {t: (points if t == scorer else 0) for t in team_ids},
-                        "_zone": z,
+                        "_unsure": unsure,
                     }
                     events.append(ev)
                     st.update(event=ev, armed=False, cool_until=t_ms + int(j["goal_cooldown_s"] * 1000))
@@ -394,18 +452,93 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
                     run = st["run"]
                     base = sum(cf * 100 if src == "yolo" else 55 for src, cf in run) / len(run)
                     conf_i = int(max(0, min(100, round(base + min(20, 5 * (len(run) - j["goal_min_frames"]))))))
-                    scorer, defender = ev["team"], z["defending"]
+                    if ev["_unsure"]:
+                        conf_i = min(conf_i, 50)
+                    scorer = ev["team"]
                     toucher = f"track {ev['scorer_track']}" if ev["scorer_track"] is not None else "nobody identified"
+                    if "defending" in z:
+                        why = f"{team_names[z['defending']]} defends that side, so {team_names[scorer]} scores."
+                    elif ev["_unsure"]:
+                        why = f"I couldn't see who shot, so I'm guessing {team_names[scorer]}. Please check."
+                    else:
+                        why = f"{team_names[scorer]} had the ball last, so they score."
                     ev.update(
                         confidence=conf_i,
                         needs_review=conf_i < j["review_threshold"],
                         reason=(f"The ball was inside the {z['name']} zone for {len(run)} checks in a row "
-                                f"({source_phrase({s for s, _ in run})}). {team_names[defender]} defends that "
-                                f"goal, so {team_names[scorer]} scores. Last touch: {toucher}."),
+                                f"({source_phrase({s for s, _ in run})}). {why} Last touch: {toucher}."),
                     )
+
+            # al-karabi: a player whose feet stay outside the arena is out; the nearest opponent pushed them
+            if game == "al-karabi":
+                ax0, ay0, ax1, ay1 = j["arena"]
+                for tid, (x0, y0, x1, y1) in persons:
+                    fx, fy = (x0 + x1) / 2 / W, y1 / H
+                    inside = ax0 <= fx <= ax1 and ay0 <= fy <= ay1
+                    out_runs[tid] = 0 if inside else out_runs[tid] + 1
+                    loser = cur_team.get(tid)
+                    if tid in eliminated or loser is None or out_runs[tid] < j["out_min_frames"]:
+                        continue
+                    eliminated.add(tid)
+                    scorer = next(t for t in team_ids if t != loser)
+                    rivals = [(math.hypot((p[1][0] + p[1][2]) / 2 - (x0 + x1) / 2, p[1][3] - y1), p[0])
+                              for p in persons if cur_team.get(p[0]) == scorer]
+                    pusher = min(rivals)[1] if rivals else None
+                    pusher_txt = f"track {pusher}" if pusher is not None else "nobody identified"
+                    conf_i = min(95, 55 + 8 * out_runs[tid])
+                    score[scorer] += points
+                    n = len(events) + 1
+                    new_event = {
+                        "id": f"{etype}-{n}", "type": etype, "t_ms": t_ms, "team": scorer, "scorer_track": pusher,
+                        "thumb": f"thumbs/{etype}-{n}.jpg", "confidence": conf_i,
+                        "needs_review": conf_i < j["review_threshold"],
+                        "score_change": {t: (points if t == scorer else 0) for t in team_ids},
+                        "reason": (f"Track {tid} ({team_names[loser]}) had their feet outside the arena for "
+                                   f"{out_runs[tid]} checks in a row, so they're out and {team_names[scorer]} "
+                                   f"gets the point. Closest opponent: {pusher_txt}."),
+                    }
+                    events.append(new_event)
+                    flash = flash_len
+
+            # al-ghomaidah: a seeker touching an opponent is a tag (debounced, per-pair cooldown)
+            if game == "al-ghomaidah":
+                seek = j["seeker"]
+                touching = set()
+                for sid, (sx0, sy0, sx1, sy1) in persons:
+                    if cur_team.get(sid) != seek:
+                        continue
+                    for oid, (ox0, oy0, ox1, oy1) in persons:
+                        if oid == sid or cur_team.get(oid) in (None, seek):
+                            continue
+                        d = math.hypot((sx0 + sx1 - ox0 - ox1) / 2, (sy0 + sy1 - oy0 - oy1) / 2)
+                        if d <= j["tag_radius"] * ((sy1 - sy0) + (oy1 - oy0)) / 2:
+                            touching.add((sid, oid))
+                for pair in list(tag_runs):
+                    if pair not in touching:
+                        del tag_runs[pair]
+                for sid, oid in sorted(touching):
+                    tag_runs[(sid, oid)] += 1
+                    if tag_runs[(sid, oid)] < j["tag_min_frames"] or t_ms < tag_cool.get((sid, oid), -1):
+                        continue
+                    tag_cool[(sid, oid)] = t_ms + int(j["tag_cooldown_s"] * 1000)
+                    conf_i = min(95, 50 + 10 * tag_runs[(sid, oid)])
+                    score[seek] += points
+                    n = len(events) + 1
+                    new_event = {
+                        "id": f"{etype}-{n}", "type": etype, "t_ms": t_ms, "team": seek, "scorer_track": sid,
+                        "thumb": f"thumbs/{etype}-{n}.jpg", "confidence": conf_i,
+                        "needs_review": conf_i < j["review_threshold"],
+                        "score_change": {t: (points if t == seek else 0) for t in team_ids},
+                        "reason": (f"Seeker track {sid} ({team_names[seek]}) was touching track {oid} for "
+                                   f"{tag_runs[(sid, oid)]} checks in a row, so I'm counting a tag."),
+                    }
+                    events.append(new_event)
+                    flash = flash_len
 
             # draw
             draw_zones(img, zones, team_names)
+            if game == "al-karabi":
+                draw_arena(img, j["arena"])
             for tid, (x0, y0, x1, y1) in persons:
                 tm = cur_team.get(tid)
                 col = team_bgr.get(tm, GREY)
@@ -422,11 +555,12 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
                         cv2.line(img, ((px0 + px1) // 2, py1), ((x0 + x1) // 2, (y0 + y1) // 2), (0, 255, 255), 1)
             draw_score_bar(img, teams, score)
             if flash > 0:
-                draw_goal_flash(img)
+                draw_goal_flash(img, word)
                 flash -= 1
-            if new_event is not None:
+            for ev in events[thumbs_done:]:  # every event raised this sample gets a frame
                 th = resize(img, 480) if W > 480 else img
-                cv2.imwrite(str(out / new_event["thumb"]), th, [cv2.IMWRITE_JPEG_QUALITY, 85])
+                cv2.imwrite(str(out / ev["thumb"]), th, [cv2.IMWRITE_JPEG_QUALITY, 85])
+            thumbs_done = len(events)
             if write_video:
                 if writer is None:
                     writer = cv2.VideoWriter(str(raw_path), cv2.VideoWriter_fourcc(*"mp4v"), out_fps, (W, H))
@@ -481,13 +615,17 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
          for tid, ms in visible.items() if ms >= 1000),
         key=lambda t: (-t["possession_ms"], t["track_id"]),
     )
-    mvp = tracks[0]["track_id"] if tracks and tracks[0]["possession_ms"] > 0 else None
+    if ball_game:
+        mvp = tracks[0]["track_id"] if tracks and tracks[0]["possession_ms"] > 0 else None
+    else:  # most eliminations / tags
+        credit = Counter(e["scorer_track"] for e in events if e["scorer_track"] is not None)
+        mvp = credit.most_common(1)[0][0] if credit else None
     for ev in events:
-        ev.pop("_zone", None)
+        ev.pop("_unsure", None)
 
     payload = {
         "run_id": out.name,
-        "game": "football",
+        "game": game,
         "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "source": {"file": Path(input_path).name, "fps": int(round(fps)),
                    "duration_ms": int(round(frame_idx * 1000 / fps)), "frames_processed": samples},
@@ -509,7 +647,7 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
 
     a, b2 = teams
     print(f"\nDone in {time.time() - t0:.1f}s: {samples} samples from {frame_idx} frames.")
-    print(f"Score: {a['name']} {score[a['id']]} - {score[b2['id']]} {b2['name']}  |  goals: {len(events)}  "
+    print(f"Score: {a['name']} {score[a['id']]} - {score[b2['id']]} {b2['name']}  |  {etype}s: {len(events)}  "
           f"({sum(e['needs_review'] for e in events)} need review)  |  tracks kept: {len(tracks)}  |  MVP track: {mvp}")
     print(f"Report: {out / 'report.json'}" + (f"  Video: {out / annotated}" if annotated else ""))
     return report
@@ -518,7 +656,7 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
 # ---------------------------------------------------------------- CLI
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Bayt football AI judge")
+    ap = argparse.ArgumentParser(description="Bayt AI judge (football, basketball, volleyball, al-karabi, al-ghomaidah)")
     ap.add_argument("--input", required=True, help="video file")
     ap.add_argument("--config", required=True, help="match.json (see config.example.json)")
     ap.add_argument("--out", required=True, help="output folder; its name becomes run_id")

@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { games } from "@/config/games";
 import type { VerifyResult } from "@/lib/games/types";
 import { verifyReport } from "@/lib/reports/verify";
 
@@ -52,22 +53,27 @@ export async function POST(request: Request) {
   }
   if (video.size > MAX_BYTES) return reply({ status: "error", reason: "That clip is over 500 MB. Please trim it first." }, 413);
 
-  let config: { teams?: unknown; players?: unknown; rules?: unknown };
+  let config: { game?: unknown; teams?: unknown; players?: unknown; rules?: unknown };
   try {
     config = JSON.parse(String(form.get("config") ?? "{}"));
   } catch {
     return reply({ status: "error", reason: "The match setup didn't come through. Go back to teams and try again." }, 400);
   }
 
-  // Judge tuning (goal zones, ball colour) comes from the example config; teams/players/rules from the host.
+  const game = games.find((g) => g.id === config.game)?.id;
+  if (!game) return reply({ status: "error", reason: "Pick a game first, then upload the clip." }, 400);
+
+  // Football tuning (goal zones, ball colour) comes from the example config; the other games use the
+  // per-game defaults in judge.py. Teams, players and rules always come from the host.
   const base = JSON.parse(await readFile(path.join(JUDGE_DIR, "config.example.json"), "utf8"));
+  if (game !== "football") delete base.judge;
   const runId = `upload-${Date.now()}`;
   const uploads = path.join(JUDGE_DIR, "uploads");
   await mkdir(uploads, { recursive: true });
   const clip = path.join(uploads, `${runId}.mp4`);
   const cfgFile = path.join(uploads, `${runId}.json`);
   await writeFile(clip, Buffer.from(await video.arrayBuffer()));
-  await writeFile(cfgFile, JSON.stringify({ ...base, teams: config.teams ?? base.teams, players: config.players ?? [], rules: config.rules ?? base.rules }));
+  await writeFile(cfgFile, JSON.stringify({ ...base, game, teams: config.teams ?? base.teams, players: config.players ?? [], rules: config.rules ?? base.rules }));
 
   const { code, log } = await runJudge(["--input", clip, "--config", cfgFile, "--out", path.join("outputs", runId)], secret);
   if (code !== 0) {

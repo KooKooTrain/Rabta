@@ -1,6 +1,5 @@
 /**
- * Shared game framework types. Football is the only game with a real judge today;
- * the other modules reuse Player/Team/Rules/MatchState and add their own judge later.
+ * Shared game framework types. Every game reuses Player/Team/Rules/MatchState and one judge report shape.
  */
 
 export type TeamId = "A" | "B";
@@ -16,10 +15,21 @@ export type Rules = {
   roundSeconds: number;
   rounds: number;
   tieBreak: TieBreak;
+  /** "real" locks the sport's own preset; "house" lets the host change anything. */
+  mode: "real" | "house";
+  /** First to this many points ends the match early. Null means play the clock. */
+  target: number | null;
+  winBy: number;
 };
 
+/** The one thing that makes each sport play like itself on the round screen. */
+export type Mechanic = "kickoff" | "possession" | "serve" | "eliminations" | "blindfold";
+
+export type GameId = "football" | "basketball" | "volleyball" | "al-karabi" | "al-ghomaidah";
+export type EventType = "goal" | "basket" | "point" | "elimination" | "tag";
+
 export type GameModule = {
-  id: string;
+  id: GameId;
   name: string;
   group: GameGroup;
   status: GameStatus;
@@ -28,6 +38,13 @@ export type GameModule = {
   blurb: string;
   defaultRules: Rules;
   judge: { implemented: boolean; capabilities: string[] };
+  /** What one scoring event is called, e.g. "goal", "basket", "tag". */
+  scoreWord: string;
+  /** Ball games get possession stats; the others rank players by events. */
+  ball: boolean;
+  mechanic: Mechanic;
+  /** Extra score buttons, e.g. basketball's inside and deep shots. Default is one +1 button. */
+  scoreButtons?: { label: string; points: number }[];
 };
 
 /* ── Signed AI judge report (canon "bayt-canon-v1") ───────────────────────────
@@ -39,7 +56,7 @@ export type GameModule = {
 
 export type ReportEvent = {
   id: string; // "goal-1"
-  type: "goal";
+  type: EventType;
   t_ms: number;
   team: TeamId; // team that scored
   scorer_track: number | null; // last track confidently in possession
@@ -59,7 +76,7 @@ export type ReportTrack = {
 
 export type ReportPayload = {
   run_id: string;
-  game: "football";
+  game: GameId;
   created_at: string; // ISO 8601
   source: { file: string; fps: number; duration_ms: number; frames_processed: number };
   teams: Team[];
@@ -106,4 +123,6 @@ export type MatchState = {
   trackMap: Record<string, string>; // track_id -> player id (host mapping)
   appliedEventIds: string[];
   finishedAt: number | null;
+  lastScorer: TeamId | null; // drives kick-off, possession and serve
+  out: string[]; // player ids knocked out this round (Al Karabi)
 };
