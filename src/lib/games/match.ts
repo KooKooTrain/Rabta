@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useReducer } from "react";
 import { gameById, games } from "@/config/games";
+import { saveGameHistory } from "./history";
 import type {
   MatchState,
   Player,
@@ -285,6 +286,58 @@ export function useMatch() {
     } catch {
       /* storage full or blocked: the match still works in memory */
     }
+  }, [state]);
+
+  useEffect(() => {
+    if (!state.finishedAt || !state.gameId) return;
+    const game = gameById(state.gameId);
+    const best = mvp(state);
+    const report = state.report;
+    saveGameHistory({
+      id: `${game.id}-${state.finishedAt}`,
+      gameId: game.id,
+      gameName: game.name,
+      completedAt: state.finishedAt,
+      score: state.score,
+      teams: state.teams,
+      players: state.players.map(({ id, name, team }) => ({ id, name: name.trim() || id, team })),
+      winner: winner(state),
+      playedMs: state.elapsedMs,
+      rules: {
+        rounds: state.rules.rounds,
+        roundSeconds: state.rules.roundSeconds,
+        tieBreak: state.rules.tieBreak,
+        pointsPerGoal: state.rules.pointsPerGoal,
+        target: state.rules.target,
+        winBy: state.rules.winBy,
+      },
+      mvp: best ? {
+        name: best.player.name.trim() || best.player.id,
+        team: best.player.team,
+        detail: game.ball ? `${formatClock(best.ms)} on the ball` : `${best.events} ${game.scoreWord}${best.events === 1 ? "" : "s"}`,
+      } : null,
+      report: report ? {
+        verified: true,
+        sourceFile: report.source.file.split(/[\\/]/).pop() || report.source.file,
+        durationMs: report.source.duration_ms,
+        possessionMs: { A: report.possession_ms.A, B: report.possession_ms.B },
+        events: report.events.map((event) => ({
+          id: event.id,
+          type: event.type,
+          tMs: event.t_ms,
+          team: event.team,
+          confidence: event.confidence,
+          reason: event.reason,
+          status: state.appliedEventIds.includes(appliedKey(report, event))
+            ? "applied" as const
+            : state.reviews[event.id] === "rejected"
+              ? "rejected" as const
+              : event.needs_review && state.reviews[event.id] !== "confirmed"
+                ? "needs-review" as const
+                : "pending" as const,
+        })),
+      } : null,
+    });
   }, [state]);
 
   useEffect(() => {
