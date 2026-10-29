@@ -165,6 +165,34 @@ html[data-reduce-motion="true"] *::after {
 
 /* ------------------------------------------------------------- motion -- */
 @layer components {
+  .game-card {
+    transition:
+      transform 220ms var(--ease-out-soft),
+      box-shadow 260ms var(--ease-out-soft);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .game-card {
+      animation: game-card-enter 420ms var(--ease-out-soft) both;
+    }
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .game-card:hover,
+    .game-card:focus-within {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--t-accent) 32%, transparent),
+        0 0 22px -5px color-mix(in srgb, var(--t-accent) 38%, transparent);
+    }
+  }
+  html[data-reduce-motion="true"] .game-card,
+  html[data-reduce-motion="true"] .game-card:hover,
+  html[data-reduce-motion="true"] .game-card:focus-within {
+    animation: none;
+    transform: none;
+    box-shadow: none;
+    transition: none;
+  }
+
   /* Scroll reveal: hidden only when JS is running (html.js) and motion allowed */
   @media (prefers-reduced-motion: no-preference) {
     .js [data-reveal] {
@@ -278,6 +306,16 @@ html[data-reduce-motion="true"] *::after {
     transform: translate3d(0, 108%, 0);
   }
   to {
+    transform: none;
+  }
+}
+@keyframes game-card-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
     transform: none;
   }
 }

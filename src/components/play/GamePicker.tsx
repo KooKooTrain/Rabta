@@ -31,9 +31,9 @@ export function GamePicker({ m }: { m: MatchApi }) {
           <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {games
               .filter((g) => g.group === group)
-              .map((g) => (
+              .map((g, index) => (
                 <li key={g.id}>
-                  <GameCard game={g} onPlay={() => m.selectGame(g.id)} />
+                  <GameCard game={g} index={index} onPlay={() => m.selectGame(g.id)} />
                 </li>
               ))}
           </ul>
@@ -43,14 +43,15 @@ export function GamePicker({ m }: { m: MatchApi }) {
   );
 }
 
-function GameCard({ game, onPlay }: { game: GameModule; onPlay: () => void }) {
+function GameCard({ game, index, onPlay }: { game: GameModule; index: number; onPlay: () => void }) {
   const active = game.status === "active";
   return (
     <article
       aria-disabled={active ? undefined : true}
+      style={{ animationDelay: `${index * 65}ms` }}
       className={cn(
-        "flex h-full flex-col gap-5 rounded-card border p-6 md:p-7",
-        active ? "border-line-strong bg-surface" : "border-line bg-soft/40",
+        "game-card flex h-full flex-col gap-5 rounded-card border-0 p-6 md:p-7",
+        active ? "bg-surface" : "bg-soft/40",
       )}
     >
       <div className={cn("flex flex-col gap-4", !active && "opacity-60")}>
