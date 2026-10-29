@@ -33,6 +33,7 @@ export function teamProblems(state: MatchState): string[] {
 
 export function judgeConfig(state: MatchState) {
   return {
+    game: state.gameId ?? "football",
     teams: [state.teams.A, state.teams.B],
     players: state.players.map(({ id, name, team }) => ({ id, name: name.trim(), team })),
     rules: state.rules,

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Minus, Plus } from "lucide-react";
+import { gameById } from "@/config/games";
 import { ActionButton } from "@/components/ui/Button";
 import { Pill } from "@/components/ui/Pill";
 import { formatClock, type MatchApi } from "@/lib/games/match";
@@ -28,7 +29,7 @@ export function RoundStep({ m }: { m: MatchApi }) {
       <StepHeader
         label={`Round ${state.round} of ${rules.rounds}`}
         title={live ? "Game on" : "Ready for the next round"}
-        intro="Record the match on a phone. You keep the official score here, and my judge can check the goals from the clip afterwards."
+        intro={`Record the match on a phone. You keep the official score here, and my judge can check every ${gameById(state.gameId).scoreWord} from the clip afterwards.`}
       />
 
       <section

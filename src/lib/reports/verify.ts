@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { games } from "@/config/games";
 import type { ReportPayload, VerifyResult } from "@/lib/games/types";
 
 /**
@@ -33,7 +34,7 @@ const isObj = (v: unknown): v is Record<string, unknown> =>
 
 /** Just enough shape checking that a correctly signed payload is safe to render. */
 function shapeError(p: Record<string, unknown>): string | null {
-  if (p.game !== "football") return "This report isn't for a football match.";
+  if (!games.some((g) => g.id === p.game)) return "This report is for a game I don't know.";
   if (typeof p.run_id !== "string" || !/^[\w.-]+$/.test(p.run_id)) return "The run id is missing or malformed.";
   if (!Array.isArray(p.events) || !Array.isArray(p.tracks) || !Array.isArray(p.teams)) return "Events, tracks or teams are missing.";
   if (!isObj(p.proposed_score) || !isObj(p.possession_ms)) return "Score or possession data is missing.";

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useReducer } from "react";
-import { games } from "@/config/games";
+import { gameById, games } from "@/config/games";
 import type {
   MatchState,
   Player,
@@ -190,10 +190,23 @@ export function playerPossession(state: MatchState): PlayerPossession | null {
   return { players, unmapped };
 }
 
-/** Player with the most possession time, or null if nobody is mapped (or nobody touched it). */
-export function mvp(state: MatchState): { player: Player; ms: number } | null {
-  const top = playerPossession(state)?.players[0];
-  return top && top.ms > 0 ? top : null;
+/**
+ * Ball games: the player with the most possession time. Other games: the player credited with the
+ * most applied events (eliminations, tags). Null if nobody is mapped or nobody earned it.
+ */
+export function mvp(state: MatchState): { player: Player; ms: number; events: number } | null {
+  if (gameById(state.gameId).ball) {
+    const top = playerPossession(state)?.players[0];
+    return top && top.ms > 0 ? { ...top, events: 0 } : null;
+  }
+  const counts = new Map<string, number>();
+  for (const ev of appliedEvents(state)) {
+    const pid = ev.scorer_track === null ? undefined : state.trackMap[String(ev.scorer_track)];
+    if (pid) counts.set(pid, (counts.get(pid) ?? 0) + 1);
+  }
+  const [pid, events] = [...counts].sort((a, b) => b[1] - a[1])[0] ?? [];
+  const player = state.players.find((p) => p.id === pid);
+  return player && events ? { player, ms: 0, events } : null;
 }
 
 /** Team with the higher official score, or null for a draw. */

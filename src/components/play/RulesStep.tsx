@@ -1,4 +1,5 @@
 import { Download } from "lucide-react";
+import { gameById } from "@/config/games";
 import { ActionButton } from "@/components/ui/Button";
 import type { MatchApi } from "@/lib/games/match";
 import type { TieBreak } from "@/lib/games/types";
@@ -8,8 +9,8 @@ import { downloadJudgeConfig } from "./TeamsStep";
 
 const TIE_BREAKS: { id: TieBreak; label: string; note: string }[] = [
   { id: "draw", label: "Draw stands", note: "Level scores at the end means everyone shares the result." },
-  { id: "golden-goal", label: "Golden goal", note: "Play on, and the next goal wins it." },
-  { id: "penalties", label: "Penalty shootout", note: "Each team takes turns shooting until one misses." },
+  { id: "golden-goal", label: "Golden point", note: "Play on, and the next score wins it." },
+  { id: "penalties", label: "Shootout", note: "Each team takes turns trying to score until one misses." },
 ];
 
 export const tieBreakNote = (t: TieBreak) => TIE_BREAKS.find((x) => x.id === t)!;
@@ -23,6 +24,7 @@ export function RulesStep({ m }: { m: MatchApi }) {
   const setReady = (id: string, ready: boolean) =>
     m.setPlayers(players.map((p) => (p.id === id ? { ...p, ready } : p)));
   const tb = tieBreakNote(rules.tieBreak);
+  const word = gameById(state.gameId).scoreWord;
 
   return (
     <div className="flex flex-col gap-10">
@@ -36,7 +38,7 @@ export function RulesStep({ m }: { m: MatchApi }) {
         <div className="flex flex-col gap-8 rounded-card border border-line bg-surface p-6 md:p-7">
           <div className="grid gap-5 sm:grid-cols-3">
             <div className="flex flex-col gap-2">
-              <label htmlFor="ppg" className="label-caps text-muted">[ Points per goal ]</label>
+              <label htmlFor="ppg" className="label-caps text-muted">[ Points per {word} ]</label>
               <input
                 id="ppg"
                 type="number"
@@ -145,7 +147,7 @@ export function RulesStep({ m }: { m: MatchApi }) {
             </dd>
             <dt className="text-muted">Scoring</dt>
             <dd>
-              {rules.pointsPerGoal} point{rules.pointsPerGoal === 1 ? "" : "s"} per goal
+              {rules.pointsPerGoal} point{rules.pointsPerGoal === 1 ? "" : "s"} per {word}
             </dd>
             <dt className="text-muted">Clock</dt>
             <dd>

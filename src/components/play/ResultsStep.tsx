@@ -1,5 +1,6 @@
 "use client";
 
+import { gameById } from "@/config/games";
 import { ActionButton } from "@/components/ui/Button";
 import { Pill } from "@/components/ui/Pill";
 import { Donut } from "@/components/visuals/Donut";
@@ -12,6 +13,7 @@ const pct = (part: number, total: number) => (total > 0 ? Math.round((part / tot
 export function ResultsStep({ m }: { m: MatchApi }) {
   const { state } = m;
   const { report } = state;
+  const game = gameById(state.gameId);
   const win = winner(state);
   const best = mvp(state);
   const possession = playerPossession(state);
@@ -25,7 +27,7 @@ export function ResultsStep({ m }: { m: MatchApi }) {
         title={win ? `${state.teams[win].name} win` : "It's a draw"}
         intro={
           win
-            ? "Here's how the match went. The score is the official one you kept, plus any AI goals you approved."
+            ? `Here's how the match went. The score is the official one you kept, plus every AI ${game.scoreWord} you approved.`
             : `Level on points. Your tie break is ${state.rules.tieBreak.replace("-", " ")}.`
         }
       />
@@ -42,17 +44,21 @@ export function ResultsStep({ m }: { m: MatchApi }) {
           <p className="font-display text-display-md tabular-nums">{formatClock(state.elapsedMs)}</p>
         </div>
         <div className="flex flex-col gap-2 rounded-card border border-line p-5">
-          <p className="label-caps text-muted">[ AI goals applied ]</p>
+          <p className="label-caps text-muted">[ AI {game.scoreWord}s applied ]</p>
           <p className="font-display text-display-md tabular-nums">{goals.length}</p>
         </div>
         <div className="flex flex-col gap-2 rounded-card border border-line p-5">
           <p className="label-caps text-muted">[ MVP ]</p>
           <p className="font-display text-display-md">{best ? best.player.name || best.player.id : "None yet"}</p>
-          {best && <p className="text-sm text-muted">{formatClock(best.ms)} on the ball</p>}
+          {best && (
+            <p className="text-sm text-muted">
+              {game.ball ? `${formatClock(best.ms)} on the ball` : `${best.events} ${game.scoreWord}${best.events === 1 ? "" : "s"}`}
+            </p>
+          )}
         </div>
       </section>
 
-      {report ? (
+      {report && game.ball ? (
         <section className="grid gap-8 rounded-slab border border-line bg-surface p-6 md:grid-cols-[14rem_1fr] md:p-8">
           <Donut
             label="Possession by team"
@@ -95,7 +101,11 @@ export function ResultsStep({ m }: { m: MatchApi }) {
           </div>
         </section>
       ) : (
-        <p className="text-muted">No AI report was loaded, so I don&apos;t have possession stats for this match.</p>
+        <p className="text-muted">
+          {report
+            ? `${game.name} has no ball to track, so I pick the MVP by ${game.scoreWord}s instead of possession.`
+            : "No AI report was loaded, so I don't have stats for this match."}
+        </p>
       )}
 
       <div className="flex flex-wrap gap-3">
