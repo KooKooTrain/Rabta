@@ -83,8 +83,7 @@ export function TeamsStep({ m }: { m: MatchApi }) {
             <section
               key={id}
               aria-label={`${team.name || `Team ${id}`} setup`}
-              className="flex flex-col gap-6 rounded-card border border-line border-t-8 bg-surface p-6 md:p-7"
-              style={{ borderTopColor: team.color }}
+              className="flex flex-col gap-6 rounded-card border border-line bg-surface p-6 md:p-7"
             >
               <div className="flex flex-col gap-2">
                 <label htmlFor={`team-${id}-name`} className="label-caps text-muted">

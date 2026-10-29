@@ -5,7 +5,7 @@ import { Pill } from "@/components/ui/Pill";
 import { formatClock, type MatchApi } from "@/lib/games/match";
 import type { TeamId } from "@/lib/games/types";
 import { cn } from "@/lib/utils";
-import { StepHeader, smallBtn } from "./parts";
+import { StepHeader, TeamName, smallBtn } from "./parts";
 
 export function RoundStep({ m }: { m: MatchApi }) {
   const { state } = m;
@@ -57,10 +57,9 @@ export function RoundStep({ m }: { m: MatchApi }) {
             return (
               <div
                 key={id}
-                className="flex flex-col items-center gap-4 rounded-card border border-line border-t-8 p-6"
-                style={{ borderTopColor: team.color }}
+                className="flex flex-col items-center gap-4 rounded-card border border-line p-6"
               >
-                <p className="font-display text-title">{team.name}</p>
+                <TeamName team={team} className="font-display text-title" />
                 <p className="font-display text-stat tabular-nums" aria-live="polite">
                   {state.score[id]}
                 </p>
