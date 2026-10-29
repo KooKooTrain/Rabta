@@ -38,6 +38,52 @@ const chipSizes: Record<Size, string> = {
 
 const isExternal = (href: string) => /^https?:\/\//.test(href);
 
+const buttonClass = (variant: Variant, size: Size, icon: boolean, className?: string) =>
+  cn(
+    base,
+    variants[variant],
+    sizes[size],
+    !icon && plainSizes[size],
+    "disabled:pointer-events-none disabled:opacity-40",
+    className,
+  );
+
+function ArrowChip({ size, Arrow }: { size: Size; Arrow: typeof ArrowRight }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "grid shrink-0 place-items-center rounded-full bg-current/15 transition-transform duration-[var(--dur-base)] ease-hover group-hover/btn:translate-x-[3px] rtl:group-hover/btn:-translate-x-[3px]",
+        chipSizes[size],
+      )}
+    >
+      <Arrow className="size-4 rtl:-scale-x-100" />
+    </span>
+  );
+}
+
+/** A real <button> with the same look as Button (for actions, not navigation). */
+export function ActionButton({
+  variant = "primary",
+  size = "md",
+  icon = true,
+  type = "button",
+  className,
+  children,
+  ...props
+}: {
+  variant?: Variant;
+  size?: Size;
+  icon?: boolean;
+} & React.ComponentProps<"button">) {
+  return (
+    <button type={type} className={buttonClass(variant, size, icon, className)} {...props}>
+      <span className="pt-[0.08em]">{children}</span>
+      {icon && <ArrowChip size={size} Arrow={ArrowRight} />}
+    </button>
+  );
+}
+
 export function Button({
   link,
   variant = "primary",
@@ -58,20 +104,10 @@ export function Button({
       <span className="pt-[0.08em]">
         <T c={link.label} rich={false} />
       </span>
-      {icon && (
-        <span
-          aria-hidden="true"
-          className={cn(
-            "grid shrink-0 place-items-center rounded-full bg-current/15 transition-transform duration-[var(--dur-base)] ease-hover group-hover/btn:translate-x-[3px] rtl:group-hover/btn:-translate-x-[3px]",
-            chipSizes[size],
-          )}
-        >
-          <Arrow className="size-4 rtl:-scale-x-100" />
-        </span>
-      )}
+      {icon && <ArrowChip size={size} Arrow={Arrow} />}
     </>
   );
-  const cls = cn(base, variants[variant], sizes[size], !icon && plainSizes[size], className);
+  const cls = buttonClass(variant, size, icon, className);
 
   return external ? (
     <a href={link.href} className={cls} target="_blank" rel="noreferrer">

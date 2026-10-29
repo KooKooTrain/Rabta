@@ -1,0 +1,182 @@
+import { Download } from "lucide-react";
+import { ActionButton } from "@/components/ui/Button";
+import type { MatchApi } from "@/lib/games/match";
+import type { TieBreak } from "@/lib/games/types";
+import { cn } from "@/lib/utils";
+import { StepHeader, Swatch, field, smallBtn } from "./parts";
+import { downloadJudgeConfig } from "./TeamsStep";
+
+const TIE_BREAKS: { id: TieBreak; label: string; note: string }[] = [
+  { id: "draw", label: "Draw stands", note: "Level scores at the end means everyone shares the result." },
+  { id: "golden-goal", label: "Golden goal", note: "Play on, and the next goal wins it." },
+  { id: "penalties", label: "Penalty shootout", note: "Each team takes turns shooting until one misses." },
+];
+
+export const tieBreakNote = (t: TieBreak) => TIE_BREAKS.find((x) => x.id === t)!;
+
+const LENGTHS = [60, 120, 180, 300];
+
+export function RulesStep({ m }: { m: MatchApi }) {
+  const { state } = m;
+  const { rules, players } = state;
+  const allReady = players.length > 0 && players.every((p) => p.ready);
+  const setReady = (id: string, ready: boolean) =>
+    m.setPlayers(players.map((p) => (p.id === id ? { ...p, ready } : p)));
+  const tb = tieBreakNote(rules.tieBreak);
+
+  return (
+    <div className="flex flex-col gap-10">
+      <StepHeader
+        label="Step 3"
+        title="House rules"
+        intro="Set the scoring and the clock, then make sure everyone is ready before kick-off."
+      />
+
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
+        <div className="flex flex-col gap-8 rounded-card border border-line bg-surface p-6 md:p-7">
+          <div className="grid gap-5 sm:grid-cols-3">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="ppg" className="label-caps text-muted">[ Points per goal ]</label>
+              <input
+                id="ppg"
+                type="number"
+                min={1}
+                max={10}
+                className={field}
+                value={rules.pointsPerGoal}
+                onChange={(e) =>
+                  m.setRules({ pointsPerGoal: Math.min(10, Math.max(1, Math.round(Number(e.target.value)) || 1)) })
+                }
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="len" className="label-caps text-muted">[ Round length ]</label>
+              <select
+                id="len"
+                className={field}
+                value={rules.roundSeconds}
+                onChange={(e) => m.setRules({ roundSeconds: Number(e.target.value) })}
+              >
+                {LENGTHS.map((s) => (
+                  <option key={s} value={s}>
+                    {s / 60} min
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="rounds" className="label-caps text-muted">[ Rounds ]</label>
+              <select
+                id="rounds"
+                className={field}
+                value={rules.rounds}
+                onChange={(e) => m.setRules({ rounds: Number(e.target.value) })}
+              >
+                {[1, 2, 3].map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <fieldset className="flex flex-col gap-3">
+            <legend className="label-caps mb-2 text-muted">[ If it&apos;s a tie ]</legend>
+            {TIE_BREAKS.map((t) => (
+              <label
+                key={t.id}
+                className={cn(
+                  "flex cursor-pointer items-start gap-3 rounded-tile border p-4 transition-colors",
+                  rules.tieBreak === t.id ? "border-fg" : "border-line hover:border-line-strong",
+                )}
+              >
+                <input
+                  type="radio"
+                  name="tiebreak"
+                  className="mt-1 accent-[var(--color-accent)]"
+                  checked={rules.tieBreak === t.id}
+                  onChange={() => m.setRules({ tieBreak: t.id })}
+                />
+                <span className="flex flex-col gap-0.5">
+                  <span className="font-medium">{t.label}</span>
+                  <span className="text-sm text-muted">{t.note}</span>
+                </span>
+              </label>
+            ))}
+          </fieldset>
+
+          <fieldset className="flex flex-col gap-3">
+            <legend className="label-caps mb-2 text-muted">[ Who&apos;s ready? ]</legend>
+            <label className="flex items-center gap-3 font-medium">
+              <input
+                type="checkbox"
+                className="size-4 accent-[var(--color-accent)]"
+                checked={allReady}
+                onChange={(e) => m.setPlayers(players.map((p) => ({ ...p, ready: e.target.checked })))}
+              />
+              Everyone&apos;s ready
+            </label>
+            <ul className="grid gap-2 sm:grid-cols-2">
+              {players.map((p) => (
+                <li key={p.id}>
+                  <label className="flex items-center gap-3 rounded-inner border border-line px-3 py-2.5">
+                    <input
+                      type="checkbox"
+                      className="size-4 accent-[var(--color-accent)]"
+                      checked={p.ready}
+                      onChange={(e) => setReady(p.id, e.target.checked)}
+                    />
+                    <Swatch color={state.teams[p.team].color} />
+                    {p.name}
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </fieldset>
+        </div>
+
+        <aside className="flex h-fit flex-col gap-5 rounded-card border border-line bg-soft p-6 md:p-7">
+          <p className="label-caps text-muted">[ Match summary ]</p>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+            <dt className="text-muted">Teams</dt>
+            <dd>
+              {state.teams.A.name} v {state.teams.B.name}
+            </dd>
+            <dt className="text-muted">Scoring</dt>
+            <dd>
+              {rules.pointsPerGoal} point{rules.pointsPerGoal === 1 ? "" : "s"} per goal
+            </dd>
+            <dt className="text-muted">Clock</dt>
+            <dd>
+              {rules.rounds} round{rules.rounds === 1 ? "" : "s"} of {rules.roundSeconds / 60} min
+            </dd>
+            <dt className="text-muted">Tie-break</dt>
+            <dd>{tb.label}</dd>
+          </dl>
+          <p className="text-sm text-muted">
+            Changed the scoring? Download the judge config again so my judge uses the same rules.
+          </p>
+          <button type="button" className={cn(smallBtn, "self-start")} onClick={() => downloadJudgeConfig(state)}>
+            <Download aria-hidden="true" className="size-4" />
+            Download judge config
+          </button>
+        </aside>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-4">
+        <ActionButton
+          size="lg"
+          disabled={!allReady}
+          onClick={() => {
+            m.startRound();
+            m.goto("round");
+          }}
+        >
+          Start match
+        </ActionButton>
+        {!allReady && <p className="text-sm text-muted">Tick everyone as ready to start.</p>}
+      </div>
+    </div>
+  );
+}

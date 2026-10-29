@@ -1,0 +1,208 @@
+"use client";
+
+import { useState } from "react";
+import { ShieldAlert, ShieldCheck } from "lucide-react";
+import { ActionButton } from "@/components/ui/Button";
+import { Pill } from "@/components/ui/Pill";
+import { appliedEvents, formatClock, pendingEvents, type MatchApi } from "@/lib/games/match";
+import type { VerifyResult } from "@/lib/games/types";
+import { cn } from "@/lib/utils";
+import { StepHeader, TeamName, field, smallBtn } from "./parts";
+
+const fileUrl = (runId: string, file: string) => `/api/judge-files/${runId}/${file}`;
+
+export function JudgeStep({ m }: { m: MatchApi }) {
+  const { state } = m;
+  const { report } = state;
+  const [text, setText] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // The server decides validity. I only load a payload it returned as verified.
+  async function verify(raw: string) {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/reports/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: raw,
+      });
+      const result = (await res.json()) as VerifyResult;
+      if (result.status === "verified") {
+        m.loadReport(result.payload);
+        setText("");
+      } else if (result.status === "invalid") {
+        setError(`Invalid signature: report rejected. ${result.reason}`);
+      } else {
+        setError(result.reason);
+      }
+    } catch {
+      setError("I couldn't reach the verifier. Is npm run dev still running?");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onFile(file: File | undefined) {
+    if (file) await verify(await file.text());
+  }
+
+  const pending = pendingEvents(state);
+  const applied = appliedEvents(state);
+
+  return (
+    <div className="flex flex-col gap-10">
+      <StepHeader
+        label="AI judge"
+        title="Check the footage"
+        intro="Run my judge on your clip, then drop its report.json here. I check the signature on the server before anything touches the score."
+      />
+
+      <section className="flex flex-col gap-4 rounded-slab border border-line bg-surface p-6 md:p-8">
+        <p className="label-caps text-muted">[ Import report ]</p>
+        <input
+          type="file"
+          accept="application/json,.json"
+          disabled={busy}
+          aria-label="Upload report.json"
+          onChange={(e) => {
+            void onFile(e.target.files?.[0]);
+            e.target.value = "";
+          }}
+          className="text-sm file:me-3 file:rounded-pill file:border file:border-line-strong file:bg-bg file:px-3.5 file:py-1.5 file:text-fg"
+        />
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Or paste the report JSON here"
+          rows={4}
+          className={cn(field, "h-auto py-2 font-mono text-sm")}
+        />
+        <div className="flex flex-wrap items-center gap-3">
+          <button type="button" className={smallBtn} disabled={busy || !text.trim()} onClick={() => void verify(text)}>
+            {busy ? "Checking..." : "Verify pasted report"}
+          </button>
+          <p className="text-sm text-muted">Camera recording in the app is coming soon. For now I judge a recorded clip.</p>
+        </div>
+        {error && (
+          <p role="alert" className="flex items-start gap-2 rounded-tile border border-line-strong p-4">
+            <ShieldAlert aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
+            <span>{error} The official score hasn&apos;t changed.</span>
+          </p>
+        )}
+      </section>
+
+      {report && (
+        <>
+          <div className="flex flex-wrap items-center gap-3">
+            <Pill className="border-transparent bg-accent text-accent-fg">
+              <ShieldCheck aria-hidden="true" className="size-4" /> Verified report
+            </Pill>
+            <Pill>Run {report.run_id}</Pill>
+            <Pill>
+              AI proposes {report.proposed_score.A} : {report.proposed_score.B}
+            </Pill>
+            <Pill>
+              Official {state.score.A} : {state.score.B}
+            </Pill>
+          </div>
+
+          <section className="flex flex-col gap-4">
+            <p className="label-caps text-muted">[ Goals I spotted ]</p>
+            {report.events.length === 0 && (
+              <p className="text-muted">I didn&apos;t see a goal in this clip, so I&apos;m not proposing any score change.</p>
+            )}
+            <ul className="grid gap-4 md:grid-cols-2">
+              {report.events.map((ev) => {
+                const review = state.reviews[ev.id];
+                const done = applied.some((a) => a.id === ev.id);
+                return (
+                  <li key={ev.id} className="flex flex-col gap-3 rounded-card border border-line p-4">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={fileUrl(report.run_id, ev.thumb)}
+                      alt={`Frame of ${ev.id} at ${formatClock(ev.t_ms, true)}`}
+                      className="aspect-video w-full rounded-tile border border-line bg-soft object-cover"
+                    />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <TeamName team={state.teams[ev.team]} className="font-medium" />
+                      <Pill>{formatClock(ev.t_ms, true)}</Pill>
+                      <Pill>{ev.confidence}% sure</Pill>
+                      {ev.needs_review && !review && <Pill dot>Needs your review</Pill>}
+                      {review && <Pill>{review === "confirmed" ? "Confirmed" : "Rejected"}</Pill>}
+                      {done && <Pill>Applied</Pill>}
+                    </div>
+                    <p className="text-sm text-muted">{ev.reason}</p>
+                    {!done && (
+                      <div className="flex gap-2">
+                        <button type="button" className={smallBtn} onClick={() => m.review(ev.id, "confirmed")}>
+                          Confirm
+                        </button>
+                        <button type="button" className={smallBtn} onClick={() => m.review(ev.id, "rejected")}>
+                          Reject
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+
+          {report.annotated_video && (
+            <section className="flex flex-col gap-4">
+              <p className="label-caps text-muted">[ What I saw ]</p>
+              <video
+                controls
+                preload="metadata"
+                src={fileUrl(report.run_id, report.annotated_video)}
+                className="w-full rounded-card border border-line bg-soft"
+              />
+            </section>
+          )}
+
+          <section className="flex flex-col gap-4">
+            <p className="label-caps text-muted">[ Who is who ]</p>
+            <p className="text-muted">
+              My tracker numbers people, it doesn&apos;t know names. Match each track to a player so possession and MVP
+              use real names.
+            </p>
+            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {report.tracks.map((t) => (
+                <li key={t.track_id} className="flex flex-col gap-2 rounded-tile border border-line p-3">
+                  <span className="text-sm">
+                    Track {t.track_id}
+                    {t.team ? ` · ${state.teams[t.team].name}` : ""} · {formatClock(t.possession_ms)} on the ball
+                  </span>
+                  <select
+                    className={field}
+                    value={state.trackMap[String(t.track_id)] ?? ""}
+                    onChange={(e) => m.mapTrack(String(t.track_id), e.target.value)}
+                    aria-label={`Player for track ${t.track_id}`}
+                  >
+                    <option value="">Not mapped</option>
+                    {state.players.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name || p.id} ({state.teams[p.team].name})
+                      </option>
+                    ))}
+                  </select>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </>
+      )}
+
+      <div className="flex flex-wrap items-center gap-3">
+        {report && (
+          <ActionButton variant="secondary" disabled={pending.length === 0} onClick={m.applyAI}>
+            {pending.length ? `Apply AI results (${pending.length})` : "Nothing new to apply"}
+          </ActionButton>
+        )}
+        <ActionButton onClick={m.finish}>See results</ActionButton>
+      </div>
+    </div>
+  );
+}
