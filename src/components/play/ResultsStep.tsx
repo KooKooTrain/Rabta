@@ -1,6 +1,7 @@
 "use client";
 
 import { gameById } from "@/config/games";
+import { guides } from "@/config/guides";
 import { ActionButton } from "@/components/ui/Button";
 import { Pill } from "@/components/ui/Pill";
 import { Donut } from "@/components/visuals/Donut";
@@ -19,6 +20,8 @@ export function ResultsStep({ m }: { m: MatchApi }) {
   const possession = playerPossession(state);
   const goals = appliedEvents(state);
   const teamMs = report ? report.possession_ms.A + report.possession_ms.B : 0;
+  const guide = guides[game.id];
+  const margin = Math.abs(state.score.A - state.score.B);
 
   return (
     <div className="flex flex-col gap-10">
@@ -107,6 +110,24 @@ export function ResultsStep({ m }: { m: MatchApi }) {
             : "No AI report was loaded, so I don't have stats for this match."}
         </p>
       )}
+
+      <section className="grid gap-4 md:grid-cols-2">
+        <div className="flex flex-col gap-2 rounded-card border border-line bg-soft p-5">
+          <p className="label-caps text-muted">[ What I noticed ]</p>
+          <p>
+            {win
+              ? margin === 1
+                ? "One point in it. That's as close as it gets."
+                : `A ${margin} point margin, so ${state.teams[win].name} were on top today.`
+              : "Nobody could split you today."}{" "}
+            {guide.afterMatch}
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 rounded-card border border-line bg-soft p-5">
+          <p className="label-caps text-muted">[ For next time ]</p>
+          <p>{guide.tips[state.rules.rounds % guide.tips.length]}</p>
+        </div>
+      </section>
 
       <div className="flex flex-wrap gap-3">
         <ActionButton variant="secondary" onClick={() => m.goto("judge")}>
