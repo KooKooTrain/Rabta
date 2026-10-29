@@ -51,3 +51,4 @@ next-env.d.ts
 __pycache__/
 match.json
 /python-judge/uploads/
+.gstack/
