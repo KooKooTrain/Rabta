@@ -362,6 +362,8 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
     j = cfg["judge"]
     frame_skip = 1 if live else max(1, int(frame_skip or j["frame_skip"]))
     write_video = write_video and not live
+    if live:  # thresholds were tuned for every 3rd frame; live checks every frame
+        j = {**j, **{k: j[k] * 3 for k in ("goal_min_frames", "out_min_frames", "tag_min_frames")}}
     width = int(width or j["width"])
     teams = cfg["teams"]
     team_ids = [t["id"] for t in teams]
@@ -496,7 +498,7 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
                     continue
                 st["run"].append((ball[1], ball[2]))
                 ev = st["event"]
-                if ev is None and st["armed"] and t_ms >= st["cool_until"] and len(st["run"]) >= j["goal_min_frames"]:
+                if ev is None and st["armed"] and t_ms >= st["cool_until"] and len(st["run"]) >= j["goal_min_frames"] and (not live or any(src == "yolo" for src, _ in st["run"])):
                     if "defending" in z:
                         scorer, unsure = next(t for t in team_ids if t != z["defending"]), False
                     else:  # last touch: the holder's team, or the team nearest the ball if nobody held it
