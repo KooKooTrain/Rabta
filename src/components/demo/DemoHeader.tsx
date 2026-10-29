@@ -39,11 +39,11 @@ export function DemoHeader() {
             <span className="hidden sm:inline">{language === "ar" ? "العودة إلى الموقع" : "Back to site"}</span>
           </Link>
           <span aria-hidden="true" className="h-6 w-px bg-line-strong" />
-          <div role="group" aria-label="Color theme" className="flex items-center gap-2.5 sm:gap-3">
-            <button type="button" onClick={() => setTheme("light")} aria-label="Light mode" aria-pressed={theme === "light"} className={cn("grid size-9 place-items-center rounded-full text-muted transition-colors hover:bg-fg/5 hover:text-fg", !isDark && "bg-fg/5 text-fg")}>
+          <div role="group" aria-label="Color theme" className="flex items-center gap-0.5 rounded-full bg-soft p-1">
+            <button type="button" onClick={() => setTheme("light")} aria-label="Light mode" aria-pressed={theme === "light"} className={cn("grid size-8 place-items-center rounded-full text-muted transition-colors hover:text-fg", !isDark ? "bg-surface text-fg shadow-sm" : "hover:bg-fg/5")}>
               <Sun aria-hidden="true" className="size-[1.1rem]" />
             </button>
-            <button type="button" onClick={() => setTheme("dark")} aria-label="Dark mode" aria-pressed={theme === "dark"} className={cn("grid size-9 place-items-center rounded-full text-muted transition-colors hover:bg-fg/5 hover:text-fg", isDark && "bg-fg/5 text-fg")}>
+            <button type="button" onClick={() => setTheme("dark")} aria-label="Dark mode" aria-pressed={theme === "dark"} className={cn("grid size-8 place-items-center rounded-full text-muted transition-colors hover:text-fg", isDark ? "bg-surface text-fg shadow-sm" : "hover:bg-fg/5")}>
               <Moon aria-hidden="true" className="size-[1.05rem]" />
             </button>
           </div>
