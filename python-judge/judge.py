@@ -5,15 +5,19 @@ al-karabi eliminates a player whose feet leave the arena; al-ghomaidah scores a 
 seeker touches an opponent. Placeholder heuristics until the MediaPipe pipeline replaces them.
 
 CLI:  python judge.py --input samples/demo.mp4 --config match.json --out outputs/demo [--preview]
+Live: python judge.py --live [--input 0] --config match.json --out outputs/live
+      (webcam; stdin takes pause / resume / seeker A|B / stop; stdout is one JSON line per tick or event)
 Lib:  from judge import run_judge; run_judge(input, config_dict, out)
 """
 import argparse
+import base64
 import json
 import math
 import os
 import shutil
 import subprocess
 import sys
+import threading
 import time
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -143,6 +147,45 @@ def open_video(path):
         fps = 30.0
     total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
     return cap, frame, fps, total
+
+
+def open_camera(src):
+    """Live source: a camera index like "0", or a file path for testing."""
+    s = str(src)
+    if not s.isdigit():
+        return open_video(s)
+    cap = cv2.VideoCapture(int(s), cv2.CAP_DSHOW) if os.name == "nt" else cv2.VideoCapture(int(s))
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # always the newest frame, never a backlog
+    ok, frame = cap.read() if cap.isOpened() else (False, None)
+    if not ok or frame is None:
+        cap.release()
+        raise JudgeError(f"I couldn't open camera {s}. Is another app using it?")
+    return cap, frame, 30.0, 0
+
+
+def read_commands(ctl, j, team_ids):
+    """Live mode: one command per stdin line. End of input (the server went away) also stops the judge."""
+    for line in sys.stdin:
+        parts = line.split()
+        if not parts:
+            continue
+        if parts[0] == "pause":
+            ctl["paused"] = True
+        elif parts[0] == "resume":
+            ctl["paused"] = False
+        elif parts[0] == "seeker" and len(parts) > 1 and parts[1] in team_ids:
+            j["seeker"] = parts[1]
+        elif parts[0] == "stop":
+            break
+    ctl["stop"] = True
+
+
+def emit(obj):
+    print(json.dumps(obj), flush=True)
+
+
+def jpeg_b64(img):
+    return base64.b64encode(cv2.imencode(".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, 60])[1]).decode("ascii")
 
 
 def resize(frame, width):
@@ -308,15 +351,17 @@ def source_phrase(sources):
     return "seen by the object detector and by colour"
 
 
-def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, write_video=True):
-    """Analyse a clip and write <out>/report.json (signed), thumbs/, annotated.mp4. Returns the signed report."""
+def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, write_video=True, live=False):
+    """Analyse a clip and write <out>/report.json (signed), thumbs/, annotated.mp4. Returns the signed report.
+    live=True watches a camera instead, streams ticks and signed events to stdout, and skips the video."""
     secret = secret or os.environ.get("BAYT_REPORT_SECRET")
     if not secret:
         raise JudgeError("BAYT_REPORT_SECRET is not set. Export a secret before running, e.g. "
                          "BAYT_REPORT_SECRET=... python judge.py ...")
     cfg = normalise_config(cfg)
     j = cfg["judge"]
-    frame_skip = max(1, int(frame_skip or j["frame_skip"]))
+    frame_skip = 1 if live else max(1, int(frame_skip or j["frame_skip"]))
+    write_video = write_video and not live
     width = int(width or j["width"])
     teams = cfg["teams"]
     team_ids = [t["id"] for t in teams]
@@ -334,7 +379,7 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
     tag_cool = {}
     thumbs_done = 0
 
-    cap, first, fps, total = open_video(input_path)
+    cap, first, fps, total = open_camera(input_path) if live else open_video(input_path)
     model = load_model()
     out = Path(out)
     (out / "thumbs").mkdir(parents=True, exist_ok=True)
@@ -357,12 +402,36 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
     frame_idx, samples = 0, 0
     t0 = time.time()
     frame = first
+    ctl = {"paused": bool(cfg.get("paused")), "stop": False}
+    prev_t, play_ms, emitted = t0, 0, 0
+
+    def next_live():
+        """Newest camera frame while playing. While paused, stream the raw view a few times a second."""
+        while not ctl["stop"]:
+            ok, f = cap.read()
+            if not ok:
+                return None
+            if not ctl["paused"]:
+                return f
+            emit({"type": "tick", "paused": True, "frame": jpeg_b64(resize(f, width))})
+            time.sleep(0.15)
+        return None
+
+    if live:
+        threading.Thread(target=read_commands, args=(ctl, j, team_ids), daemon=True).start()
+        frame = next_live()
 
     while frame is not None:
         if frame_idx % frame_skip == 0:
             img = resize(frame, width)
             H, W = img.shape[:2]
-            t_ms = int(round(frame_idx * 1000 / fps))
+            if live:  # match time from the wall clock; pauses don't count
+                now = time.time()
+                dt_ms, prev_t = min(500, int((now - prev_t) * 1000)), now
+                play_ms += dt_ms
+                t_ms = play_ms
+            else:
+                t_ms = int(round(frame_idx * 1000 / fps))
             res = model.track(img, persist=True, tracker="bytetrack.yaml", classes=[0, 32] if ball_game else [0],
                               imgsz=width, conf=0.15, verbose=False)[0]
             persons, ball = [], None
@@ -561,16 +630,30 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
                 th = resize(img, 480) if W > 480 else img
                 cv2.imwrite(str(out / ev["thumb"]), th, [cv2.IMWRITE_JPEG_QUALITY, 85])
             thumbs_done = len(events)
+            if live:
+                for ev in events[emitted:]:
+                    public = {k: v for k, v in ev.items() if not k.startswith("_")}
+                    emit({"type": "event", "signed": sign({"run_id": out.name, "event": public}, secret)})
+                emitted = len(events)
+                credit = Counter(e["scorer_track"] for e in events if e["scorer_track"] is not None)
+                seen = [t for t, ms in visible.items() if ms >= 1000]
+                seen.sort(key=lambda t: (-(poss.get(t, 0) if ball_game else credit[t]), t))
+                emit({"type": "tick", "paused": False, "t_ms": t_ms, "score": score, "frame": jpeg_b64(img),
+                      "tracks": [{"track_id": t, "team": majority(votes[t]), "possession_ms": poss.get(t, 0),
+                                  "events": credit[t]} for t in seen[:4]]})
             if write_video:
                 if writer is None:
                     writer = cv2.VideoWriter(str(raw_path), cv2.VideoWriter_fourcc(*"mp4v"), out_fps, (W, H))
                 writer.write(img)
 
             samples += 1
-            if samples % 30 == 0:
+            if samples % 30 == 0 and not live:
                 pct = f"{100 * frame_idx // total}%" if total else f"frame {frame_idx}"
                 print(f"  {pct}  ({samples} samples, {time.time() - t0:.0f}s)", flush=True)
         frame_idx += 1
+        if live:
+            frame = next_live()
+            continue
         if (frame_idx % frame_skip == 0):
             ok, frame = cap.read()
         else:
@@ -627,8 +710,9 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
         "run_id": out.name,
         "game": game,
         "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "source": {"file": Path(input_path).name, "fps": int(round(fps)),
-                   "duration_ms": int(round(frame_idx * 1000 / fps)), "frames_processed": samples},
+        "source": {"file": "webcam" if live else Path(input_path).name, "fps": int(round(fps)),
+                   "duration_ms": play_ms if live else int(round(frame_idx * 1000 / fps)),
+                   "frames_processed": samples},
         "teams": [{"id": t["id"], "name": t["name"], "color": t["color"]} for t in teams],
         "players": [p.get("name", "") for p in cfg["players"]],
         "tracks": tracks,
@@ -650,6 +734,8 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
     print(f"Score: {a['name']} {score[a['id']]} - {score[b2['id']]} {b2['name']}  |  {etype}s: {len(events)}  "
           f"({sum(e['needs_review'] for e in events)} need review)  |  tracks kept: {len(tracks)}  |  MVP track: {mvp}")
     print(f"Report: {out / 'report.json'}" + (f"  Video: {out / annotated}" if annotated else ""))
+    if live:
+        emit({"type": "done"})
     return report
 
 
@@ -657,7 +743,8 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Bayt AI judge (football, basketball, volleyball, al-karabi, al-ghomaidah)")
-    ap.add_argument("--input", required=True, help="video file")
+    ap.add_argument("--input", help="video file, or a camera index with --live (default 0)")
+    ap.add_argument("--live", action="store_true", help="watch a camera live and stream JSON lines")
     ap.add_argument("--config", required=True, help="match.json (see config.example.json)")
     ap.add_argument("--out", required=True, help="output folder; its name becomes run_id")
     ap.add_argument("--preview", action="store_true", help="save preview.jpg of zones + ball candidates and exit")
@@ -668,12 +755,17 @@ def main(argv=None):
     try:
         cfg = load_config(args.config)
         if args.preview:
+            if not args.input:
+                raise JudgeError("--preview needs --input.")
             run_preview(args.input, cfg, args.out, args.width)
             return 0
         if not os.environ.get("BAYT_REPORT_SECRET"):
             raise JudgeError("BAYT_REPORT_SECRET is not set. Set it first, e.g. "
                              "BAYT_REPORT_SECRET=<secret> python judge.py ... (no default secret is used).")
-        if not Path(args.input).is_file():
+        if args.live:
+            run_judge(args.input or "0", cfg, args.out, width=args.width, live=True)
+            return 0
+        if not args.input or not Path(args.input).is_file():
             raise JudgeError(f"Input video not found: {args.input}")
         run_judge(args.input, cfg, args.out, frame_skip=args.frame_skip, width=args.width,
                   write_video=not args.no_video)
