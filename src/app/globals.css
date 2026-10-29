@@ -165,6 +165,34 @@ html[data-reduce-motion="true"] *::after {
 
 /* ------------------------------------------------------------- motion -- */
 @layer components {
+  .family-member-card {
+    transition:
+      transform 220ms var(--ease-out-soft),
+      box-shadow 260ms var(--ease-out-soft);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .family-member-card {
+      animation: game-card-enter 420ms var(--ease-out-soft) both;
+    }
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .family-member-card:hover,
+    .family-member-card:focus-within {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--t-accent) 28%, transparent),
+        0 0 20px -6px color-mix(in srgb, var(--t-accent) 34%, transparent);
+    }
+  }
+  html[data-reduce-motion="true"] .family-member-card,
+  html[data-reduce-motion="true"] .family-member-card:hover,
+  html[data-reduce-motion="true"] .family-member-card:focus-within {
+    animation: none;
+    transform: none;
+    box-shadow: none;
+    transition: none;
+  }
+
   .game-card {
     transition:
       transform 220ms var(--ease-out-soft),
