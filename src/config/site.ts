@@ -14,17 +14,17 @@ import type { LogoConfig, SiteConfig } from "./types";
 
 export const site = {
   meta: {
-    title: "Hearthline: AI for everyday family life", // [PLACEHOLDER]
+    title: "Bayt: Family AI Game Day",
     description:
-      "An AI companion that helps families notice what matters, understand it, and act together.", // [PLACEHOLDER]
+      "Pick a family game, set up teams, and let my AI judge watch the video, spot the goals and keep score.",
     url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
     keywords: ["AI for Family", "family wellbeing", "ADU COE 2026"],
   },
 
   brand: {
     teamName: ph("Team Name"), // [PLACEHOLDER]
-    productName: ph("Hearthline"), // [PLACEHOLDER]
-    tagline: ph("Everyday care, shared by the whole family."), // [PLACEHOLDER]
+    productName: "Bayt",
+    tagline: "Family game day, judged fairly.",
     seed: "hearth-2026",
     // To use an image: { kind: "image", src: "/brand/logo.svg", width: 32, height: 32, alt: "" }
     logo: { kind: "mark" } as LogoConfig,
@@ -38,7 +38,7 @@ export const site = {
   },
 
   nav: {
-    cta: { label: "Try the demo", href: "/demo" },
+    cta: { label: "Start game day", href: "/play" },
     secondary: { label: "How it works", href: "/#how" },
   },
 
@@ -83,12 +83,10 @@ export const site = {
   content: {
     // [PLACEHOLDER] all hero copy
     hero: {
-      eyebrow: ph("AI for Family · Working prototype"),
-      headline: ph("Family life,\n*shared.*"),
-      lead: ph(
-        "An AI companion that notices what your family needs, explains it in plain language, and helps everyone act together, without the guesswork.",
-      ),
-      primaryCta: { label: "Try the live demo", href: "/demo" },
+      eyebrow: "Family AI Game Day · Working prototype",
+      headline: "Game day,\n*judged fairly.*",
+      lead: "Pick a game, set up the teams, and play. I watch the video, spot the goals, work out who had the ball most, and hand the host a signed report to apply.",
+      primaryCta: { label: "Start game day", href: "/play" },
       secondaryCta: { label: "See how it works", href: "#how" },
       insight: {
         label: ph("AI insight"),
@@ -379,7 +377,7 @@ export const site = {
       eyebrow: ph("See it in action"),
       heading: ph("Less juggling.\nMore *together.*"),
       body: ph("Explore the working prototype and see how it supports a real family week."),
-      primary: { label: "Open the demo", href: "/demo" },
+      primary: { label: "Start game day", href: "/play" },
       secondary: { label: "Read the FAQ", href: "#faq" },
     },
   },
@@ -412,7 +410,7 @@ export const site = {
   footer: {
     blurb: ph("An AI companion for everyday family life, built for the ADU COE STEM Competition 2026."),
     actions: [
-      { label: "Try the demo", href: "/demo" },
+      { label: "Start game day", href: "/play" },
       { label: "Read the FAQ", href: "/#faq" },
     ],
     columns: [
@@ -421,7 +419,7 @@ export const site = {
         links: [
           { label: "How it works", href: "/#how" },
           { label: "Features", href: "/#features" },
-          { label: "Live demo", href: "/demo" },
+          { label: "Game day", href: "/play" },
         ],
       },
       {
