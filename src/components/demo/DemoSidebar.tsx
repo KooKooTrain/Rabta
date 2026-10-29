@@ -10,13 +10,13 @@ import { cn } from "@/lib/utils";
 import { useWorkspacePreferences } from "@/components/demo/WorkspacePreferences";
 
 const routes: Record<string, string> = {
-  Analyze: "/demo",
+  Game: "/demo",
   History: "/demo/history",
   Family: "/demo/family",
   Schedule: "/demo/schedule",
   Settings: "/demo/settings",
 };
-const arabicLabels: Record<string, string> = { Analyze: "تحليل", History: "السجل", Family: "العائلة", Schedule: "الجدول", Settings: "الإعدادات" };
+const arabicLabels: Record<string, string> = { Game: "اللعبة", History: "السجل", Family: "العائلة", Schedule: "الجدول", Settings: "الإعدادات" };
 
 export function DemoSidebar({ items }: { items: { label: string; icon: IconName }[] }) {
   const pathname = usePathname();

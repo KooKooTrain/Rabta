@@ -10,7 +10,7 @@ import { useSyncExternalStore } from "react";
 import { useWorkspacePreferences } from "@/components/demo/WorkspacePreferences";
 
 const pageNames: Record<string, string> = {
-  "/demo": "Analyze",
+  "/demo": "Game",
   "/demo/history": "History",
   "/demo/family": "Family",
   "/demo/schedule": "Schedule",
@@ -20,8 +20,8 @@ const pageNames: Record<string, string> = {
 export function DemoHeader() {
   const pathname = usePathname();
   const { language } = useWorkspacePreferences();
-  const page = pageNames[pathname] ?? "Analyze";
-  const translatedPage = language === "ar" ? ({ Analyze: "تحليل", History: "السجل", Family: "العائلة", Schedule: "الجدول", Settings: "الإعدادات" }[page] ?? page) : page;
+  const page = pageNames[pathname] ?? "Game";
+  const translatedPage = language === "ar" ? ({ Game: "اللعبة", History: "السجل", Family: "العائلة", Schedule: "الجدول", Settings: "الإعدادات" }[page] ?? page) : page;
   const theme = useSyncExternalStore<Theme | null>(subscribeTheme, getTheme, () => null);
   const isDark = theme === "dark";
 

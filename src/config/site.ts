@@ -383,10 +383,10 @@ export const site = {
   },
 
   demo: {
-    title: ph("Analyze"),
+    title: ph("Game"),
     subtitle: ph("A clear view of how your family is doing."),
     nav: [
-      { label: "Analyze", icon: "chart-line" },
+      { label: "Game", icon: "volleyball" },
       { label: "History", icon: "clock" },
       { label: "Family", icon: "users" },
       { label: "Schedule", icon: "calendar" },

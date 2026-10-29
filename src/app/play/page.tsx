@@ -1,5 +1,5 @@
-import { PlayWizard } from "@/components/play/PlayWizard";
+import { redirect } from "next/navigation";
 
 export default function PlayPage() {
-  return <PlayWizard />;
+  redirect("/demo");
 }
