@@ -1,4 +1,9 @@
+"use client";
+
+import { useRef } from "react";
+import { BookOpen, X } from "lucide-react";
 import { games, groupLabels } from "@/config/games";
+import { guides } from "@/config/guides";
 import { ActionButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Pill } from "@/components/ui/Pill";
@@ -6,7 +11,7 @@ import type { MatchApi } from "@/lib/games/match";
 import type { GameGroup, GameModule } from "@/lib/games/types";
 import type { IconName } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { StepHeader } from "./parts";
+import { StepHeader, smallBtn } from "./parts";
 
 const GROUPS: GameGroup[] = ["worldwide", "emirati"];
 
@@ -80,10 +85,78 @@ function GameCard({ game, onPlay }: { game: GameModule; onPlay: () => void }) {
         </div>
       </div>
       {active && (
-        <ActionButton onClick={onPlay} className="mt-auto self-start">
-          Play {game.name}
-        </ActionButton>
+        <div className="mt-auto flex flex-wrap items-center gap-2">
+          <ActionButton onClick={onPlay}>Play {game.name}</ActionButton>
+          <GuideButton game={game} />
+        </div>
       )}
     </article>
+  );
+}
+
+/** "How to play" opens a native modal dialog, so Esc and focus trapping come for free. */
+export function GuideButton({ game }: { game: GameModule }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  const guide = guides[game.id];
+  const close = () => ref.current?.close();
+  return (
+    <>
+      <button type="button" className={smallBtn} onClick={() => ref.current?.showModal()}>
+        <BookOpen aria-hidden="true" className="size-4" />
+        How to play
+      </button>
+      <dialog
+        ref={ref}
+        aria-labelledby={`guide-${game.id}`}
+        onClick={(e) => e.target === e.currentTarget && close()}
+        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-card border border-line bg-bg p-0 text-fg backdrop:bg-black/60"
+      >
+        <div data-lenis-prevent className="flex max-h-[85vh] flex-col gap-7 overflow-y-auto p-6 md:p-8">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col gap-2">
+              <p className="label-caps text-muted">[ How to play ]</p>
+              <h2 id={`guide-${game.id}`} className="font-display text-display-md">
+                {game.name}
+              </h2>
+            </div>
+            <button type="button" className={cn(smallBtn, "w-9 px-0")} onClick={close} aria-label="Close guide">
+              <X aria-hidden="true" className="size-4" />
+            </button>
+          </div>
+          <p className="text-muted">{guide.need}</p>
+          <section className="flex flex-col gap-3">
+            <h3 className="label-caps text-muted">[ The basics ]</h3>
+            <ol className="flex list-decimal flex-col gap-1.5 ps-5">
+              {guide.howTo.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+          </section>
+          <section className="flex flex-col gap-3">
+            <h3 className="label-caps text-muted">[ The real rules ]</h3>
+            <ul className="flex flex-col gap-3">
+              {guide.realRules.map((r) => (
+                <li key={r.rule} className="flex flex-col gap-0.5 rounded-tile border border-line p-3">
+                  <span className="font-medium">{r.rule}</span>
+                  <span className="text-sm text-muted">{r.why}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section className="flex flex-col gap-3">
+            <h3 className="label-caps text-muted">[ My tips ]</h3>
+            <ul className="flex list-disc flex-col gap-1.5 ps-5">
+              {guide.tips.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          </section>
+          <section className="flex flex-col gap-2 rounded-tile bg-soft p-4">
+            <h3 className="label-caps text-muted">[ A bit of history ]</h3>
+            <p className="text-sm">{guide.history}</p>
+          </section>
+        </div>
+      </dialog>
+    </>
   );
 }

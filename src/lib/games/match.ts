@@ -15,12 +15,7 @@ import type {
 
 const STORAGE_KEY = "bayt.match.v1";
 
-const footballRules: Rules = games.find((g) => g.id === "football")?.defaultRules ?? {
-  pointsPerGoal: 1,
-  roundSeconds: 180,
-  rounds: 1,
-  tieBreak: "penalties",
-};
+const footballRules: Rules = games[0].defaultRules;
 
 export const initialState: MatchState = {
   step: "game",
@@ -45,6 +40,8 @@ export const initialState: MatchState = {
   trackMap: {},
   appliedEventIds: [],
   finishedAt: null,
+  lastScorer: null,
+  out: [],
 };
 
 export type Action =
@@ -57,6 +54,7 @@ export type Action =
   | { type: "startRound"; now: number }
   | { type: "endRound"; now: number }
   | { type: "adjustScore"; team: TeamId; delta: number }
+  | { type: "toggleOut"; playerId: string }
   | { type: "loadReport"; payload: ReportPayload }
   | { type: "review"; eventId: string; review: Review }
   | { type: "mapTrack"; trackId: string; playerId: string }
@@ -92,7 +90,7 @@ export function reducer(state: MatchState, action: Action): MatchState {
     case "selectGame": {
       const game = games.find((g) => g.id === action.gameId);
       if (!game || game.status !== "active") return state;
-      return { ...state, gameId: game.id, rules: game.defaultRules, step: "teams" };
+      return { ...state, gameId: game.id, rules: game.defaultRules, step: "teams", lastScorer: null, out: [] };
     }
     case "goto":
       return { ...state, step: action.step };
@@ -112,7 +110,7 @@ export function reducer(state: MatchState, action: Action): MatchState {
       const ran = state.startedAt
         ? Math.min(action.now - state.startedAt, state.rules.roundSeconds * 1000)
         : 0;
-      const base = { ...state, startedAt: null, elapsedMs: state.elapsedMs + Math.max(0, ran) };
+      const base = { ...state, startedAt: null, elapsedMs: state.elapsedMs + Math.max(0, ran), out: [] };
       return state.round < state.rules.rounds
         ? { ...base, round: state.round + 1 }
         : { ...base, step: "judge" };
@@ -124,7 +122,20 @@ export function reducer(state: MatchState, action: Action): MatchState {
           ...state.score,
           [action.team]: Math.max(0, state.score[action.team] + action.delta),
         },
+        lastScorer: action.delta > 0 ? action.team : state.lastScorer,
       };
+    case "toggleOut": {
+      // Each elimination is a point for the other team; bringing a player back takes it away.
+      const player = state.players.find((p) => p.id === action.playerId);
+      if (!player) return state;
+      const isOut = state.out.includes(player.id);
+      const other: TeamId = player.team === "A" ? "B" : "A";
+      return {
+        ...state,
+        out: isOut ? state.out.filter((id) => id !== player.id) : [...state.out, player.id],
+        score: { ...state.score, [other]: Math.max(0, state.score[other] + (isOut ? -1 : 1)) },
+      };
+    }
     case "loadReport":
       return { ...state, report: action.payload, reviews: {}, trackMap: {} };
     case "review":
@@ -209,6 +220,38 @@ export function mvp(state: MatchState): { player: Player; ms: number; events: nu
   return player && events ? { player, ms: 0, events } : null;
 }
 
+/** The team that hit the target with a big enough lead, or null if nobody has yet. */
+export function targetWinner(state: MatchState): TeamId | null {
+  const { target, winBy } = state.rules;
+  if (!target) return null;
+  const { A, B } = state.score;
+  if (A >= target && A - B >= winBy) return "A";
+  if (B >= target && B - A >= winBy) return "B";
+  return null;
+}
+
+/**
+ * Who restarts play. Football and basketball: the team that was just scored on.
+ * Volleyball: the team that won the rally serves. Null before anyone scores.
+ */
+export function restartTeam(state: MatchState): TeamId | null {
+  const last = state.lastScorer;
+  if (!last) return null;
+  return gameById(state.gameId).mechanic === "serve" ? last : last === "A" ? "B" : "A";
+}
+
+/** Al Ghomaidah: Team A wears the blindfold in odd rounds, Team B in even ones. */
+export const seekerTeam = (state: MatchState): TeamId => (state.round % 2 === 1 ? "A" : "B");
+
+/** A team with every player knocked out (Al Karabi), or null. */
+export function teamAllOut(state: MatchState): TeamId | null {
+  for (const id of ["A", "B"] as TeamId[]) {
+    const team = state.players.filter((p) => p.team === id);
+    if (team.length > 0 && team.every((p) => state.out.includes(p.id))) return id;
+  }
+  return null;
+}
+
 /** Team with the higher official score, or null for a draw. */
 export function winner(state: MatchState): TeamId | null {
   const { A, B } = state.score;
@@ -223,7 +266,8 @@ function load(): MatchState | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<MatchState>;
     if (typeof parsed !== "object" || !parsed || typeof parsed.step !== "string") return null;
-    return { ...initialState, ...parsed };
+    // Merge rules too, so a match saved before rules gained new fields still loads.
+    return { ...initialState, ...parsed, rules: { ...initialState.rules, ...parsed.rules } };
   } catch {
     return null;
   }
@@ -259,6 +303,7 @@ export function useMatch() {
       startRound: () => dispatch({ type: "startRound", now: Date.now() }),
       endRound: () => dispatch({ type: "endRound", now: Date.now() }),
       adjustScore: (team: TeamId, delta: number) => dispatch({ type: "adjustScore", team, delta }),
+      toggleOut: (playerId: string) => dispatch({ type: "toggleOut", playerId }),
       loadReport: (payload: ReportPayload) => dispatch({ type: "loadReport", payload }),
       review: (eventId: string, review: Review) => dispatch({ type: "review", eventId, review }),
       mapTrack: (trackId: string, playerId: string) =>
