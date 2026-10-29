@@ -8,44 +8,44 @@
       To change the accent, edit the --color-brand* and --color-tint values
       here and the canvas palettes in PixelField / StripeBand. ------------ */
 @theme {
-  /* Light neutrals */
-  --color-paper: #f5f1ea; /* cream: page background */
-  --color-panel: #ebe4d9; /* warm grey panels */
+  /* Light neutrals: cool lavender-grey and soft white */
+  --color-paper: #f0eff4;
+  --color-panel: #e8e6ef;
   --color-card: #ffffff;
-  --color-ink: #1c1714; /* warm near-black */
-  --color-ink-muted: #574e48; /* 7.6:1 on paper */
-  --color-ink-subtle: #6b625c; /* 5.6:1 on paper, 4.9:1 on panel */
-  --color-fade: #c2b8ae; /* scrubbed / faded display words (large type only) */
-  --color-rule: #ddd4c7; /* decorative hairlines only */
-  --color-rule-strong: #8e847b; /* control borders (3:1) */
-  --color-cream: #fbf7f0;
+  --color-ink: #17171b;
+  --color-ink-muted: #625f69;
+  --color-ink-subtle: #77737f;
+  --color-fade: #c7c4ce;
+  --color-rule: #dfdde5;
+  --color-rule-strong: #aaa7b1;
+  --color-cream: #fbfaff;
 
-  /* Brand accent: cobalt, in both themes */
-  --color-brand: #3a5bff; /* slabs, buttons (white label 5.1:1), stat tiles, + marks */
-  --color-brand-ink: #2741d6; /* small brand text on paper/panel (AA) */
-  --color-brand-deep: #0f1a5c; /* deepest brand shade (charts, canvases) */
-  --color-brand-soft: #8fa3ff; /* brand text on charcoal/coal */
-  --color-brand-hover: #2741d6;
-  --color-tint: #c9d4ff; /* soft accent: pills, progress, second chart colour */
+  /* Brand accent: muted lavender */
+  --color-brand: #897db9;
+  --color-brand-ink: #71639f;
+  --color-brand-deep: #40385c;
+  --color-brand-soft: #b5a9e4;
+  --color-brand-hover: #786ba8;
+  --color-tint: #e4def4;
 
   /* Darks */
-  --color-charcoal: #221c19; /* dark slabs */
-  --color-charcoal-2: #2e2622; /* panels on dark */
-  --color-coal: #141110; /* darkest: footer, marquee, dark-mode page */
+  --color-charcoal: #29292f;
+  --color-charcoal-2: #32323a;
+  --color-coal: #222228;
 
   /* Legacy aliases (older demo components keep working) */
   --color-sand: var(--color-panel);
-  --color-sage: #e6eaf5;
-  --color-sky: #dfe5ff;
-  --color-blush: #ffdcd6;
-  --color-butter: #fbecd6;
+  --color-sage: #e6e6ee;
+  --color-sky: #dce8f0;
+  --color-blush: #eadbe1;
+  --color-butter: #eee5d5;
 
   /* Type: families come from next/font CSS variables (src/config/fonts.ts) */
-  --font-display: var(--font-display-src), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sans-src), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-sans-src), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* code snippets only */
 
-  /* Type scale: fluid between ~390px and ~1440px. Display is condensed caps. */
+  /* Type scale: fluid between ~390px and ~1440px. */
   --text-display-hero: clamp(3.4rem, 0.4rem + 12.6vw, 13.5rem);
   --text-display-hero--line-height: 0.82;
   --text-display-hero--letter-spacing: -0.045em;
@@ -105,8 +105,8 @@
   --inset: clamp(0.375rem, 0.9vw, 0.75rem);
 
   /* Display face width (Archivo 'wdth' axis: 62–125) */
-  --display-stretch: 72%;
-  --display-weight: 800;
+  --display-stretch: 100%;
+  --display-weight: 650;
 
   /* Motion durations */
   --dur-fast: 160ms;
@@ -173,8 +173,8 @@
   --t-bg: var(--color-charcoal);
   --t-surface: var(--color-charcoal-2);
   --t-fg: var(--color-paper);
-  --t-muted: #cfc4ba;
-  --t-subtle: #b3a79c;
+  --t-muted: #c5c3cc;
+  --t-subtle: #a7a4ae;
   --t-fade: rgb(245 241 234 / 0.26);
   --t-line: rgb(245 241 234 / 0.14);
   --t-line-strong: rgb(245 241 234 / 0.45);
@@ -204,8 +204,8 @@
   --t-bg: var(--color-coal);
   --t-surface: var(--color-charcoal);
   --t-fg: var(--color-paper);
-  --t-muted: #cfc4ba;
-  --t-subtle: #b3a79c;
+  --t-muted: #c5c3cc;
+  --t-subtle: #a7a4ae;
   --t-fade: rgb(245 241 234 / 0.24);
   --t-line: rgb(245 241 234 / 0.13);
   --t-line-strong: rgb(245 241 234 / 0.42);
@@ -227,14 +227,14 @@
   --t-soft: var(--color-coal);
 }
 [data-theme="dark"] [data-tone="charcoal"] {
-  --t-bg: #2a231f;
-  --t-surface: #3a312c;
-  --t-edge: rgb(245 241 234 / 0.1);
+  --t-bg: #2b2b32;
+  --t-surface: #35353d;
+  --t-edge: rgb(242 240 247 / 0.08);
 }
 [data-theme="dark"] [data-tone="coal"] {
-  --t-bg: #1d1916;
-  --t-surface: #2a231f;
-  --t-edge: rgb(245 241 234 / 0.1);
+  --t-bg: #222228;
+  --t-surface: #2b2b32;
+  --t-edge: rgb(242 240 247 / 0.08);
 }
 :root {
   color-scheme: light;

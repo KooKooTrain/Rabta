@@ -58,12 +58,10 @@ html.lenis body {
 }
 
 /* ----------------------------------------------------------- utilities -- */
-/* Condensed uppercase display face */
+/* Manrope display face */
 @utility font-display {
   font-family: var(--font-display);
-  font-stretch: var(--display-stretch);
   font-weight: var(--display-weight);
-  text-transform: uppercase;
 }
 
 /* Small spaced caps [ LABEL ] in the body face */
@@ -74,6 +72,21 @@ html.lenis body {
   letter-spacing: var(--text-label--letter-spacing);
   text-transform: uppercase;
   font-weight: 600;
+}
+
+html[data-adhd-friendly="true"] body {
+  line-height: 1.75;
+}
+html[data-adhd-friendly="true"] :is(p, li, label) {
+  max-width: 72ch;
+}
+html[data-reduce-motion="true"] *,
+html[data-reduce-motion="true"] *::before,
+html[data-reduce-motion="true"] *::after {
+  scroll-behavior: auto !important;
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }
 
 @utility container-site {

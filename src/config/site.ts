@@ -14,7 +14,7 @@ import type { LogoConfig, SiteConfig } from "./types";
 
 export const site = {
   meta: {
-    title: "Bayt: Family AI Game Day",
+    title: "Rabta: Family AI Game Day",
     description:
       "Pick a family game, set up teams, and let my AI judge watch the video, spot the goals and keep score.",
     url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
@@ -23,7 +23,7 @@ export const site = {
 
   brand: {
     teamName: ph("Team Name"), // [PLACEHOLDER]
-    productName: "Bayt",
+    productName: "Rabta",
     tagline: "Family game day, judged fairly.",
     seed: "hearth-2026",
     // To use an image: { kind: "image", src: "/brand/logo.svg", width: 32, height: 32, alt: "" }
@@ -383,13 +383,13 @@ export const site = {
   },
 
   demo: {
-    title: ph("Family dashboard"),
-    subtitle: ph("Prototype · data shown is sample data"),
+    title: ph("Analyze"),
+    subtitle: ph("A clear view of how your family is doing."),
     nav: [
-      { label: "Overview", icon: "dashboard" },
+      { label: "Analyze", icon: "chart-line" },
+      { label: "History", icon: "clock" },
       { label: "Family", icon: "users" },
       { label: "Schedule", icon: "calendar" },
-      { label: "Insights", icon: "sparkles" },
       { label: "Settings", icon: "settings" },
     ],
     emptyState: {
@@ -404,7 +404,7 @@ export const site = {
       ph("Explain this suggestion simply"),
     ],
     showSampleWidgets: true,
-    showChat: true,
+    showChat: false,
   },
 
   footer: {
