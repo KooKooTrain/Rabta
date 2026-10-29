@@ -58,7 +58,7 @@ export function FamilyPage() {
         <div>
           <p className="label-caps text-muted">{ar ? "الأشخاص الذين يلعبون معًا" : "The people who play together"}</p>
           <h2 className="mt-2 text-4xl font-medium tracking-[-0.05em] sm:text-5xl">{ar ? "العائلة" : "Family"}</h2>
-          <p className="mt-3 max-w-2xl text-muted">{ar ? "أضف أفراد الأسرة وجهّزهم ليوم اللعب." : "Keep your household together and ready for game day."}</p>
+          <p className="mt-3 max-w-2xl text-muted">{ar ? "أضف اللاعبين الذين سيشاركون في مباريات الأسرة." : "Add the players who will take part in your family matches."}</p>
         </div>
         <button type="button" onClick={() => setAdding((value) => !value)} className="inline-flex items-center gap-2 rounded-full bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-85">
           <Plus aria-hidden="true" className="size-4" />{ar ? "إضافة فرد" : "Add member"}
@@ -76,7 +76,7 @@ export function FamilyPage() {
       <div className="mt-8 grid gap-8 xl:grid-cols-[minmax(0,1.5fr)_minmax(19rem,0.72fr)] xl:gap-12">
         <section aria-labelledby="family-roster-heading">
           <div className="mb-4 flex items-center justify-between gap-3">
-            <div><h3 id="family-roster-heading" className="text-xl font-medium tracking-[-0.03em]">{ar ? "أفراد الأسرة" : "Household"}</h3><p className="mt-1 text-sm text-muted">{members.length} {ar ? "أفراد" : members.length === 1 ? "person" : "people"}</p></div>
+            <div><h3 id="family-roster-heading" className="text-xl font-medium tracking-[-0.03em]">{ar ? "اللاعبون" : "Family players"}</h3><p className="mt-1 text-sm text-muted">{members.length} {ar ? "لاعبين" : members.length === 1 ? "player" : "players"}</p></div>
             <span className="hidden items-center gap-1.5 text-xs text-muted sm:inline-flex"><ShieldCheck aria-hidden="true" className="size-4" />{ar ? "محفوظ على هذا الجهاز" : "Saved on this device"}</span>
           </div>
           {members.length ? <ul className="grid gap-3 sm:grid-cols-2">
@@ -105,7 +105,7 @@ export function FamilyPage() {
           </section>
           <section className="rounded-2xl bg-surface p-5 sm:p-6">
             <div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-full bg-soft"><Users aria-hidden="true" className="size-4 text-muted" /></span><div><h3 className="font-medium">{ar ? "الفرق" : "Teams"}</h3><p className="mt-0.5 text-xs text-muted">{ar ? "تتغير حسب اللعبة" : "Choose teams for each game"}</p></div></div>
-            <p className="mt-3 text-sm leading-relaxed text-muted">{ar ? "قسّم أفراد الأسرة إلى فريقين من صفحة اللعبة. استخدم ألوان قمصان مختلفة ليسهل على المحكّم تمييز اللاعبين." : "Split the household into two teams in Game. Choose different shirt colours so the judge can tell players apart."}</p>
+            <p className="mt-3 text-sm leading-relaxed text-muted">{ar ? "قسّم اللاعبين إلى فريقين من صفحة اللعبة. استخدم ألوان قمصان مختلفة ليسهل على المحكّم تمييز اللاعبين." : "Split the players into two teams in Game. Choose different shirt colours so the judge can tell players apart."}</p>
           </section>
           <Link href="/demo/history" className="inline-flex items-center justify-between gap-3 rounded-2xl px-5 py-4 text-sm text-muted transition-colors hover:bg-fg/5 hover:text-fg"><span>{ar ? "عرض نتائج الألعاب السابقة" : "See previous game results"}</span><ArrowUpRight aria-hidden="true" className="size-4" /></Link>
         </aside>

@@ -84,7 +84,7 @@ export function ChatPanel({
           </span>
           <div className="min-w-0">
             <h2 className="font-display text-base leading-tight">{assistantName}</h2>
-            <p className="label-caps text-subtle">Explains · suggests · you decide</p>
+            <p className="label-caps text-subtle">Match help · scores · game rules</p>
           </div>
         </header>
 
@@ -98,7 +98,7 @@ export function ChatPanel({
           {empty && (
             <div className="rounded-tile bg-soft p-4">
               <p className="text-sm text-muted">
-                Ask anything about the family week. Replies are scripted in mock mode, so it works with no API key.
+                Ask about a sport, team setup, match schedule, or game report. Replies work in demo mode.
               </p>
             </div>
           )}
@@ -214,7 +214,7 @@ export function ChatPanel({
               }}
               rows={1}
               maxLength={4000}
-              placeholder="Ask about your family week…"
+              placeholder="Ask about a game or match report…"
               className="max-h-32 min-h-10 flex-1 resize-none bg-transparent px-2 py-2 text-[0.9375rem] outline-none placeholder:text-subtle [field-sizing:content] focus-visible:outline-none"
             />
             <button

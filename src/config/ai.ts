@@ -1,56 +1,47 @@
 /**
- * AI CONFIG: system prompt + scripted mock replies.
- * Mock replies are used whenever AI_PROVIDER=mock or no AI_API_KEY is set,
- * so the demo (and the video ad) works without any key.
+ * AI CONFIG: sports-focused system prompt and scripted replies for the demo.
+ * Mock replies keep the assistant useful when no API key is configured.
  */
 
-// [PLACEHOLDER] rewrite around the real problem tomorrow
-export const SYSTEM_PROMPT = `You are a warm, practical family assistant inside a prototype app.
-- Speak in plain, kind language that a grandparent or a 12-year-old can follow.
-- Keep answers short: a one-line summary, then at most 3 concrete next steps.
-- Explain WHY you suggest something and say how confident you are.
-- You never diagnose medical, legal or financial issues; suggest asking a professional instead.
-- People make the final decision. Offer options, never act on anyone's behalf.
-- Respect privacy: only use information the family has shared in this conversation.`;
+export const SYSTEM_PROMPT = `You are Rabta's assistant for family sports and game day.
+- Keep replies short, clear, and friendly for players of different ages.
+- Help with supported sports, team setup, match schedules, scores, and match reports.
+- Never claim to have watched a video or verified an event unless that information is provided in the conversation.
+- Explain that the host reviews and confirms match results before they are saved.
+- Encourage fair play and safe participation.`;
 
-// [PLACEHOLDER] scripted replies: tailor these to the problem for the demo video
 export const MOCK_REPLIES: { keywords: string[]; reply: string }[] = [
   {
-    keywords: ["week", "summary", "summarise", "summarize", "overview"],
+    keywords: ["week", "summary", "summarise", "summarize", "overview", "matches"],
     reply:
-      "Here's your family week at a glance: 14 events, 3 overlaps, and one evening with no plans.\n\n1. Thursday is the busiest day: two pickups overlap at 4:00.\n2. Grandma's check-in is due on Friday.\n3. Sunday evening is free, a good slot for a family dinner.\n\nConfidence: high, based on the shared calendars.",
+      "Your family has three sports sessions coming up: football practice, a basketball friendly, and a volleyball family game. Pick a day to see the players and start time.",
   },
   {
-    keywords: ["thursday", "plan", "schedule", "busy", "calendar"],
+    keywords: ["plan", "schedule", "busy", "calendar", "practice"],
     reply:
-      "Thursday has three overlaps between 3:30 and 5:00.\n\n1. Move the football pickup to 4:30. Coach's notes say practice runs late.\n2. Ask whoever is free at 4:00 to cover the pharmacy stop.\n3. Keep dinner simple: a 20-minute recipe is already on your list.\n\nWant me to share these suggestions with the family? You decide.",
+      "For a family match, choose a sport, set the time, and add the players. Leave a little time before kick-off to set teams and check the game rules.",
   },
   {
-    keywords: ["explain", "why", "simply", "suggestion", "how"],
+    keywords: ["score", "report", "result", "explain", "why"],
     reply:
-      "Simply put: I noticed the same person is booked in two places at once, and their rest time this week is 40% lower than usual. Moving one task spreads the load more fairly. This is only a suggestion; nothing changes until someone accepts it.",
+      "The match report summarizes the score and the events Rabta could track. Please review the details and confirm the result before saving it to History.",
   },
   {
-    keywords: ["health", "sick", "doctor", "medicine", "pain"],
+    keywords: ["football", "basketball", "volleyball", "karabi", "ghomaidah", "game", "play"],
     reply:
-      "I can't give medical advice, but I can help you stay organised. I can set a reminder to call your family doctor, note the symptoms you've shared so you don't forget them, and let the right family member know. If it feels urgent, please contact a medical professional or emergency services.",
-  },
-  {
-    keywords: ["grand", "elder", "parent", "check"],
-    reply:
-      "Grandpa's last check-in was 2 days ago and everything looked normal.\n\n1. A short video call this evening would keep the routine going.\n2. His pharmacy refill is due on Saturday.\n3. He mentioned wanting help with his phone; Sami could help on Sunday.",
+      "Rabta supports football, basketball, volleyball, Al Karabi, and Al Ghomaidah. Choose one in Game to see its setup and scoring rules.",
   },
 ];
 
 const FALLBACKS = [
-  "Good question. Based on what your family has shared, the most helpful next step is to pick one small task and assign it to someone who has time this week. Want me to suggest who?",
-  "I've looked at the family overview. Nothing needs urgent attention, but two small reminders are coming up tomorrow. Should I list them?",
+  "Choose a sport and set up the teams first. I can help explain the match rules or review the result details.",
+  "For a fair result, keep the camera view clear and ask the host to check the report before saving it.",
 ];
 
-/** Keyword match, otherwise a deterministic fallback. */
+/** Keyword match, otherwise a deterministic sports-focused fallback. */
 export function pickMockReply(lastUserMessage: string): string {
   const text = lastUserMessage.toLowerCase();
-  const hit = MOCK_REPLIES.find((r) => r.keywords.some((k) => text.includes(k)));
+  const hit = MOCK_REPLIES.find((reply) => reply.keywords.some((keyword) => text.includes(keyword)));
   if (hit) return hit.reply;
   return FALLBACKS[text.length % FALLBACKS.length];
 }

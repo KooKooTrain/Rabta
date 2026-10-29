@@ -16,13 +16,13 @@ export const site = {
   meta: {
     title: "Rabta: Family AI Game Day",
     description:
-      "Pick a family game, set up teams, and let my AI judge watch the video, spot the goals and keep score.",
+      "Choose a family sport, build teams, and let Rabta review the match video, track the score, and save the result.",
     url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-    keywords: ["AI for Family", "family wellbeing", "ADU COE 2026"],
+    keywords: ["family sports", "AI referee", "sports game day", "ADU COE 2026"],
   },
 
   brand: {
-    teamName: ph("Team Name"), // [PLACEHOLDER]
+    teamName: "Rabta",
     productName: "Rabta",
     tagline: "Family game day, judged fairly.",
     seed: "hearth-2026",
@@ -72,10 +72,10 @@ export const site = {
     { id: "how", enabled: true, tone: "paper", navLabel: "How it works" },
     { id: "audience", enabled: true, tone: "brand" },
     { id: "features", enabled: true, tone: "panel", navLabel: "Features" },
-    { id: "moments", enabled: true, tone: "charcoal" },
+    { id: "moments", enabled: false, tone: "charcoal" },
     { id: "trust", enabled: true, tone: "coal", navLabel: "Trust" },
     { id: "impact", enabled: true, tone: "paper" },
-    { id: "team", enabled: true, tone: "charcoal", navLabel: "Team" },
+    { id: "team", enabled: false, tone: "charcoal" },
     { id: "faq", enabled: true, tone: "paper", navLabel: "FAQ" },
     { id: "cta", enabled: true, tone: "brand" },
   ],
@@ -85,66 +85,63 @@ export const site = {
     hero: {
       eyebrow: "Family AI Game Day · Working prototype",
       headline: "Game day,\n*judged fairly.*",
-      lead: "Pick a game, set up the teams, and play. I watch the video, spot the goals, work out who had the ball most, and hand the host a signed report to apply.",
+      lead: "Choose a sport, set up teams, and play. Rabta reviews supported match action and prepares a clear report for the host to check.",
       primaryCta: { label: "Start game day", href: "/play" },
       secondaryCta: { label: "See how it works", href: "#how" },
       insight: {
-        label: ph("AI insight"),
-        title: ph("Thursday looks busy"),
-        detail: ph("3 overlaps found · 2 suggestions ready"),
+        label: ph("Match report"),
+        title: ph("Game complete"),
+        detail: ph("Final score ready for host review"),
       },
       bottomBar: {
         clockLabel: "Abu Dhabi",
         timeZone: "Asia/Dubai",
-        tagline: ph("Built in 3 hours for families everywhere"),
+        tagline: ph("Family sports, played together"),
         scrollHint: "Scroll to discover",
       },
     },
 
     // [PLACEHOLDER]
     marquee: {
-      label: ph("Designed around"),
+      label: ph("Made for game day"),
       items: [
-        ph("Shared routines"),
-        ph("Health & wellbeing"),
-        ph("Caring for grandparents"),
-        ph("Screen-time balance"),
-        ph("Meals & groceries"),
-        ph("School & activities"),
-        ph("Household budgets"),
-        ph("Staying connected"),
+        ph("Football"),
+        ph("Basketball"),
+        ph("Volleyball"),
+        ph("Emirati games"),
+        ph("Family teams"),
+        ph("Fair scoring"),
+        ph("Match highlights"),
+        ph("Game day together"),
       ],
     },
 
     // [PLACEHOLDER] replace with the real problem + cited statistics
     problem: {
       manifesto: ph(
-        "Families don't need another app. They need *one calm place* that sees the whole week.",
+        "Family sports should be about *playing together*, not arguing over the score.",
       ),
-      eyebrow: ph("The problem"),
-      heading: ph("The *invisible*\nload"),
+      eyebrow: ph("The game-day challenge"),
+      heading: ph("Keep every\nmatch *fair*"),
       statement: ph(
-        "Every household runs on hundreds of small decisions: who needs what, when, and why. Most of that work is unseen, unshared, and lands on one person. The result is stress, missed moments, and problems noticed too late.",
+        "Quick family matches can be hard to score consistently. Rabta reviews the recorded game, tracks what happened, and gives everyone a clear result to check together.",
       ),
       stats: [
         {
-          value: 64,
-          suffix: "%",
-          label: ph("of parents say they feel overwhelmed coordinating family life"),
-          source: ph("Source: add citation"),
+          value: 5,
+          label: ph("games ready to play across sports and Emirati traditions"),
+          source: ph("Football · basketball · volleyball · Al Karabi · Al Ghomaidah"),
         },
         {
-          value: 3.5,
-          decimals: 1,
-          unit: ph("hrs / week"),
-          label: ph("spent on planning and reminders"),
-          source: ph("Source: add citation"),
+          value: 2,
+          unit: ph("teams"),
+          label: ph("set up for a head-to-head family match"),
+          source: ph("Create teams before each game"),
         },
         {
           value: 1,
-          suffix: " in 4",
-          label: ph("families report a missed health or school task each month"),
-          source: ph("Source: add citation"),
+          label: ph("match report saved with the final score and game details"),
+          source: ph("Review the result before saving"),
         },
       ],
     },
@@ -152,60 +149,60 @@ export const site = {
     // [PLACEHOLDER] keep three plain verbs; rewrite around the real feature
     how: {
       eyebrow: ph("How it works"),
-      heading: ph("Notice.\nUnderstand.\n*Support.*"),
+      heading: ph("Choose.\nPlay.\n*Review.*"),
       intro: ph(
-        "Three simple steps turn scattered family signals into clear, shared next steps.",
+        "Set up a family game, record the action, and review a clear match report together.",
       ),
-      mockTitle: ph("Family overview"),
-      mockSubtitle: ph("This week · 4 members"),
+      mockTitle: ph("Match overview"),
+      mockSubtitle: ph("Family game day · 2 teams"),
       steps: [
         {
-          verb: ph("Notice"),
-          title: ph("It quietly gathers the signals"),
+          verb: ph("Choose"),
+          title: ph("Pick a game and make teams"),
           body: ph(
-            "Calendars, check-ins and routines come together in one calm view, only with each member's consent.",
+            "Choose football, basketball, volleyball, or an Emirati game, then add players to each team.",
           ),
           mock: {
-            status: ph("Listening"),
-            headline: ph("12 updates gathered"),
+            status: ph("Teams ready"),
+            headline: ph("2 teams · 4 players"),
             rows: [
-              { label: ph("Calendar events"), value: ph("8"), status: "info" },
-              { label: ph("Check-ins"), value: ph("3"), status: "ok" },
-              { label: ph("Reminders"), value: ph("1"), status: "watch" },
+              { label: ph("Selected game"), value: ph("Football"), status: "info" },
+              { label: ph("Home team"), value: ph("2 players"), status: "ok" },
+              { label: ph("Away team"), value: ph("2 players"), status: "watch" },
             ],
             series: [3, 4, 3, 5, 4, 6, 5, 7, 6, 8],
           },
         },
         {
-          verb: ph("Understand"),
-          title: ph("AI finds the pattern that matters"),
+          verb: ph("Play"),
+          title: ph("Rabta follows the match"),
           body: ph(
-            "The model highlights conflicts, risks and trends, and explains why in plain language anyone can follow.",
+            "Record the game while Rabta tracks the action and prepares a score for the host to review.",
           ),
           mock: {
-            status: ph("Analysing"),
-            headline: ph("Thursday is overloaded"),
+            status: ph("Match review"),
+            headline: ph("Checking goals and possession"),
             rows: [
-              { label: ph("Schedule overlaps"), value: ph("3"), status: "watch" },
-              { label: ph("Rest time"), value: ph("-40%"), status: "watch" },
-              { label: ph("Confidence"), value: ph("92%"), status: "info" },
+              { label: ph("Goals"), value: ph("3"), status: "watch" },
+              { label: ph("Possession"), value: ph("52%"), status: "info" },
+              { label: ph("Players tracked"), value: ph("4"), status: "ok" },
             ],
             series: [4, 5, 5, 7, 9, 8, 6, 5, 4, 4],
           },
         },
         {
-          verb: ph("Support"),
-          title: ph("Everyone gets a clear next step"),
+          verb: ph("Review"),
+          title: ph("Check and save the result"),
           body: ph(
-            "Suggestions are shared with the right person, and a human always makes the final call.",
+            "The host checks the final report, confirms the result, and adds it to match history.",
           ),
           mock: {
-            status: ph("Ready"),
-            headline: ph("2 suggestions shared"),
+            status: ph("Report ready"),
+            headline: ph("3 – 2 · Match complete"),
             rows: [
-              { label: ph("Move pickup to 4:30"), value: ph("Accepted"), status: "ok" },
-              { label: ph("Swap dinner duty"), value: ph("Pending"), status: "info" },
-              { label: ph("Stress outlook"), value: ph("Lower"), status: "ok" },
+              { label: ph("Final score"), value: ph("3 – 2"), status: "ok" },
+              { label: ph("Match report"), value: ph("Reviewed"), status: "info" },
+              { label: ph("Game history"), value: ph("Saved"), status: "ok" },
             ],
             series: [8, 7, 7, 6, 5, 5, 4, 4, 3, 3],
           },
@@ -217,84 +214,84 @@ export const site = {
     features: {
       eyebrow: ph("Features"),
       heading: ph("Thoughtful\nby *design*"),
-      intro: ph("Everything a family needs, nothing it doesn't."),
+      intro: ph("Simple tools for a fair, fun family match."),
       highlight: {
         icon: "sparkles",
-        title: ph("A weekly family pulse"),
+        title: ph("A clear match report"),
         body: ph(
-          "One glance shows how the week is going, what changed, and where a little help would make the biggest difference.",
+          "Review the final score, key moments, player activity, and possession after each game.",
         ),
-        chartLabel: ph("Family wellbeing index"),
+        chartLabel: ph("Match activity through the game"),
         series: [52, 55, 54, 58, 61, 60, 64, 67, 66, 71, 74, 78],
       },
       items: [
-        { icon: "message", title: ph("Plain-language answers"), body: ph("Ask anything; get clear, kind explanations.") },
-        { icon: "bell", title: ph("Gentle nudges"), body: ph("Reminders that arrive at the right moment for the right person.") },
-        { icon: "users", title: ph("Shared, not surveilled"), body: ph("Every member sees and controls what they share.") },
-        { icon: "languages", title: ph("Multilingual"), body: ph("Works across the languages your family speaks.") },
-        { icon: "accessibility", title: ph("Accessible for all ages"), body: ph("Large text, voice, and simple modes for grandparents and kids.") },
+        { icon: "message", title: ph("Ask the game assistant"), body: ph("Get a clear explanation of a score or match report.") },
+        { icon: "bell", title: ph("Plan the next match"), body: ph("Keep track of family practices and game days.") },
+        { icon: "users", title: ph("Build family teams"), body: ph("Add players and see who is ready to play.") },
+        { icon: "languages", title: ph("English and Arabic"), body: ph("Switch the game-day interface between both languages.") },
+        { icon: "accessibility", title: ph("Easy to follow"), body: ph("Clear scores, simple setup, and calmer display options.") },
       ],
     },
 
     // [PLACEHOLDER]
     audience: {
-      eyebrow: ph("Who it's for"),
-      heading: ph("How it helps\nevery member"),
-      intro: ph("Every role in the family gets a view that fits their needs."),
+      eyebrow: ph("Made for family game day"),
+      heading: ph("A place for\nevery *player*"),
+      intro: ph("Bring players, hosts, and supporters together around the same match."),
       items: [
         {
-          name: ph("Parents"),
-          need: ph("Less mental load, fewer dropped balls."),
-          tags: [ph("Shared calendar"), ph("Auto-reminders"), ph("Weekly pulse")],
+          name: ph("Game hosts"),
+          need: ph("Set up teams and keep the match moving."),
+          tags: [ph("Choose a game"), ph("Start a match"), ph("Review the score")],
           photo: { src: "/photos/family-03.jpg", alt: "A young woman and a small child laughing together outdoors" },
           chart: {
-            label: ph("Where time goes"),
+            label: ph("Game-day tasks"),
             segments: [
-              { label: ph("Planning"), value: 42 },
-              { label: ph("Reminders"), value: 33 },
-              { label: ph("Follow-ups"), value: 25 },
+              { label: ph("Set up"), value: 42 },
+              { label: ph("Play"), value: 33 },
+              { label: ph("Review"), value: 25 },
             ],
           },
         },
         {
-          name: ph("Grandparents"),
-          need: ph("Stay close and supported, simply."),
-          tags: [ph("Large text"), ph("Voice mode"), ph("Gentle check-ins")],
+          name: ph("Players"),
+          need: ph("Know the teams, rules, and score."),
+          tags: [ph("Team colors"), ph("Game rules"), ph("Match result")],
           photo: { src: "/photos/family-02.jpg", alt: "A grandmother embraced by her granddaughter" },
           chart: {
-            label: ph("Support needs"),
+            label: ph("Match details"),
             segments: [
-              { label: ph("Health"), value: 48 },
-              { label: ph("Connection"), value: 32 },
-              { label: ph("Errands"), value: 20 },
+              { label: ph("Teams"), value: 48 },
+              { label: ph("Score"), value: 32 },
+              { label: ph("Players"), value: 20 },
             ],
           },
         },
         {
-          name: ph("Teens"),
-          need: ph("Independence with a safety net."),
-          tags: [ph("Private by default"), ph("Study plans"), ph("Quick check-ins")],
+          name: ph("Scorekeepers"),
+          need: ph("Check the result and keep a record."),
+          tags: [ph("Match report"), ph("Game history"), ph("Score review")],
           photo: { src: "/photos/family-05.jpg", alt: "A mother cuddling her young daughter beside a planter of flowers" },
           chart: {
-            label: ph("Week balance"),
+            label: ph("Match report"),
             segments: [
-              { label: ph("School"), value: 45 },
-              { label: ph("Activities"), value: 30 },
-              { label: ph("Rest"), value: 25 },
+              { label: ph("Goals"), value: 45 },
+              { label: ph("Possession"), value: 30 },
+              { label: ph("Movement"), value: 25 },
             ],
           },
         },
         {
-          name: ph("Caregivers"),
-          need: ph("Clear handovers and shared context."),
-          tags: [ph("Handover notes"), ph("Medication log"), ph("Shared tasks")],
+          name: ph("Supporters"),
+          need: ph("Follow the action and cheer both teams on."),
+          tags: [ph("Live match"), ph("Team colors"), ph("Final score")],
           photo: { src: "/photos/family-09.jpg", alt: "A nurse holding the hand of an elderly man in a wheelchair" },
           chart: {
-            label: ph("Care tasks"),
+            label: ph("What to follow"),
             segments: [
-              { label: ph("Medication"), value: 38 },
-              { label: ph("Appointments"), value: 36 },
-              { label: ph("Daily care"), value: 26 },
+              { label: ph("Goals"), value: 38 },
+              { label: ph("Possession"), value: 36 },
+              { label: ph("Team play"), value: 26 },
             ],
           },
         },
@@ -305,43 +302,43 @@ export const site = {
     moments: {
       eyebrow: ph("Real moments"),
       heading: ph("Made for the\nmoments that *matter*"),
-      intro: ph("Less time coordinating. More time for the things families actually remember."),
-      pills: [ph("Mealtimes"), ph("Bedtimes"), ph("School runs"), ph("Visits"), ph("Weekends")],
+      intro: ph("From the first serve to the final score, make more of game day together."),
+      pills: [ph("Team picks"), ph("Kick-off"), ph("Big saves"), ph("Family cheers"), ph("Rematches")],
     },
 
     // Mostly real principles; adapt to the actual problem.
     trust: {
-      eyebrow: "Responsible AI",
-      heading: ph("Trust is the\n*first* feature"),
+      eyebrow: "Fair, responsible game review",
+      heading: ph("Play fair.\nKeep it *clear.*"),
       intro: ph(
-        "Family data is the most personal data there is. These principles shaped every decision we made.",
+        "Rabta helps review recorded matches while keeping the family in control of the video and final score.",
       ),
       principles: [
-        { icon: "lock", title: "Private by design", body: ph("Data stays minimal, encrypted, and is never sold or used for ads.") },
-        { icon: "user-check", title: "Human in the loop", body: ph("AI suggests; people decide. Nothing important happens automatically.") },
-        { icon: "shield-check", title: "Age-appropriate", body: ph("Children's views and data follow stricter defaults.") },
-        { icon: "eye", title: "Transparent AI", body: ph("Every suggestion shows why it was made and how confident it is.") },
+        { icon: "lock", title: "Your match, your choice", body: ph("Only upload a game recording when your family is comfortable sharing it.") },
+        { icon: "user-check", title: "Host confirms the score", body: ph("Rabta prepares a result for review; the host decides whether to save it.") },
+        { icon: "shield-check", title: "Play safely", body: ph("Set age-appropriate teams and follow the safety rules for each game.") },
+        { icon: "eye", title: "Clear match details", body: ph("Review the score and tracked events before adding a result to history.") },
       ],
       never: {
-        heading: "What we never do",
+        heading: "How Rabta keeps game day fair",
         items: [
-          ph("Sell or share family data"),
-          ph("Diagnose or replace professionals"),
-          ph("Make decisions without consent"),
-          ph("Track members secretly"),
+          ph("Change a result without host review"),
+          ph("Choose teams without the players"),
+          ph("Save a report before confirmation"),
+          ph("Replace good sportsmanship"),
         ],
       },
     },
 
     // [PLACEHOLDER] label clearly as projected / target outcomes
     impact: {
-      eyebrow: ph("Projected impact"),
-      heading: ph("The *family*\neffect"),
-      note: ph("Targets based on our prototype testing assumptions; not yet independently measured."),
+      eyebrow: ph("The match, at a glance"),
+      heading: ph("Every game\ngets a *result*"),
+      note: ph("Choose a game, review its score, and keep a record of family matches. Results are examples until a host confirms them."),
       stats: [
-        { value: 2, suffix: "+", unit: ph("hrs"), label: ph("saved per family, per week") },
-        { value: 40, suffix: "%", label: ph("fewer missed tasks and appointments") },
-        { value: 90, suffix: "%", label: ph("of suggestions understood on first read") },
+        { value: 5, unit: ph("games"), label: ph("across worldwide sports and Emirati traditions") },
+        { value: 2, label: ph("teams set up for a head-to-head match") },
+        { value: 1, label: ph("reviewed result saved in match history") },
       ],
     },
 
@@ -362,21 +359,21 @@ export const site = {
     // [PLACEHOLDER]
     faq: {
       eyebrow: "FAQ",
-      heading: ph("Questions\nfamilies *ask*"),
+      heading: ph("Game day\n*questions*"),
       items: [
-        { q: ph("Is my family's data safe?"), a: ph("Yes. We collect the minimum, encrypt it, and never sell it. Each member controls what they share and can delete it at any time.") },
-        { q: ph("Does the AI make decisions for us?"), a: ph("No. It suggests and explains; a person always decides. Important actions always ask for confirmation.") },
-        { q: ph("Who is it for?"), a: ph("Any family: parents, grandparents, teens and caregivers each get a view designed for them.") },
-        { q: ph("What AI does it use?"), a: ph("A large language model behind a privacy layer, with clear explanations and confidence for every suggestion.") },
-        { q: ph("Is this a finished product?"), a: ph("It's a working prototype built for the ADU COE STEM Programming with AI Competition 2026.") },
+        { q: ph("What can we play?"), a: ph("Choose football, basketball, volleyball, Al Karabi, or Al Ghomaidah. Each game has its own setup and scoring rules.") },
+        { q: ph("How does match review work?"), a: ph("Record a game and submit its video for review. Rabta tracks supported events and prepares a report for the host to check.") },
+        { q: ph("Who confirms the final score?"), a: ph("The host reviews the report and decides whether to save the result to match history.") },
+        { q: ph("Can we schedule practices and matches?"), a: ph("Yes. The Schedule page lets your family plan practices, friendly matches, and family games by sport.") },
+        { q: ph("Is this a finished product?"), a: ph("Rabta is a working prototype built for the ADU COE STEM Programming with AI Competition 2026.") },
       ],
     },
 
     // [PLACEHOLDER]
     cta: {
       eyebrow: ph("See it in action"),
-      heading: ph("Less juggling.\nMore *together.*"),
-      body: ph("Explore the working prototype and see how it supports a real family week."),
+      heading: ph("Less scorekeeping.\nMore *playing.*"),
+      body: ph("Pick a family game, build your teams, and get ready for a match."),
       primary: { label: "Start game day", href: "/play" },
       secondary: { label: "Read the FAQ", href: "#faq" },
     },
@@ -384,7 +381,7 @@ export const site = {
 
   demo: {
     title: ph("Game"),
-    subtitle: ph("A clear view of how your family is doing."),
+    subtitle: ph("Choose a sport, start a match, and keep the result."),
     nav: [
       { label: "Game", icon: "volleyball" },
       { label: "History", icon: "clock" },
@@ -393,22 +390,22 @@ export const site = {
       { label: "Settings", icon: "settings" },
     ],
     emptyState: {
-      eyebrow: ph("Prototype canvas"),
-      heading: ph("The feature goes here"),
-      body: ph("Replace <EmptyState /> in src/app/demo/page.tsx with the problem-specific feature."),
+      eyebrow: ph("Family sports"),
+      heading: ph("Game day starts here"),
+      body: ph("Choose a game and set up your teams to get started."),
     },
-    assistantName: "Assistant",
+    assistantName: "Game day assistant",
     suggestedPrompts: [
-      ph("Summarise our family week"),
-      ph("What should we plan for Thursday?"),
-      ph("Explain this suggestion simply"),
+      ph("Summarise our recent matches"),
+      ph("Which game should we play next?"),
+      ph("Explain this match report"),
     ],
     showSampleWidgets: true,
     showChat: false,
   },
 
   footer: {
-    blurb: ph("An AI companion for everyday family life, built for the ADU COE STEM Competition 2026."),
+    blurb: ph("A family sports referee and match companion, built for the ADU COE STEM Competition 2026."),
     actions: [
       { label: "Start game day", href: "/play" },
       { label: "Read the FAQ", href: "/#faq" },
@@ -431,7 +428,7 @@ export const site = {
         ],
       },
     ],
-    legal: ph("Prototype for educational purposes. Sample data only."),
+    legal: ph("Prototype for educational purposes. Match examples are sample data."),
   },
 
   competition: {
