@@ -103,6 +103,16 @@ export type VerifyResult =
   | { status: "invalid"; reason: string }
   | { status: "error"; reason: string };
 
+/* ── Live judge stream (NDJSON from /api/judge/live) ───────────────────────── */
+
+export type LiveTrack = { track_id: number; team: TeamId | null; possession_ms: number; events: number };
+
+export type LiveMessage =
+  | { type: "tick"; paused: boolean; frame: string; t_ms?: number; score?: Record<TeamId, number>; tracks?: LiveTrack[] }
+  | { type: "event"; runId: string; event: ReportEvent } // signature already verified on the server
+  | { type: "report"; result: VerifyResult }
+  | { type: "error"; reason: string };
+
 /* ── Match state (one authoritative copy, client side) ─────────────────────── */
 
 export type Step = "game" | "teams" | "rules" | "round" | "judge" | "results";

@@ -8,12 +8,13 @@ import { Pill } from "@/components/ui/Pill";
 import { appliedEvents, formatClock, pendingEvents, type MatchApi } from "@/lib/games/match";
 import type { VerifyResult } from "@/lib/games/types";
 import { cn } from "@/lib/utils";
+import type { LiveJudge } from "./LiveJudge";
 import { StepHeader, TeamName, field, smallBtn } from "./parts";
 import { judgeConfig } from "./TeamsStep";
 
 const fileUrl = (runId: string, file: string) => `/api/judge-files/${runId}/${file}`;
 
-export function JudgeStep({ m }: { m: MatchApi }) {
+export function JudgeStep({ m, live }: { m: MatchApi; live: LiveJudge }) {
   const { state } = m;
   const { report } = state;
   const game = gameById(state.gameId);
@@ -80,11 +81,17 @@ export function JudgeStep({ m }: { m: MatchApi }) {
       <StepHeader
         label="AI judge"
         title="Check the footage"
-        intro="Upload your match clip as an MP4 and my judge will go through it. I check the signed report on the server before anything touches the score."
+        intro="My live judge already kept the score. Here's every call it made, signed and checked on the server, so you can map players and fix anything I missed."
       />
 
+      {live.status !== "off" && live.status !== "error" && (
+        <p role="status" className="rounded-tile border border-line p-4 text-muted">
+          I&apos;m wrapping up the live judge and checking its signed report. This takes a few seconds.
+        </p>
+      )}
+
       <section className="flex flex-col gap-4 rounded-slab border border-line bg-surface p-6 md:p-8">
-        <p className="label-caps text-muted">[ Upload match video ]</p>
+        <p className="label-caps text-muted">[ No camera? Upload a match video instead ]</p>
         <input
           type="file"
           accept="video/mp4,.mp4"
@@ -101,9 +108,6 @@ export function JudgeStep({ m }: { m: MatchApi }) {
             Watching the footage. This takes about a minute for every 100 seconds of video.
           </p>
         )}
-        <p className="text-sm text-muted">
-          This judge is a stand-in. I&apos;ll swap it for a MediaPipe pipeline once all four sports are in.
-        </p>
         <p className="label-caps mt-4 text-muted">[ Or import a report ]</p>
         <input
           type="file"

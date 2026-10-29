@@ -59,6 +59,7 @@ export type Action =
   | { type: "review"; eventId: string; review: Review }
   | { type: "mapTrack"; trackId: string; playerId: string }
   | { type: "applyAI" }
+  | { type: "liveEvent"; runId: string; event: ReportEvent }
   | { type: "finish"; now: number }
   | { type: "reset" };
 
@@ -159,6 +160,18 @@ export function reducer(state: MatchState, action: Action): MatchState {
         ...state,
         score,
         appliedEventIds: [...state.appliedEventIds, ...todo.map((ev) => appliedKey(report, ev))],
+      };
+    }
+    case "liveEvent": {
+      // The live judge keeps the score. Same key as appliedKey, so the final report shows it as applied.
+      const key = `${action.runId}/${action.event.id}`;
+      if (state.appliedEventIds.includes(key)) return state;
+      const change = action.event.score_change;
+      return {
+        ...state,
+        score: { A: Math.max(0, state.score.A + (change.A ?? 0)), B: Math.max(0, state.score.B + (change.B ?? 0)) },
+        lastScorer: action.event.team,
+        appliedEventIds: [...state.appliedEventIds, key],
       };
     }
     case "finish":
@@ -309,6 +322,7 @@ export function useMatch() {
       mapTrack: (trackId: string, playerId: string) =>
         dispatch({ type: "mapTrack", trackId, playerId }),
       applyAI: () => dispatch({ type: "applyAI" }),
+      liveEvent: (runId: string, event: ReportEvent) => dispatch({ type: "liveEvent", runId, event }),
       finish: () => dispatch({ type: "finish", now: Date.now() }),
       reset: () => dispatch({ type: "reset" }),
     }),

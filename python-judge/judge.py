@@ -417,7 +417,8 @@ def run_judge(input_path, cfg, out, secret=None, frame_skip=None, width=None, wr
             time.sleep(0.15)
         return None
 
-    if live:
+    if live:  # the first tracking pass is slow, so do it now rather than when the round starts
+        model.track(resize(first, width), persist=True, tracker="bytetrack.yaml", imgsz=width, verbose=False)
         threading.Thread(target=read_commands, args=(ctl, j, team_ids), daemon=True).start()
         frame = next_live()
 

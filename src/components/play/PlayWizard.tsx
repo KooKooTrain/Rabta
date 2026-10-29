@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { GamePicker } from "./GamePicker";
 import { JudgeStep } from "./JudgeStep";
 import { ResultsStep } from "./ResultsStep";
+import { useLiveJudge } from "./LiveJudge";
 import { RoundStep } from "./RoundStep";
 import { RulesStep } from "./RulesStep";
 import { TeamsStep } from "./TeamsStep";
@@ -23,6 +24,7 @@ const STEPS: { id: Step; label: string }[] = [
 
 export function PlayWizard() {
   const m = useMatch();
+  const live = useLiveJudge(m);
   const { state } = m;
   const current = STEPS.findIndex((s) => s.id === state.step);
   const started = state.startedAt !== null || state.elapsedMs > 0 || state.round > 1;
@@ -79,8 +81,8 @@ export function PlayWizard() {
         {state.step === "game" && <GamePicker m={m} />}
         {state.step === "teams" && <TeamsStep m={m} />}
         {state.step === "rules" && <RulesStep m={m} />}
-        {state.step === "round" && <RoundStep m={m} />}
-        {state.step === "judge" && <JudgeStep m={m} />}
+        {state.step === "round" && <RoundStep m={m} judge={live} />}
+        {state.step === "judge" && <JudgeStep m={m} live={live} />}
         {state.step === "results" && <ResultsStep m={m} />}
       </Container>
     </div>

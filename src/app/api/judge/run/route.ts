@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { games } from "@/config/games";
 import type { VerifyResult } from "@/lib/games/types";
+import { JUDGE_DIR, PYTHON } from "@/lib/judge/python";
 import { verifyReport } from "@/lib/reports/verify";
 
 /**
@@ -15,8 +16,6 @@ import { verifyReport } from "@/lib/reports/verify";
 
 export const maxDuration = 600;
 
-const JUDGE_DIR = path.resolve(process.cwd(), "python-judge");
-const PYTHON = path.join(JUDGE_DIR, ".venv", process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
 const MAX_BYTES = 500_000_000;
 
 const reply = (body: VerifyResult, status = 200) => Response.json(body, { status });

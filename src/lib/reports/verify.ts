@@ -48,6 +48,18 @@ function shapeError(p: Record<string, unknown>): string | null {
 }
 
 export function verifyReport(report: unknown, secret: string): VerifyResult {
+  const signed = verifySigned(report, secret);
+  if (signed.status !== "verified") return signed;
+  const shape = shapeError(signed.payload);
+  if (shape) return { status: "invalid", reason: shape };
+  return { status: "verified", payload: signed.payload as ReportPayload };
+}
+
+/** Signature check only, for anything the judge signs (whole reports and single live events). */
+export function verifySigned(
+  report: unknown,
+  secret: string,
+): { status: "verified"; payload: Record<string, unknown> } | { status: "invalid"; reason: string } {
   if (!isObj(report)) return { status: "invalid", reason: "The report must be a JSON object." };
   const { alg, canon, payload, signature } = report;
   if (alg !== "HMAC-SHA256" || canon !== "bayt-canon-v1") {
@@ -70,7 +82,5 @@ export function verifyReport(report: unknown, secret: string): VerifyResult {
     return { status: "invalid", reason: "The signature doesn't match the contents. Something in this report was changed after the judge signed it." };
   }
 
-  const shape = shapeError(payload);
-  if (shape) return { status: "invalid", reason: shape };
-  return { status: "verified", payload: payload as ReportPayload };
+  return { status: "verified", payload };
 }

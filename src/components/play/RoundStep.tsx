@@ -14,9 +14,10 @@ import {
 } from "@/lib/games/match";
 import type { TeamId } from "@/lib/games/types";
 import { cn } from "@/lib/utils";
+import { LivePanel, type LiveJudge } from "./LiveJudge";
 import { StepHeader, TeamName, smallBtn } from "./parts";
 
-export function RoundStep({ m }: { m: MatchApi }) {
+export function RoundStep({ m, judge }: { m: MatchApi; judge: LiveJudge }) {
   const { state } = m;
   const { startedAt, rules } = state;
   const [now, setNow] = useState(() => Date.now());
@@ -53,7 +54,7 @@ export function RoundStep({ m }: { m: MatchApi }) {
       <StepHeader
         label={`Round ${state.round} of ${rules.rounds}`}
         title={live ? "Game on" : "Ready for the next round"}
-        intro={`Record the match on a phone. You keep the official score here, and my judge can check every ${game.scoreWord} from the clip afterwards.`}
+        intro={`Point the laptop camera at the game and just play. My AI judge keeps the score live. If I get a ${game.scoreWord} wrong, tap Undo or use the host buttons.`}
       />
 
       <section
@@ -157,6 +158,8 @@ export function RoundStep({ m }: { m: MatchApi }) {
           })}
         </div>
       </section>
+
+      <LivePanel m={m} live={judge} />
 
       <aside className="flex max-w-3xl flex-col gap-2 rounded-card border border-line bg-soft p-5">
         <p className="label-caps text-muted">[ Tip for round {state.round} ]</p>
