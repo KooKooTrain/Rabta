@@ -1,0 +1,15 @@
+{
+  "teams": [{"id":"A","name":"Team A","color":"#e53935"},{"id":"B","name":"Team B","color":"#1e88e5"}],
+  "players": [{"id":"p1","name":"P1","team":"A"},{"id":"p2","name":"P2","team":"A"},{"id":"p3","name":"P3","team":"B"},{"id":"p4","name":"P4","team":"B"}],
+  "rules": {"pointsPerGoal":1,"roundSeconds":180,"rounds":1,"tieBreak":"penalties"},
+  "judge": {
+    "goal_zones": [
+      {"name":"left goal","defending":"A","rect":[0.0,0.25,0.12,0.85]},
+      {"name":"right goal","defending":"B","rect":[0.88,0.25,1.0,0.85]}
+    ],
+    "ball_hsv_lower":[5,120,120], "ball_hsv_upper":[25,255,255],
+    "frame_skip":3, "width":640, "possession_radius":0.6,
+    "goal_min_frames":2, "goal_cooldown_s":3, "review_threshold":70,
+    "ball_min_conf":0.15
+  }
+}
