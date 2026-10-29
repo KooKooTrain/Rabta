@@ -54,7 +54,9 @@ Set the same value in the shell before running the judge: `$env:BAYT_REPORT_SECR
 `match.json` comes from the "Download judge config" button on the teams screen. `config.example.json` shows
 every field, including goal zones and the ball colour range.
 
-Then `npm run dev`, open `/play`, play the round, and upload `python-judge/outputs/demo/report.json` on the
+Easiest path: `npm run dev`, open `/play`, play the round, and upload the match MP4 on the AI judge screen. The
+server saves it to `python-judge/uploads/`, runs the judge, and verifies the report before showing it. This judge
+is a stand-in until the MediaPipe pipeline lands. You can still run the CLI and upload `report.json` on the
 AI judge screen.
 
 **Tamper test:** change `proposed_score` in `report.json` and upload it again. I show "Invalid signature:

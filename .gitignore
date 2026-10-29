@@ -50,3 +50,4 @@ next-env.d.ts
 *.pt
 __pycache__/
 match.json
+/python-judge/uploads/

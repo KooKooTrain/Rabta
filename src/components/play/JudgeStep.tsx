@@ -8,6 +8,7 @@ import { appliedEvents, formatClock, pendingEvents, type MatchApi } from "@/lib/
 import type { VerifyResult } from "@/lib/games/types";
 import { cn } from "@/lib/utils";
 import { StepHeader, TeamName, field, smallBtn } from "./parts";
+import { judgeConfig } from "./TeamsStep";
 
 const fileUrl = (runId: string, file: string) => `/api/judge-files/${runId}/${file}`;
 
@@ -44,6 +45,25 @@ export function JudgeStep({ m }: { m: MatchApi }) {
     }
   }
 
+  // Upload a clip and let the server run the judge. The server verifies the signed report before replying.
+  async function analyse(file: File | undefined) {
+    if (!file) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const form = new FormData();
+      form.append("video", file);
+      form.append("config", JSON.stringify(judgeConfig(state)));
+      const result = (await (await fetch("/api/judge/run", { method: "POST", body: form })).json()) as VerifyResult;
+      if (result.status === "verified") m.loadReport(result.payload);
+      else setError(result.reason);
+    } catch {
+      setError("I couldn't reach the judge. Is npm run dev still running?");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function onFile(file: File | undefined) {
     if (file) await verify(await file.text());
   }
@@ -56,11 +76,31 @@ export function JudgeStep({ m }: { m: MatchApi }) {
       <StepHeader
         label="AI judge"
         title="Check the footage"
-        intro="Run my judge on your clip, then drop its report.json here. I check the signature on the server before anything touches the score."
+        intro="Upload your match clip as an MP4 and my judge will go through it. I check the signed report on the server before anything touches the score."
       />
 
       <section className="flex flex-col gap-4 rounded-slab border border-line bg-surface p-6 md:p-8">
-        <p className="label-caps text-muted">[ Import report ]</p>
+        <p className="label-caps text-muted">[ Upload match video ]</p>
+        <input
+          type="file"
+          accept="video/mp4,.mp4"
+          disabled={busy}
+          aria-label="Upload match video (MP4)"
+          onChange={(e) => {
+            void analyse(e.target.files?.[0]);
+            e.target.value = "";
+          }}
+          className="text-sm file:me-3 file:rounded-pill file:border file:border-line-strong file:bg-bg file:px-3.5 file:py-1.5 file:text-fg"
+        />
+        {busy && (
+          <p role="status" className="text-muted">
+            Watching the footage. This takes about a minute for every 100 seconds of video.
+          </p>
+        )}
+        <p className="text-sm text-muted">
+          This judge is a stand-in. I&apos;ll swap it for a MediaPipe pipeline once all four sports are in.
+        </p>
+        <p className="label-caps mt-4 text-muted">[ Or import a report ]</p>
         <input
           type="file"
           accept="application/json,.json"
@@ -83,7 +123,6 @@ export function JudgeStep({ m }: { m: MatchApi }) {
           <button type="button" className={smallBtn} disabled={busy || !text.trim()} onClick={() => void verify(text)}>
             {busy ? "Checking..." : "Verify pasted report"}
           </button>
-          <p className="text-sm text-muted">Camera recording in the app is coming soon. For now I judge a recorded clip.</p>
         </div>
         {error && (
           <p role="alert" className="flex items-start gap-2 rounded-tile border border-line-strong p-4">
