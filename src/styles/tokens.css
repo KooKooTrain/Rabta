@@ -8,25 +8,25 @@
       To change the accent, edit the --color-brand* and --color-tint values
       here and the canvas palettes in PixelField / StripeBand. ------------ */
 @theme {
-  /* Light neutrals: cool lavender-grey and soft white */
+  /* Light neutrals: cool gray and soft white */
   --color-paper: #f0eff4;
   --color-panel: #e8e6ef;
   --color-card: #ffffff;
   --color-ink: #17171b;
-  --color-ink-muted: #625f69;
-  --color-ink-subtle: #77737f;
-  --color-fade: #c7c4ce;
-  --color-rule: #dfdde5;
-  --color-rule-strong: #aaa7b1;
+  --color-ink-muted: #625f63;
+  --color-ink-subtle: #777378;
+  --color-fade: #c7c4c8;
+  --color-rule: #dfdde0;
+  --color-rule-strong: #aaa7ad;
   --color-cream: #fbfaff;
 
-  /* Brand accent: muted lavender */
-  --color-brand: #897db9;
-  --color-brand-ink: #71639f;
-  --color-brand-deep: #40385c;
-  --color-brand-soft: #b5a9e4;
-  --color-brand-hover: #786ba8;
-  --color-tint: #e4def4;
+  /* Brand accent: the middle blue from the reference savings card */
+  --color-brand: #9bb8d6;
+  --color-brand-ink: #405d7c;
+  --color-brand-deep: #2e4666;
+  --color-brand-soft: #b5cce0;
+  --color-brand-hover: #87a7cb;
+  --color-tint: #e0eaf2;
 
   /* Darks */
   --color-charcoal: #29292f;
@@ -35,7 +35,7 @@
 
   /* Legacy aliases (older demo components keep working) */
   --color-sand: var(--color-panel);
-  --color-sage: #e6e6ee;
+  --color-sage: #e5e5e9;
   --color-sky: #dce8f0;
   --color-blush: #eadbe1;
   --color-butter: #eee5d5;
@@ -132,7 +132,7 @@
   --t-line: var(--color-rule);
   --t-line-strong: var(--color-rule-strong);
   --t-accent: var(--color-brand);
-  --t-accent-fg: #ffffff;
+  --t-accent-fg: var(--color-ink);
   --t-accent-text: var(--color-brand-ink);
   --t-emph: var(--color-brand);
   --t-soft: var(--color-panel); /* second pill / chip fill */
@@ -149,23 +149,23 @@
 }
 [data-tone="brand"] {
   --t-bg: var(--color-brand);
-  --t-surface: rgb(255 255 255 / 0.1);
-  --t-fg: #ffffff; /* 5.1:1 */
-  --t-muted: #ffffff;
-  --t-subtle: #ffffff;
-  --t-fade: rgb(255 255 255 / 0.4);
-  --t-line: rgb(255 255 255 / 0.24);
-  --t-line-strong: rgb(255 255 255 / 0.65);
+  --t-surface: rgb(255 255 255 / 0.35);
+  --t-fg: var(--color-ink);
+  --t-muted: #303f51;
+  --t-subtle: #465b73;
+  --t-fade: rgb(23 23 27 / 0.36);
+  --t-line: rgb(23 23 27 / 0.15);
+  --t-line-strong: rgb(23 23 27 / 0.4);
   --t-accent: var(--color-ink);
   --t-accent-fg: var(--color-paper);
-  --t-accent-text: #ffffff;
+  --t-accent-text: var(--color-brand-deep);
   --t-emph: var(--color-ink); /* large display only (3.5:1) */
   --t-soft: var(--color-tint);
   --t-soft-fg: var(--color-ink);
   --t-wipe: var(--color-paper);
   --t-wipe-fg: var(--color-ink);
-  --t-mark: #ffffff;
-  --t-focus: #ffffff;
+  --t-mark: var(--color-ink);
+  --t-focus: var(--color-ink);
   --t-edge: transparent;
 }
 [data-tone="charcoal"],
@@ -173,13 +173,13 @@
   --t-bg: var(--color-charcoal);
   --t-surface: var(--color-charcoal-2);
   --t-fg: var(--color-paper);
-  --t-muted: #c5c3cc;
-  --t-subtle: #a7a4ae;
+  --t-muted: #c5c3c7;
+  --t-subtle: #a7a4aa;
   --t-fade: rgb(245 241 234 / 0.26);
   --t-line: rgb(245 241 234 / 0.14);
   --t-line-strong: rgb(245 241 234 / 0.45);
   --t-accent: var(--color-brand);
-  --t-accent-fg: #ffffff;
+  --t-accent-fg: var(--color-ink);
   --t-accent-text: var(--color-brand-soft);
   --t-emph: var(--color-brand-soft);
   --t-soft: var(--color-tint);
@@ -196,7 +196,7 @@
 }
 
 /* 3. DARK THEME: <html data-theme="dark"> (set before paint by the root
-      layout). Light tones turn dark; the brand slab stays cobalt; dark slabs lift a
+      layout). Light tones turn dark; the brand slab stays ink blue; dark slabs lift a
       step and get a hairline so they still read as panels. -------------- */
 :root[data-theme="dark"],
 [data-theme="dark"] [data-tone="paper"],
@@ -204,13 +204,13 @@
   --t-bg: var(--color-coal);
   --t-surface: var(--color-charcoal);
   --t-fg: var(--color-paper);
-  --t-muted: #c5c3cc;
-  --t-subtle: #a7a4ae;
+  --t-muted: #c5c3c7;
+  --t-subtle: #a7a4aa;
   --t-fade: rgb(245 241 234 / 0.24);
   --t-line: rgb(245 241 234 / 0.13);
   --t-line-strong: rgb(245 241 234 / 0.42);
-  --t-accent: var(--color-brand);
-  --t-accent-fg: #ffffff;
+  --t-accent: var(--color-brand-soft);
+  --t-accent-fg: var(--color-coal);
   --t-accent-text: var(--color-brand-soft);
   --t-emph: var(--color-brand-soft);
   --t-soft: var(--color-charcoal-2);
@@ -230,11 +230,15 @@
   --t-bg: #2b2b32;
   --t-surface: #35353d;
   --t-edge: rgb(242 240 247 / 0.08);
+  --t-accent: var(--color-brand-soft);
+  --t-accent-fg: var(--color-coal);
 }
 [data-theme="dark"] [data-tone="coal"] {
   --t-bg: #222228;
   --t-surface: #2b2b32;
   --t-edge: rgb(242 240 247 / 0.08);
+  --t-accent: var(--color-brand-soft);
+  --t-accent-fg: var(--color-coal);
 }
 :root {
   color-scheme: light;

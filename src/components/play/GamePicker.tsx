@@ -86,7 +86,7 @@ function GameCard({ game, onPlay }: { game: GameModule; onPlay: () => void }) {
       </div>
       {active && (
         <div className="mt-auto flex flex-wrap items-center gap-2">
-          <ActionButton onClick={onPlay}>Play {game.name}</ActionButton>
+          <ActionButton className="font-light" onClick={onPlay}>Play {game.name}</ActionButton>
           <GuideButton game={game} />
         </div>
       )}
