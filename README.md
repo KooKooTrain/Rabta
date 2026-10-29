@@ -16,6 +16,60 @@ auth or database.
 
 ---
 
+## Bayt: Family AI Game Day
+
+Bayt runs a family game day from one screen. I pick a game, set up teams and rules, keep score during the
+round, then let my AI judge check the footage. The judge proposes goals, possession and an MVP, and I decide
+what counts. Football is live. Basketball, Dodgeball, Al Karabi and Al Ghomaidah show as coming soon.
+
+**How it fits together**
+- `/play` is the host wizard: game, players and teams, rules, round, AI judge, results. Match state lives in
+  `localStorage` (`bayt.match.v1`), so a refresh doesn't lose the match.
+- `python-judge/judge.py` reads a recorded clip with YOLOv8n plus ByteTrack, finds the ball (YOLO, with a
+  colour mask as backup), works out teams from shirt colour, possession, and goals from the goal zones in the
+  config. It writes `outputs/<run>/report.json`, `thumbs/*.jpg` and `annotated.mp4`.
+- The report is signed with HMAC-SHA256 over canonical JSON. `POST /api/reports/verify` checks it on the
+  server with a constant-time compare. If anything was edited after signing, I reject it and the official
+  score stays the same. The browser never sees the secret and never decides validity.
+- `GET /api/judge-files/<run>/<file>` serves thumbnails and the annotated video from `python-judge/outputs`
+  (read-only, nothing goes in `public/`).
+
+**Setup (Windows, PowerShell)**
+```powershell
+cd python-judge
+py -3.14 -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
+```
+Make a long random secret and put it in `.env.local` as `BAYT_REPORT_SECRET=...` (see `.env.example`).
+Set the same value in the shell before running the judge: `$env:BAYT_REPORT_SECRET = "<same value>"`.
+
+**Run the judge**
+```powershell
+# check goal zones and ball colour on the first frame (writes outputs/demo/preview.jpg)
+.venv\Scripts\python judge.py --input samples/demo.mp4 --config match.json --out outputs/demo --preview
+# full run (use --frame-skip / --width to trade accuracy for speed, --no-video to skip the annotated clip)
+.venv\Scripts\python judge.py --input samples/demo.mp4 --config match.json --out outputs/demo
+```
+`match.json` comes from the "Download judge config" button on the teams screen. `config.example.json` shows
+every field, including goal zones and the ball colour range.
+
+Then `npm run dev`, open `/play`, play the round, and upload `python-judge/outputs/demo/report.json` on the
+AI judge screen.
+
+**Tamper test:** change `proposed_score` in `report.json` and upload it again. I show "Invalid signature:
+report rejected" and the score doesn't move.
+
+**Known limits**
+- It runs locally only. Netlify can't run Python, and there's no camera recording in the app yet.
+- YOLO often misses a small ball, so the colour mask does a lot of the work. Goals it finds that way are
+  flagged for review. Tune the colour range with `--preview`.
+- Tracker ids break up when people cross, so I map tracks to players by hand on the judge screen.
+- Scorer attribution is rough (last confident holder). Team detection hasn't been tested on many kits.
+- Video labels are ASCII only.
+
+---
+
 ## Run
 
 ```bash
