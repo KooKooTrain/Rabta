@@ -6,6 +6,11 @@
 
 [rabtaadu.netlify.app](https://rabtaadu.netlify.app/)
 
+## Other Important Links 
+
+[Youtube Video](https://youtu.be/KssukFNXCMY?si=WxtoGLBK-sls0X-p)
+[Presentation](https://canva.link/d88kv7pmlmhg0v2) [It was above 10mb so we could not upload it, so we have linked our presentation here]
+
 ## What you can do
 
 - Play football, basketball, volleyball, Al Karabi, and Al Ghomaidah.
