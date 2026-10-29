@@ -41,3 +41,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python judge
+/python-judge/.venv/
+/python-judge/outputs/
+/python-judge/samples/*
+!/python-judge/samples/.gitkeep
+*.pt
+__pycache__/
+match.json
