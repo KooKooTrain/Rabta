@@ -33,7 +33,7 @@ export const site = {
   locale: { lang: "en", dir: "ltr" },
 
   flags: {
-    showPlaceholderTags: true,
+    showPlaceholderTags: false,
     showBlueprintGrid: true,
   },
 
