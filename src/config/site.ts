@@ -14,7 +14,7 @@ import type { LogoConfig, SiteConfig } from "./types";
 
 export const site = {
   meta: {
-    title: "Rabta: Family AI Game Day",
+    title: "Rabta",
     description:
       "Choose a family sport, build teams, and let Rabta review the match video, track the score, and save the result.",
     url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",

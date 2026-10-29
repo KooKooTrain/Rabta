@@ -8,7 +8,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.meta.url),
-  title: { default: site.meta.title, template: `%s · ${site.meta.title}` },
+  title: { default: site.meta.title, template: `%s | Rabta` },
   description: site.meta.description,
   keywords: site.meta.keywords,
   openGraph: {
